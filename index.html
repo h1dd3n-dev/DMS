@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Access</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 flex items-center justify-center min-h-screen px-4 font-sans text-slate-200">
+
+  <div class="bg-slate-900/80 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-800">
+    
+    <!-- Error Alert Box -->
+    <div id="errorAlert" class="hidden mb-4 p-3 bg-red-950/50 border border-red-800/60 text-red-400 text-xs rounded-lg tracking-wide"></div>
+
+    <!-- Minimal Secret Form -->
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <input 
+          type="email" 
+          id="email" 
+          required 
+          autocomplete="off"
+          placeholder="Identifier" 
+          class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:border-slate-600 focus:ring-1 focus:ring-slate-600 focus:outline-none text-sm transition"
+        >
+      </div>
+
+      <div>
+        <input 
+          type="password" 
+          id="password" 
+          required 
+          autocomplete="off"
+          placeholder="Access Key" 
+          class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:border-slate-600 focus:ring-1 focus:ring-slate-600 focus:outline-none text-sm transition"
+        >
+      </div>
+
+      <button 
+        type="submit" 
+        id="loginBtn" 
+        class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 rounded-lg transition duration-150 border border-slate-700 flex items-center justify-center text-sm shadow-sm"
+      >
+        <span id="btnText">Authenticate</span>
+        <span id="btnLoader" class="hidden ml-2 inline-block w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></span>
+      </button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
+      authDomain: "alpha-deed-management.firebaseapp.com",
+      projectId: "alpha-deed-management",
+      storageBucket: "alpha-deed-management.firebasestorage.app",
+      messagingSenderId: "460540818357",
+      appId: "1:460540818357:web:ae0aac3ef01d690774dffc",
+      measurementId: "G-GZK5JDLCEZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const loginForm = document.getElementById('loginForm');
+    const errorAlert = document.getElementById('errorAlert');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+
+    function showError(message) {
+      errorAlert.textContent = message;
+      errorAlert.classList.remove('hidden');
+    }
+
+    function setBtnLoading(isLoading) {
+      if (isLoading) {
+        btnText.textContent = "Verifying...";
+        btnLoader.classList.remove('hidden');
+      } else {
+        btnText.textContent = "Authenticate";
+        btnLoader.classList.add('hidden');
+      }
+    }
+
+    async function redirectAuthorized(user) {
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userSnapshot = await getDoc(userDocRef);
+
+        if (userSnapshot.exists()) {
+          window.location.href = 'dashboard.html';
+        } else {
+          showError("Access denied. Identity not found.");
+          setBtnLoading(false);
+        }
+      } catch (err) {
+        showError("Handshake failed. Try again.");
+        setBtnLoading(false);
+      }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setBtnLoading(true);
+        redirectAuthorized(user);
+      }
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorAlert.classList.add('hidden');
+      setBtnLoading(true);
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        await redirectAuthorized(userCredential.user);
+      } catch (error) {
+        setBtnLoading(false);
+        showError("Invalid credentials or unauthorized entry.");
+      }
+    });
+  </script>
+</body>
+</html>

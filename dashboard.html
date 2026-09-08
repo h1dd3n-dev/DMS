@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central Audit & Record Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Hind Siliguri', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+  <!-- Header -->
+  <header id="mainHeader" class="bg-slate-900 text-white shadow-md sticky top-0 z-30 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div id="statusDot" class="h-3 w-3 rounded-full bg-emerald-400"></div>
+        <div>
+          <h1 id="appTitle" class="text-base md:text-lg font-bold">Secure Record Console</h1>
+          <div class="flex items-center gap-2 text-xs text-slate-300" id="headerSubtitleContainer">
+            <span id="roleBadge" class="bg-slate-800 px-2 py-0.5 rounded font-semibold uppercase tracking-wider">যাচাই হচ্ছে...</span>
+            <span id="officeInfo">লোকেশন: লোড হচ্ছে...</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="userBadge" class="text-xs bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg text-slate-300 font-mono hidden md:inline"></span>
+        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3.5 py-1.5 rounded-lg transition font-medium">লগআউট</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- Super Admin View -->
+    <div id="viewSuperAdmin" class="hidden space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow text-white">
+          <div class="text-xs text-slate-400 font-medium">সর্বমোট রেকর্ড</div>
+          <div id="statAdminTotalDeeds" class="text-2xl font-bold mt-1">0</div>
+        </div>
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow text-white">
+          <div class="text-xs text-amber-400 font-medium">মোট প্রক্রিয়াধীন (Office)</div>
+          <div id="statAdminOfficeDeeds" class="text-2xl font-bold text-amber-400 mt-1">0</div>
+        </div>
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow text-white">
+          <div class="text-xs text-emerald-400 font-medium">মোট বিতরণকৃত (Delivered)</div>
+          <div id="statAdminDeliveredDeeds" class="text-2xl font-bold text-emerald-400 mt-1">0</div>
+        </div>
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow text-white">
+          <div class="text-xs text-cyan-400 font-medium">সক্রিয় IT Officer</div>
+          <div id="statAdminTotalIT" class="text-2xl font-bold text-cyan-400 mt-1">0</div>
+        </div>
+      </div>
+
+      <div class="flex gap-2 border-b border-slate-700 pb-2">
+        <button id="tabAdminUsersBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white">ইউজার ও ইউনিট কন্ট্রোল</button>
+        <button id="tabAdminDeedsBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">কেন্দ্রীয় রেকর্ড তালিকা</button>
+      </div>
+
+      <section id="adminUsersSection" class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-base font-bold text-slate-200">নিবন্ধিত সকল ইউজার তালিকা</h2>
+          <button id="openITModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">+ নতুন IT Officer তৈরি করুন</button>
+        </div>
+        <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-x-auto shadow text-white">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-700">
+              <tr>
+                <th class="p-3">ইউজার আইডি / ইমেইল</th>
+                <th class="p-3">পদবী (Role)</th>
+                <th class="p-3">ইউনিট কোড</th>
+                <th class="p-3">কোঅর্ডিনেটর কোড</th>
+                <th class="p-3">পাসওয়ার্ড স্ট্যাটাস</th>
+                <th class="p-3 text-center">সরাসরি অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="adminUserTableBody" class="divide-y divide-slate-700">
+              <tr><td colspan="6" class="text-center p-6 text-slate-500">ইউজার তথ্য লোড করা হচ্ছে...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="adminDeedsSection" class="hidden space-y-4">
+        <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-x-auto shadow text-white">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-700">
+              <tr>
+                <th class="p-3">ইউনিট</th>
+                <th class="p-3">রেফ নং</th>
+                <th class="p-3">রেকর্ড আইডি</th>
+                <th class="p-3">গ্রাহক</th>
+                <th class="p-3">ম্যানেজার তথ্য</th>
+                <th class="p-3">স্ট্যাটাস</th>
+                <th class="p-3">ডেলিভারি গ্রহীতা</th>
+                <th class="p-3 text-center">মুছে ফেলা</th>
+              </tr>
+            </thead>
+            <tbody id="adminGlobalDeedsBody" class="divide-y divide-slate-700">
+              <tr><td colspan="8" class="text-center p-6 text-slate-500">লোড করা হচ্ছে...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- IT Officer View -->
+    <div id="viewITOfficer" class="hidden space-y-6">
+      <div class="flex flex-wrap gap-3 items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex gap-2">
+          <button id="tabITDeedsBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition">রেকর্ড তালিকা ও ট্র্যাকিং</button>
+          <button id="tabITUsersBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">ফিল্ড ইউজার ম্যানেজমেন্ট</button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="exportBackupBtn" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">📥 অফলাইন ব্যাকআপ (CSV)</button>
+          <button id="openBulkModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">✨ বাল্ক এন্ট্রি (AI JSON)</button>
+          <button id="openDeedModalBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">+ একক রেকর্ড এন্ট্রি</button>
+        </div>
+      </div>
+
+      <section id="itDeedsSection" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <input type="text" id="itSearchPolicy" placeholder="রেকর্ড আইডি দিয়ে খুঁজুন..." class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+          <input type="text" id="itSearchBM" placeholder="কোঅর্ডিনেটর কোড দিয়ে খুঁজুন..." class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+          <select id="itFilterStatus" class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+            <option value="">সব স্ট্যাটাস</option>
+            <option value="Pending">Pending</option>
+            <option value="Received at Office">Received at Office</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+          <button id="itResetFilters" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition">রিসেট ফিল্টার</button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-700">
+            <thead class="bg-slate-100 text-slate-800 font-semibold border-b">
+              <tr>
+                <th class="p-3">রেফারেন্স নং</th>
+                <th class="p-3">রেকর্ড আইডি</th>
+                <th class="p-3">নাম</th>
+                <th class="p-3">কোড ও বিবরণ</th>
+                <th class="p-3">ইনকামিং তারিখ</th>
+                <th class="p-3">স্ট্যাটাস</th>
+                <th class="p-3">ডেলিভারি বিবরণ</th>
+                <th class="p-3 text-center">অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="itDeedsTableBody" class="divide-y divide-slate-200">
+              <tr><td colspan="8" class="text-center p-6 text-slate-500">তথ্য লোড করা হচ্ছে...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="itUsersSection" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-lg font-bold text-slate-800">অধীনস্থ ফিল্ড অফিসার তালিকা</h2>
+          <button id="openFieldUserModalBtn" class="bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition">+ নতুন ফিল্ড অফিসার যুক্ত করুন</button>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-700">
+            <thead class="bg-slate-100 text-slate-800 font-semibold border-b">
+              <tr>
+                <th class="p-3">ইউজার আইডি / ইমেইল</th>
+                <th class="p-3">পদবী (Role)</th>
+                <th class="p-3">কোঅর্ডিনেটর কোড</th>
+                <th class="p-3">পাসওয়ার্ড সিঙ্ক</th>
+                <th class="p-3 text-center">অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="itUsersTableBody" class="divide-y divide-slate-200">
+              <tr><td colspan="5" class="text-center p-6 text-slate-500">লোড করা হচ্ছে...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Field User View -->
+    <div id="viewField" class="hidden space-y-5">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500 font-semibold">মোট রেকর্ড</div>
+          <div id="statFieldTotal" class="text-2xl font-bold text-slate-800 mt-1">0</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-amber-600 font-semibold">অফিসে প্রক্রিয়াধীন</div>
+          <div id="statFieldPending" class="text-2xl font-bold text-amber-600 mt-1">0</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-blue-600 font-semibold">অফিসে সংরক্ষিত</div>
+          <div id="statFieldReceived" class="text-2xl font-bold text-blue-600 mt-1">0</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-emerald-600 font-semibold">বিতরণ সম্পন্ন</div>
+          <div id="statFieldDelivered" class="text-2xl font-bold text-emerald-600 mt-1">0</div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
+        <div class="flex-1 w-full md:w-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input type="text" id="fieldSearchPolicy" placeholder="রেকর্ড আইডি বা নাম দিয়ে খুঁজুন..." class="w-full px-3.5 py-2 border rounded-lg text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+          <select id="fieldFilterStatus" class="w-full px-3.5 py-2 border rounded-lg text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+            <option value="">সব স্ট্যাটাস</option>
+            <option value="Received at Office">Received at Office</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+        <button id="fieldRefreshBtn" class="w-full md:w-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 border rounded-lg text-sm font-semibold transition">রিফ্রেশ</button>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-4 py-3 border-b bg-slate-50 flex justify-between items-center">
+          <h2 class="text-sm font-bold text-slate-800">রেকর্ডসমূহ ও ট্র্যাকিং স্ট্যাটাস</h2>
+          <span class="text-xs text-slate-500" id="fieldResultCount">০ টি রেকর্ড পাওয়া গেছে</span>
+        </div>
+        <div class="hidden md:block overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-700">
+            <thead class="bg-slate-100 text-slate-700 text-xs font-bold border-b">
+              <tr>
+                <th class="p-3.5">রেফারেন্স নং</th>
+                <th class="p-3.5">রেকর্ড আইডি</th>
+                <th class="p-3.5">গ্রাহক / সত্তা</th>
+                <th class="p-3.5">কোঅর্ডিনেটর তথ্য</th>
+                <th class="p-3.5">আসার তারিখ</th>
+                <th class="p-3.5">বর্তমান স্ট্যাটাস</th>
+                <th class="p-3.5">ডেলিভারি বিবরণ</th>
+              </tr>
+            </thead>
+            <tbody id="fieldDesktopTableBody" class="divide-y divide-slate-200">
+              <tr><td colspan="7" class="text-center p-8 text-slate-400">তথ্য লোড করা হচ্ছে...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="fieldMobileCardContainer" class="md:hidden divide-y divide-slate-200"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals -->
+
+  <!-- Modal: Super Admin Create IT -->
+  <div id="adminITModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-800 rounded-2xl w-full max-w-md p-6 border border-slate-700 shadow-2xl space-y-4 text-white">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <h3 class="text-base font-bold">নতুন IT Officer তৈরি</h3>
+        <button id="closeAdminITModal" class="text-slate-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      <form id="createITForm" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">অফিসিয়াল ইমেইল</label>
+          <input type="email" id="adminITEmail" required placeholder="user.office@portal.internal" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">ডিফল্ট পাসওয়ার্ড</label>
+          <input type="password" id="adminITPassword" required minlength="6" placeholder="••••••••" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">ইউনিট / লোকেশন কোড</label>
+          <input type="text" id="adminITBranch" required placeholder="LOC-01" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelAdminITModal" class="px-4 py-2 text-sm bg-slate-700 rounded-lg">বাতিল</button>
+          <button type="submit" class="px-5 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg">অ্যাকাউন্ট তৈরি করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Single Record Entry -->
+  <div id="deedModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-lg font-bold text-slate-800">নতুন ইনকামিং রেকর্ড এন্ট্রি</h3>
+        <button id="closeDeedModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+      </div>
+      <form id="deedForm" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">রেফারেন্স নং</label>
+          <input type="text" id="itRefNo" required placeholder="REF-02860/2026" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">রেকর্ড আইডি / ট্র্যাকিং নং</label>
+            <input type="text" id="itPolicyNo" required placeholder="012345678" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">গ্রাহকের নাম</label>
+            <input type="text" id="itPolicyHolderName" required placeholder="মো: রহিম" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কোঅর্ডিনেটর কোড</label>
+            <input type="text" id="itBMCode" required placeholder="CRD-6000260" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কোঅর্ডিনেটর নাম</label>
+            <input type="text" id="itBMName" required placeholder="ইউনিট অফিসার" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">অফিসে পৌঁছানোর তারিখ</label>
+          <input type="date" id="itIncomingDate" required class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelDeedModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
+          <button type="submit" class="px-5 py-2 text-sm bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg">সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Delivery Status -->
+  <div id="deliveryModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-base font-bold text-slate-800">স্ট্যাটাস ও ডেলিভারি আপডেট</h3>
+        <button id="closeDeliveryModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+      </div>
+      <form id="deliveryForm" class="space-y-3">
+        <input type="hidden" id="editDeedId">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">বর্তমান স্ট্যাটাস</label>
+          <select id="updateStatus" class="w-full px-3 py-2 border rounded-lg text-sm font-semibold">
+            <option value="Pending">Pending</option>
+            <option value="Received at Office">Received at Office</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+        </div>
+        <div id="deliveryFields" class="space-y-3 hidden">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কাকে বুঝিয়ে দেওয়া হলো (নাম/কোড)</label>
+            <input type="text" id="deliveredTo" placeholder="উদা: আব্দুল্লাহ (CRD-1234)" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">ডেলিভারির তারিখ</label>
+            <input type="date" id="deliveryDate" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelDeliveryModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
+          <button type="submit" class="px-5 py-2 text-sm bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg">আপডেট করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create Field User -->
+  <div id="userModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-base font-bold text-slate-800">নতুন ফিল্ড অফিসার তৈরি</h3>
+        <button id="closeUserModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+      </div>
+      <form id="fieldUserForm" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ইমেইল / লগইন আইডি</label>
+          <input type="email" id="newUserEmail" required placeholder="field.user@portal.internal" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
+          <input type="password" id="newUserPassword" required minlength="6" placeholder="••••••••" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">পদবী (Role)</label>
+          <select id="newUserRole" required class="w-full px-3 py-2 border rounded-lg text-sm">
+            <option value="bm">Branch Supervisor</option>
+            <option value="sm">Senior Manager</option>
+            <option value="asm">Associate Manager</option>
+            <option value="um">Unit Lead</option>
+            <option value="fa">Field Officer</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">কোঅর্ডিনেটর কোড</label>
+          <input type="text" id="newUserBMCode" required placeholder="উদা: CRD-6000260" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelUserModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
+          <button type="submit" class="px-5 py-2 text-sm bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg">তৈরি করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Bulk AI JSON Entry -->
+  <div id="bulkModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-4xl p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">AI জেসন (JSON) বাল্ক রেকর্ড এন্ট্রি</h3>
+          <p class="text-xs text-slate-500">ডকুমেন্টের ইমেজ থেকে AI জেনারেটেড JSON কোড এখানে পেস্ট করুন</p>
+        </div>
+        <button id="closeBulkModal" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+      </div>
+
+      <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div class="text-xs text-slate-600">
+          <span class="font-bold text-slate-800">স্টেপ ১:</span> নিচের বাটনে ক্লিক করে সাধারণ প্রম্পটটি কপি করুন এবং AI চ্যাটে ছবির সাথে পাঠিয়ে দিন।
+        </div>
+        <button id="copyPromptBtn" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg shadow transition">
+          📋 AI প্রম্পট কপি করুন
+        </button>
+      </div>
+
+      <div id="jsonInputContainer" class="space-y-2 flex-1 flex flex-col">
+        <label class="block text-xs font-semibold text-slate-700">AI থেকে পাওয়া JSON কোডটি নিচে পেস্ট করুন:</label>
+        <textarea id="bulkJsonInput" placeholder='[\n  {\n    "refNo": "REF-02860/2026",\n    "policyNo": "010110177896-9",\n    "policyHolderName": "MD SHAHIDUL ISLAM",\n    "bmCode": "10029061",\n    "bmName": "MD. ALAMGIR HOSSAIN",\n    "incomingDate": "2026-07-22"\n  }\n]' class="w-full flex-1 p-3 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-700 focus:outline-none min-h-[160px]"></textarea>
+        <div class="flex justify-end gap-2 pt-2">
+          <button id="parseJsonBtn" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow">
+            প্রিভিউ দেখুন (Preview)
+          </button>
+        </div>
+      </div>
+
+      <div id="previewContainer" class="hidden space-y-3 flex-1 overflow-hidden flex flex-col">
+        <div class="flex justify-between items-center bg-indigo-50 p-2.5 rounded-lg border border-indigo-200">
+          <span class="text-xs font-bold text-indigo-900" id="previewCountBadge">মোট ০ টি রেকর্ড শনাক্ত হয়েছে</span>
+          <button id="backToEditJsonBtn" class="text-xs text-indigo-700 underline font-semibold">JSON পুনরায় সংশোধন করুন</button>
+        </div>
+
+        <div class="border border-slate-200 rounded-lg overflow-y-auto flex-1 max-h-[300px]">
+          <table class="w-full text-left text-xs text-slate-700">
+            <thead class="bg-slate-100 font-bold sticky top-0 border-b">
+              <tr>
+                <th class="p-2.5">রেফারেন্স নং</th>
+                <th class="p-2.5">রেকর্ড আইডি</th>
+                <th class="p-2.5">নাম</th>
+                <th class="p-2.5">কোড</th>
+                <th class="p-2.5">বিবরণ</th>
+                <th class="p-2.5">তারিখ</th>
+              </tr>
+            </thead>
+            <tbody id="previewTableBody" class="divide-y"></tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t">
+          <button id="cancelPreviewBtn" class="px-4 py-2 text-xs bg-slate-200 text-slate-700 rounded-lg">বাতিল</button>
+          <button id="confirmBulkUploadBtn" class="px-5 py-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-lg shadow">
+            কনফার্ম ও ডাটাবেজে সেভ করুন
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modular Firebase Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, onSnapshot, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
+      authDomain: "alpha-deed-management.firebaseapp.com",
+      projectId: "alpha-deed-management",
+      storageBucket: "alpha-deed-management.firebasestorage.app",
+      messagingSenderId: "460540818357",
+      appId: "1:460540818357:web:ae0aac3ef01d690774dffc",
+      measurementId: "G-GZK5JDLCEZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let itDeedsList = [];
+    let fieldDeedsList = [];
+    let parsedBulkDeeds = [];
+
+    document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => window.location.href = 'index.html');
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
+      }
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (!userDoc.exists()) {
+          alert("ডাটাবেজে প্রোফাইল নেই!");
+          window.location.href = 'index.html';
+          return;
+        }
+
+        currentUser = { uid: user.uid, email: user.email, ...userDoc.data() };
+        setupDashboardByRole(currentUser);
+      } catch (err) {
+        console.error("Dashboard error:", err);
+      }
+    });
+
+    function setupDashboardByRole(user) {
+      const role = user.role;
+      document.getElementById('roleBadge').textContent = role;
+      document.getElementById('officeInfo').textContent = `লোকেশন: ${user.officeCode || 'General'}`;
+
+      if (role === 'super_admin') {
+        document.body.className = "bg-slate-900 text-slate-100 min-h-screen";
+        document.getElementById('mainHeader').className = "bg-slate-950 border-b border-slate-800 sticky top-0 z-30 text-white";
+        document.getElementById('statusDot').className = "h-3 w-3 rounded-full bg-red-500 animate-pulse";
+        document.getElementById('appTitle').textContent = "Central Management Hub";
+        document.getElementById('userBadge').textContent = user.email;
+        document.getElementById('userBadge').classList.remove('hidden');
+
+        document.getElementById('viewSuperAdmin').classList.remove('hidden');
+        initSuperAdmin();
+      } else if (role === 'it_officer') {
+        document.getElementById('appTitle').textContent = "Record Audit & Dispatch";
+        document.getElementById('userBadge').textContent = user.email;
+        document.getElementById('userBadge').classList.remove('hidden');
+
+        document.getElementById('viewITOfficer').classList.remove('hidden');
+        initITOfficer();
+      } else {
+        document.getElementById('appTitle').textContent = "Field Records Portal";
+        if (user.bmCode) {
+          const b = document.getElementById('userBadge');
+          b.textContent = `ID: ${user.bmCode}`;
+          b.classList.remove('hidden');
+        }
+        document.getElementById('viewField').classList.remove('hidden');
+        initFieldUser();
+      }
+    }
+
+    function initSuperAdmin() {
+      const tabUsersBtn = document.getElementById('tabAdminUsersBtn');
+      const tabDeedsBtn = document.getElementById('tabAdminDeedsBtn');
+      const usersSection = document.getElementById('adminUsersSection');
+      const deedsSection = document.getElementById('adminDeedsSection');
+
+      tabUsersBtn.onclick = () => {
+        usersSection.classList.remove('hidden');
+        deedsSection.classList.add('hidden');
+        tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white";
+        tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700";
+      };
+
+      tabDeedsBtn.onclick = () => {
+        deedsSection.classList.remove('hidden');
+        usersSection.classList.add('hidden');
+        tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white";
+        tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700";
+      };
+
+      const itModal = document.getElementById('adminITModal');
+      document.getElementById('openITModalBtn').onclick = () => itModal.classList.remove('hidden');
+      document.getElementById('closeAdminITModal').onclick = () => itModal.classList.add('hidden');
+      document.getElementById('cancelAdminITModal').onclick = () => itModal.classList.add('hidden');
+
+      document.getElementById('createITForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('adminITEmail').value.trim();
+        const password = document.getElementById('adminITPassword').value;
+        const branch = document.getElementById('adminITBranch').value.trim();
+
+        try {
+          const secApp = initializeApp(firebaseConfig, "AdminSecAuth_" + Date.now());
+          const secAuth = getAuth(secApp);
+          const cred = await createUserWithEmailAndPassword(secAuth, email, password);
+
+          await setDoc(doc(db, 'users', cred.user.uid), {
+            uid: cred.user.uid,
+            email: email,
+            role: 'it_officer',
+            officeCode: branch,
+            currentAuthPass: password,
+            createdAt: serverTimestamp()
+          });
+
+          alert("অফিসার অ্যাকাউন্ট তৈরি হয়েছে!");
+          document.getElementById('createITForm').reset();
+          itModal.classList.add('hidden');
+        } catch (err) {
+          alert("ত্রুটি: " + err.message);
+        }
+      });
+
+      onSnapshot(collection(db, 'users'), (snapshot) => {
+        let itCount = 0;
+        const tbody = document.getElementById('adminUserTableBody');
+        tbody.innerHTML = snapshot.docs.map(docSnap => {
+          const u = docSnap.data();
+          if (u.role === 'it_officer') itCount++;
+          const isRoot = u.role === 'super_admin';
+          const passPending = u.pendingPassword ? `<span class="text-xs bg-amber-900 text-amber-300 px-2 py-0.5 rounded font-mono">Pending: ${u.pendingPassword}</span>` : `<span class="text-xs text-slate-500">Active</span>`;
+
+          return `
+            <tr class="hover:bg-slate-800 transition">
+              <td class="p-3 font-mono text-xs text-indigo-400 font-semibold">${u.email}</td>
+              <td class="p-3"><span class="px-2 py-0.5 text-xs uppercase font-bold rounded bg-slate-900 border border-slate-700">${u.role}</span></td>
+              <td class="p-3">${u.officeCode || 'Central'}</td>
+              <td class="p-3 font-mono text-xs">${u.bmCode || '—'}</td>
+              <td class="p-3">${passPending}</td>
+              <td class="p-3 text-center space-x-1">
+                ${!isRoot ? `
+                  <button onclick="adminSetPasswordDirect('${docSnap.id}', '${u.email}')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2.5 py-1 rounded">পাসওয়ার্ড পরিবর্তন</button>
+                  <button onclick="adminModifyUser('${docSnap.id}', '${u.role}', '${u.officeCode || ''}', '${u.bmCode || ''}')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2 py-1 rounded">এডিট</button>
+                  <button onclick="adminDeleteUser('${docSnap.id}', '${u.email}')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded">ডিলিট</button>
+                ` : '<span class="text-xs text-slate-500">Protected</span>'}
+              </td>
+            </tr>
+          `;
+        }).join('');
+        document.getElementById('statAdminTotalIT').textContent = itCount;
+      });
+
+      onSnapshot(collection(db, 'deeds'), (snapshot) => {
+        let officeCount = 0;
+        let deliveredCount = 0;
+        const tbody = document.getElementById('adminGlobalDeedsBody');
+
+        tbody.innerHTML = snapshot.docs.map(docSnap => {
+          const d = docSnap.data();
+          if (d.status === 'Delivered') deliveredCount++;
+          else officeCount++;
+
+          return `
+            <tr class="hover:bg-slate-800 transition text-xs">
+              <td class="p-3 font-semibold text-slate-200">${d.branchName || 'N/A'}</td>
+              <td class="p-3 font-mono text-slate-400">${d.refNo}</td>
+              <td class="p-3 font-bold text-indigo-400 font-mono">${d.policyNo}</td>
+              <td class="p-3 text-slate-200">${d.policyHolderName}</td>
+              <td class="p-3">${d.bmName} (${d.bmCode})</td>
+              <td class="p-3 font-bold ${d.status === 'Delivered' ? 'text-emerald-400' : 'text-amber-400'}">${d.status}</td>
+              <td class="p-3">${d.deliveredTo ? `${d.deliveredTo} (${d.deliveryDate})` : '—'}</td>
+              <td class="p-3 text-center">
+                <button onclick="adminDeleteDeed('${docSnap.id}')" class="text-red-400 hover:text-red-300 font-bold">ডিলিট</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        document.getElementById('statAdminTotalDeeds').textContent = snapshot.docs.length;
+        document.getElementById('statAdminOfficeDeeds').textContent = officeCount;
+        document.getElementById('statAdminDeliveredDeeds').textContent = deliveredCount;
+      });
+    }
+
+    window.adminSetPasswordDirect = async (uid, email) => {
+      const newPass = prompt(`'${email}' এর জন্য নতুন পাসওয়ার্ড লিখুন:`);
+      if (!newPass || newPass.length < 6) return alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
+      await updateDoc(doc(db, 'users', uid), { pendingPassword: newPass, lastPasswordResetAt: new Date().toISOString() });
+      alert(`পাসওয়ার্ড সেট হয়েছে!`);
+    };
+
+    window.adminModifyUser = async (uid, role, office, bm) => {
+      const newRole = prompt("নতুন Role দিন:", role);
+      const newOffice = prompt("নতুন লোকেশন কোড:", office);
+      const newBM = prompt("নতুন কোঅর্ডিনেটর কোড:", bm);
+      if (newRole && newOffice) {
+        await updateDoc(doc(db, 'users', uid), { role: newRole, officeCode: newOffice, bmCode: newBM || null });
+        alert("আপডেট সম্পন্ন!");
+      }
+    };
+
+    window.adminDeleteUser = async (uid, email) => {
+      if (confirm(`আপনি কি নিশ্চিতভাবে ${email} ডিলিট করতে চান?`)) {
+        await deleteDoc(doc(db, 'users', uid));
+        alert("ইউজার ডিলিট করা হয়েছে।");
+      }
+    };
+
+    window.adminDeleteDeed = async (id) => {
+      if (confirm("এই রেকর্ডটি পুরোপুরি মুছে ফেলতে চান?")) {
+        await deleteDoc(doc(db, 'deeds', id));
+      }
+    };
+
+    function initITOfficer() {
+      const tabDeedsBtn = document.getElementById('tabITDeedsBtn');
+      const tabUsersBtn = document.getElementById('tabITUsersBtn');
+      const deedsSection = document.getElementById('itDeedsSection');
+      const usersSection = document.getElementById('itUsersSection');
+
+      tabDeedsBtn.onclick = () => {
+        deedsSection.classList.remove('hidden');
+        usersSection.classList.add('hidden');
+        tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition";
+        tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+      };
+
+      tabUsersBtn.onclick = () => {
+        usersSection.classList.remove('hidden');
+        deedsSection.classList.add('hidden');
+        tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition";
+        tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+      };
+
+      const deedModal = document.getElementById('deedModal');
+      document.getElementById('openDeedModalBtn').onclick = () => {
+        document.getElementById('itIncomingDate').value = new Date().toISOString().split('T')[0];
+        deedModal.classList.remove('hidden');
+      };
+      document.getElementById('closeDeedModal').onclick = () => deedModal.classList.add('hidden');
+      document.getElementById('cancelDeedModal').onclick = () => deedModal.classList.add('hidden');
+
+      const userModal = document.getElementById('userModal');
+      document.getElementById('openFieldUserModalBtn').onclick = () => userModal.classList.remove('hidden');
+      document.getElementById('closeUserModal').onclick = () => userModal.classList.add('hidden');
+      document.getElementById('cancelUserModal').onclick = () => userModal.classList.add('hidden');
+
+      document.getElementById('deedForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          const deedsColl = collection(db, 'deeds');
+          const newDocRef = doc(deedsColl);
+          await setDoc(newDocRef, {
+            refNo: document.getElementById('itRefNo').value.trim(),
+            policyNo: document.getElementById('itPolicyNo').value.trim(),
+            policyHolderName: document.getElementById('itPolicyHolderName').value.trim(),
+            bmCode: document.getElementById('itBMCode').value.trim(),
+            bmName: document.getElementById('itBMName').value.trim(),
+            branchName: currentUser.officeCode || 'Internal',
+            status: 'Received at Office',
+            incomingDate: document.getElementById('itIncomingDate').value,
+            deliveryDate: null,
+            deliveredTo: null,
+            itOfficerId: currentUser.uid,
+            createdAt: serverTimestamp()
+          });
+          document.getElementById('deedForm').reset();
+          deedModal.classList.add('hidden');
+        } catch (err) {
+          alert("ত্রুটি: " + err.message);
+        }
+      });
+
+      const deedsQuery = query(collection(db, 'deeds'), where('branchName', '==', currentUser.officeCode || 'Internal'));
+      onSnapshot(deedsQuery, (snapshot) => {
+        itDeedsList = [];
+        snapshot.forEach(docSnap => itDeedsList.push({ id: docSnap.id, ...docSnap.data() }));
+        renderITDeeds(itDeedsList);
+      });
+
+      document.getElementById('fieldUserForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newUserEmail').value.trim();
+        const password = document.getElementById('newUserPassword').value;
+        const role = document.getElementById('newUserRole').value;
+        const bmCode = document.getElementById('newUserBMCode').value.trim();
+
+        try {
+          const secApp = initializeApp(firebaseConfig, "ITSecAuth_" + Date.now());
+          const secAuth = getAuth(secApp);
+          const cred = await createUserWithEmailAndPassword(secAuth, email, password);
+
+          await setDoc(doc(db, 'users', cred.user.uid), {
+            uid: cred.user.uid,
+            email: email,
+            role: role,
+            bmCode: bmCode,
+            officeCode: currentUser.officeCode || 'Internal',
+            createdBy: currentUser.uid,
+            currentAuthPass: password,
+            createdAt: serverTimestamp()
+          });
+
+          alert("ফিল্ড ইউজার তৈরি সম্পন্ন!");
+          document.getElementById('fieldUserForm').reset();
+          userModal.classList.add('hidden');
+        } catch (err) {
+          alert("ত্রুটি: " + err.message);
+        }
+      });
+
+      const usersQuery = query(collection(db, 'users'), where('createdBy', '==', currentUser.uid));
+      onSnapshot(usersQuery, (snapshot) => {
+        const tbody = document.getElementById('itUsersTableBody');
+        if (snapshot.empty) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-500">কোনো ফিল্ড ইউজার নেই।</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = snapshot.docs.map(docSnap => {
+          const u = docSnap.data();
+          const passPending = u.pendingPassword ? `<span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-mono">Pending: ${u.pendingPassword}</span>` : `<span class="text-xs text-slate-400">সিঙ্কড</span>`;
+          return `
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-medium">${u.email}</td>
+              <td class="p-3"><span class="uppercase text-xs font-bold px-2 py-0.5 bg-slate-100 border rounded">${u.role}</span></td>
+              <td class="p-3 font-mono text-slate-800">${u.bmCode || 'N/A'}</td>
+              <td class="p-3">${passPending}</td>
+              <td class="p-3 text-center space-x-1">
+                <button onclick="changeFieldPassword('${docSnap.id}', '${u.email}')" class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded">পাসওয়ার্ড পরিবর্তন</button>
+                <button onclick="editFieldInfo('${docSnap.id}', '${u.role}', '${u.bmCode || ''}')" class="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded">এডিট</button>
+                <button onclick="deleteFieldAccount('${docSnap.id}', '${u.email}')" class="text-xs bg-red-50 text-red-700 border border-red-200 px-2 py-1 rounded">ডিলিট</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      });
+
+      initBulkModal();
+    }
+
+    function renderITDeeds(deeds) {
+      const tbody = document.getElementById('itDeedsTableBody');
+      if (deeds.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-slate-500">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = deeds.map(deed => {
+        const isOwner = deed.itOfficerId === currentUser.uid;
+        let badge = deed.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : (deed.status === 'Received at Office' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800');
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 font-medium">${deed.refNo}</td>
+            <td class="p-3 font-semibold text-indigo-800">${deed.policyNo}</td>
+            <td class="p-3">${deed.policyHolderName}</td>
+            <td class="p-3"><div>${deed.bmName}</div><span class="text-xs text-slate-400 font-mono">${deed.bmCode}</span></td>
+            <td class="p-3 text-xs">${deed.incomingDate || 'N/A'}</td>
+            <td class="p-3"><span class="text-xs px-2.5 py-1 rounded-full font-bold ${badge}">${deed.status}</span></td>
+            <td class="p-3 text-xs">${deed.deliveredTo ? `<b>${deed.deliveredTo}</b><br><span class="text-slate-400">${deed.deliveryDate}</span>` : 'অসম্পূর্ণ'}</td>
+            <td class="p-3 text-center space-x-1">
+              <button onclick="openDeliveryModal('${deed.id}', '${deed.status}', '${deed.deliveredTo || ''}', '${deed.deliveryDate || ''}')" class="text-xs bg-slate-100 hover:bg-slate-200 border px-2 py-1 rounded">স্ট্যাটাস</button>
+              ${isOwner ? `
+                <button onclick="editITDeed('${deed.id}', '${deed.policyNo}', '${deed.policyHolderName}', '${deed.bmCode}', '${deed.bmName}')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded">এডিট</button>
+                <button onclick="deleteITDeed('${deed.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-800 px-2 py-1 rounded">ডিলিট</button>
+              ` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.openDeliveryModal = (id, status, deliveredTo, deliveryDate) => {
+      const modal = document.getElementById('deliveryModal');
+      const updateStatusSelect = document.getElementById('updateStatus');
+      const deliveryFields = document.getElementById('deliveryFields');
+
+      document.getElementById('editDeedId').value = id;
+      updateStatusSelect.value = status;
+      if (status === 'Delivered') {
+        deliveryFields.classList.remove('hidden');
+        document.getElementById('deliveredTo').value = deliveredTo;
+        document.getElementById('deliveryDate').value = deliveryDate || new Date().toISOString().split('T')[0];
+      } else {
+        deliveryFields.classList.add('hidden');
+      }
+      modal.classList.remove('hidden');
+    };
+
+    document.getElementById('updateStatus').onchange = (e) => {
+      const deliveryFields = document.getElementById('deliveryFields');
+      if (e.target.value === 'Delivered') {
+        deliveryFields.classList.remove('hidden');
+        document.getElementById('deliveryDate').value = new Date().toISOString().split('T')[0];
+      } else {
+        deliveryFields.classList.add('hidden');
+      }
+    };
+
+    document.getElementById('closeDeliveryModal').onclick = () => document.getElementById('deliveryModal').classList.add('hidden');
+    document.getElementById('cancelDeliveryModal').onclick = () => document.getElementById('deliveryModal').classList.add('hidden');
+
+    document.getElementById('deliveryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editDeedId').value;
+      const status = document.getElementById('updateStatus').value;
+      await updateDoc(doc(db, 'deeds', id), {
+        status,
+        deliveredTo: status === 'Delivered' ? document.getElementById('deliveredTo').value.trim() : null,
+        deliveryDate: status === 'Delivered' ? document.getElementById('deliveryDate').value : null
+      });
+      document.getElementById('deliveryModal').classList.add('hidden');
+    });
+
+    window.editITDeed = async (id, currentPolicy, currentHolder, currentBM, currentBMName) => {
+      const newPolicy = prompt("রেকর্ড আইডি সংশোধন:", currentPolicy);
+      const newHolder = prompt("নাম সংশোধন:", currentHolder);
+      const newBM = prompt("কোঅর্ডিনেটর কোড:", currentBM);
+      const newBMName = prompt("কোঅর্ডিনেটর নাম:", currentBMName);
+
+      if (newPolicy && newHolder) {
+        await updateDoc(doc(db, 'deeds', id), { policyNo: newPolicy, policyHolderName: newHolder, bmCode: newBM, bmName: newBMName });
+        alert("আপডেট হয়েছে!");
+      }
+    };
+
+    window.deleteITDeed = async (id) => {
+      if (confirm("রেকর্ডটি মুছে ফেলতে চান?")) await deleteDoc(doc(db, 'deeds', id));
+    };
+
+    window.changeFieldPassword = async (uid, email) => {
+      const newPass = prompt(`'${email}' এর নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর):`);
+      if (!newPass || newPass.length < 6) return alert("কমপক্ষে ৬ অক্ষর দিন!");
+      await updateDoc(doc(db, 'users', uid), { pendingPassword: newPass, lastPasswordResetAt: new Date().toISOString() });
+      alert("পাসওয়ার্ড সেট হয়েছে!");
+    };
+
+    window.editFieldInfo = async (uid, role, bmCode) => {
+      const newRole = prompt("নতুন Role দিন:", role);
+      const newBM = prompt("নতুন কোঅর্ডিনেটর কোড:", bmCode);
+      if (newRole) {
+        await updateDoc(doc(db, 'users', uid), { role: newRole, bmCode: newBM || null });
+        alert("আপডেট সম্পন্ন!");
+      }
+    };
+
+    window.deleteFieldAccount = async (uid, email) => {
+      if (confirm(`নিশ্চিতভাবে ${email} ডিলিট করতে চান?`)) {
+        await deleteDoc(doc(db, 'users', uid));
+        alert("ডিলিট হয়েছে।");
+      }
+    };
+
+    function initBulkModal() {
+      const bulkModal = document.getElementById('bulkModal');
+      const jsonInputContainer = document.getElementById('jsonInputContainer');
+      const previewContainer = document.getElementById('previewContainer');
+      const bulkJsonInput = document.getElementById('bulkJsonInput');
+      const previewTableBody = document.getElementById('previewTableBody');
+
+      document.getElementById('openBulkModalBtn').onclick = () => {
+        bulkModal.classList.remove('hidden');
+        jsonInputContainer.classList.remove('hidden');
+        previewContainer.classList.add('hidden');
+        bulkJsonInput.value = '';
+      };
+
+      document.getElementById('closeBulkModal').onclick = () => bulkModal.classList.add('hidden');
+      document.getElementById('cancelPreviewBtn').onclick = () => bulkModal.classList.add('hidden');
+      document.getElementById('backToEditJsonBtn').onclick = () => {
+        previewContainer.classList.add('hidden');
+        jsonInputContainer.classList.remove('hidden');
+      };
+
+      document.getElementById('copyPromptBtn').onclick = () => {
+        const promptText = `Extract all tabular records from this document into a strict JSON format. Do not include markdown code block syntax (like \`\`\`json), commentary, or extra text. Output only raw JSON array with objects using this exact schema:
+
+[
+  {
+    "refNo": "REF-02860/2026",
+    "policyNo": "010110177896-9",
+    "policyHolderName": "MD SHAHIDUL ISLAM",
+    "bmCode": "10029061",
+    "bmName": "MD. ALAMGIR HOSSAIN",
+    "incomingDate": "2026-07-22"
+  }
+]`;
+        navigator.clipboard.writeText(promptText).then(() => alert("প্রম্পট কপি হয়েছে!"));
+      };
+
+      document.getElementById('parseJsonBtn').onclick = () => {
+        let raw = bulkJsonInput.value.trim().replace(/```json/gi, '').replace(/```/g, '').trim();
+        if (!raw) return alert("JSON পেস্ট করুন!");
+        try {
+          parsedBulkDeeds = JSON.parse(raw);
+          document.getElementById('previewCountBadge').textContent = `মোট ${parsedBulkDeeds.length} টি রেকর্ড পাওয়া গেছে`;
+          previewTableBody.innerHTML = parsedBulkDeeds.map(d => `
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 font-mono">${d.refNo || 'REF-AUTO'}</td>
+              <td class="p-2.5 font-bold text-slate-800">${d.policyNo || 'N/A'}</td>
+              <td class="p-2.5 font-semibold">${d.policyHolderName || 'N/A'}</td>
+              <td class="p-2.5 font-mono">${d.bmCode || 'N/A'}</td>
+              <td class="p-2.5">${d.bmName || 'N/A'}</td>
+              <td class="p-2.5">${d.incomingDate || new Date().toISOString().split('T')[0]}</td>
+            </tr>
+          `).join('');
+          jsonInputContainer.classList.add('hidden');
+          previewContainer.classList.remove('hidden');
+        } catch (e) {
+          alert("ভুল JSON ফরম্যাট!");
+        }
+      };
+
+      document.getElementById('confirmBulkUploadBtn').onclick = async () => {
+        const batch = writeBatch(db);
+        const branch = currentUser.officeCode || 'Internal';
+
+        parsedBulkDeeds.forEach(deed => {
+          const ref = doc(collection(db, 'deeds'));
+          batch.set(ref, {
+            refNo: deed.refNo || 'N/A',
+            policyNo: deed.policyNo || 'N/A',
+            policyHolderName: deed.policyHolderName || 'N/A',
+            bmCode: deed.bmCode || 'N/A',
+            bmName: deed.bmName || 'N/A',
+            branchName: branch,
+            status: 'Received at Office',
+            incomingDate: deed.incomingDate || new Date().toISOString().split('T')[0],
+            deliveryDate: null,
+            deliveredTo: null,
+            itOfficerId: currentUser.uid,
+            createdAt: serverTimestamp()
+          });
+        });
+
+        await batch.commit();
+        alert(`${parsedBulkDeeds.length} টি রেকর্ড সেভ করা হয়েছে!`);
+        bulkModal.classList.add('hidden');
+      };
+
+      document.getElementById('exportBackupBtn').onclick = () => {
+        if (!itDeedsList.length) return alert("কোনো তথ্য নেই!");
+        const headers = ["Reference No,Record ID,Name,Code,Coordinator Name,Unit,Status,Incoming Date,Delivery Date,Delivered To"];
+        const rows = itDeedsList.map(d => [
+          `"${d.refNo || ''}"`, `"${d.policyNo || ''}"`, `"${d.policyHolderName || ''}"`,
+          `"${d.bmCode || ''}"`, `"${d.bmName || ''}"`, `"${d.branchName || ''}"`,
+          `"${d.status || ''}"`, `"${d.incomingDate || ''}"`, `"${d.deliveryDate || ''}"`, `"${d.deliveredTo || ''}"`
+        ].join(','));
+
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers, ...rows].join("\n");
+        const link = document.createElement("a");
+        link.setAttribute("href", encodeURI(csvContent));
+        link.setAttribute("download", `Record_Backup_${currentUser.officeCode || 'Unit'}_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const filterFunc = () => {
+        const p = document.getElementById('itSearchPolicy').value.toLowerCase().trim();
+        const b = document.getElementById('itSearchBM').value.toLowerCase().trim();
+        const s = document.getElementById('itFilterStatus').value;
+        const filtered = itDeedsList.filter(d => 
+          (!p || (d.policyNo && d.policyNo.toLowerCase().includes(p))) &&
+          (!b || (d.bmCode && d.bmCode.toLowerCase().includes(b))) &&
+          (!s || d.status === s)
+        );
+        renderITDeeds(filtered);
+      };
+      document.getElementById('itSearchPolicy').oninput = filterFunc;
+      document.getElementById('itSearchBM').oninput = filterFunc;
+      document.getElementById('itFilterStatus').onchange = filterFunc;
+      document.getElementById('itResetFilters').onclick = () => {
+        document.getElementById('itSearchPolicy').value = '';
+        document.getElementById('itSearchBM').value = '';
+        document.getElementById('itFilterStatus').value = '';
+        renderITDeeds(itDeedsList);
+      };
+    }
+
+    function initFieldUser() {
+      let q;
+      const deedsRef = collection(db, 'deeds');
+      if (['sm', 'asm'].includes(currentUser.role)) {
+        q = query(deedsRef, where('branchName', '==', currentUser.officeCode));
+      } else {
+        q = query(deedsRef, where('branchName', '==', currentUser.officeCode), where('bmCode', '==', currentUser.bmCode));
+      }
+
+      onSnapshot(q, (snapshot) => {
+        fieldDeedsList = [];
+        snapshot.forEach(docSnap => fieldDeedsList.push({ id: docSnap.id, ...docSnap.data() }));
+        renderFieldDeeds(fieldDeedsList);
+      });
+
+      const applyFilters = () => {
+        const s = document.getElementById('fieldSearchPolicy').value.toLowerCase().trim();
+        const st = document.getElementById('fieldFilterStatus').value;
+        const filtered = fieldDeedsList.filter(d => 
+          (!s || (d.policyNo?.toLowerCase().includes(s) || d.policyHolderName?.toLowerCase().includes(s))) &&
+          (!st || d.status === st)
+        );
+        renderFieldDeeds(filtered);
+      };
+
+      document.getElementById('fieldSearchPolicy').oninput = applyFilters;
+      document.getElementById('fieldFilterStatus').onchange = applyFilters;
+      document.getElementById('fieldRefreshBtn').onclick = () => renderFieldDeeds(fieldDeedsList);
+    }
+
+    function renderFieldDeeds(deeds) {
+      let p = 0, r = 0, d = 0;
+      deeds.forEach(item => {
+        if (item.status === 'Delivered') d++;
+        else if (item.status === 'Received at Office') r++;
+        else p++;
+      });
+      document.getElementById('statFieldTotal').textContent = deeds.length;
+      document.getElementById('statFieldPending').textContent = p;
+      document.getElementById('statFieldReceived').textContent = r;
+      document.getElementById('statFieldDelivered').textContent = d;
+
+      const desktopTbody = document.getElementById('fieldDesktopTableBody');
+      const mobileContainer = document.getElementById('fieldMobileCardContainer');
+      document.getElementById('fieldResultCount').textContent = `${deeds.length} টি রেকর্ড পাওয়া গেছে`;
+
+      if (deeds.length === 0) {
+        desktopTbody.innerHTML = `<tr><td colspan="7" class="text-center p-8 text-slate-400">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>`;
+        mobileContainer.innerHTML = `<div class="p-8 text-center text-slate-400">কোনো রেকর্ড পাওয়া যায়নি।</div>`;
+        return;
+      }
+
+      desktopTbody.innerHTML = deeds.map(item => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-3.5 font-mono text-xs">${item.refNo || 'N/A'}</td>
+          <td class="p-3.5 font-bold text-indigo-700">${item.policyNo}</td>
+          <td class="p-3.5 font-medium">${item.policyHolderName}</td>
+          <td class="p-3.5"><div>${item.bmName}</div><div class="text-xs text-slate-400 font-mono">${item.bmCode}</div></td>
+          <td class="p-3.5 text-xs">${item.incomingDate || 'N/A'}</td>
+          <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${item.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${item.status}</span></td>
+          <td class="p-3.5 text-xs">${item.deliveredTo ? `<b>${item.deliveredTo}</b> (${item.deliveryDate})` : 'অফিসে সংরক্ষিত'}</td>
+        </tr>
+      `).join('');
+
+      mobileContainer.innerHTML = deeds.map(item => `
+        <div class="p-4 space-y-2">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs font-mono text-slate-400">${item.refNo}</span>
+              <div class="text-base font-bold text-slate-800">${item.policyNo}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-xs font-bold ${item.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${item.status}</span>
+          </div>
+          <div class="text-sm font-semibold">${item.policyHolderName}</div>
+          <div class="text-xs text-slate-500">ID: ${item.bmName} (${item.bmCode}) | তারিখ: ${item.incomingDate || 'N/A'}</div>
+          ${item.deliveredTo ? `<div class="mt-2 text-xs bg-emerald-50 p-2 rounded border border-emerald-100 font-semibold text-emerald-800">গ্রহীতা: ${item.deliveredTo} (${item.deliveryDate})</div>` : ''}
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
