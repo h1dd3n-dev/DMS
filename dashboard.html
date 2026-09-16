@@ -111,9 +111,10 @@
     <!-- IT Officer View -->
     <div id="viewITOfficer" class="hidden space-y-6">
       <div class="flex flex-wrap gap-3 items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-wrap">
           <button id="tabITDeedsBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition">রেকর্ড তালিকা ও ট্র্যাকিং</button>
           <button id="tabITUsersBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">ফিল্ড ইউজার ম্যানেজমেন্ট</button>
+          <button id="tabITCouriersBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚚 কুরিয়ার ট্র্যাকিং</button>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <button id="exportBackupBtn" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">📥 অফলাইন ব্যাকআপ (CSV)</button>
@@ -124,8 +125,8 @@
 
       <section id="itDeedsSection" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <input type="text" id="itSearchPolicy" placeholder="রেকর্ড আইডি দিয়ে খুঁজুন..." class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
-          <input type="text" id="itSearchBM" placeholder="কোঅর্ডিনেটর কোড দিয়ে খুঁজুন..." class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+          <input type="text" id="itSearchPolicy" placeholder="রেকর্ড আইডি দিয়ে খুঁজুন..." class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+          <input type="text" id="itSearchBM" placeholder="কোঅর্ডিনেটর কোড দিয়ে খুঁজুন..." class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
           <select id="itFilterStatus" class="px-3.5 py-2 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
             <option value="">সব স্ট্যাটাস</option>
             <option value="Pending">Pending</option>
@@ -178,7 +179,146 @@
           </table>
         </div>
       </section>
+
+<!-- Modal: Courier Entry -->
+<div id="courierModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start md:items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-4 my-6">
+    <div class="flex justify-between items-center border-b pb-3">
+      <h3 id="courierModalTitle" class="text-lg font-bold text-slate-800">নতুন কুরিয়ার এন্ট্রি</h3>
+      <button id="closeCourierModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
     </div>
+    <form id="courierForm" class="space-y-4">
+      <input type="hidden" id="courierEditId">
+
+      <!-- Row 1: Policy No + Name -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            পলিসি নং <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="courierPolicyNo" required placeholder="উদা: 010110177896-9"
+                 class="w-full px-3 py-2 border rounded-lg text-sm font-mono focus:ring-2 focus:ring-slate-700 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            নাম <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="courierName" required placeholder="উদা: মো: শাহিদুল ইসলাম"
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- Items checkboxes -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-2">কি পাঠানো হচ্ছে</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 border border-slate-200 rounded-xl p-3">
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="সার্ভেয়ার এর আবেদন + দলিল" class="w-4 h-4 accent-indigo-600">
+            <span>সার্ভেয়ার এর আবেদন + দলিল</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="নির্বাহী রশিদ + ব্যাংক একাউন্ট" class="w-4 h-4 accent-indigo-600">
+            <span>নির্বাহী রশিদ + ব্যাংক একাউন্ট</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="SB (ব্যাংক স্টেটমেন্ট+নির্বাহী রশিদ)" class="w-4 h-4 accent-indigo-600">
+            <span>SB (ব্যাংক স্টেটমেন্ট+নির্বাহী রশিদ)</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="ইজরিন (PUR)" class="w-4 h-4 accent-indigo-600">
+            <span>ইজরিন (PUR)</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="C-XR (X-Ray রিপোর্ট)" class="w-4 h-4 accent-indigo-600">
+            <span>C-XR (X-Ray রিপোর্ট)</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="ছবি" class="w-4 h-4 accent-indigo-600">
+            <span>ছবি</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="বয়স প্রমাণপত্র" class="w-4 h-4 accent-indigo-600">
+            <span>বয়স প্রমাণপত্র</span>
+          </label>
+          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+            <input type="checkbox" name="courierItems" value="ম্যাচিউরিটি আবেদন + দলিল" class="w-4 h-4 accent-indigo-600">
+            <span>ম্যাচিউরিটি আবেদন + দলিল</span>
+          </label>
+        </div>
+        <div class="mt-2">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Other (ঐচ্ছিক)</label>
+          <input type="text" id="courierOtherItems" placeholder="অন্যান্য যা পাঠানো হচ্ছে..."
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- Courier details -->
+      <div class="border-t pt-3">
+        <div class="text-xs font-bold text-slate-500 uppercase mb-2">কুরিয়ার তথ্য</div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার তারিখ</label>
+            <input type="date" id="courierDate" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার কোম্পানি</label>
+            <select id="courierCompany" required class="w-full px-3 py-2 border rounded-lg text-sm">
+              <option value="">-- নির্বাচন করুন --</option>
+              <option value="Sundarban Courier">Sundarban Courier</option>
+              <option value="SA Paribahan">SA Paribahan</option>
+              <option value="RedX">RedX</option>
+              <option value="Pathao Courier">Pathao Courier</option>
+              <option value="Steadfast">Steadfast</option>
+              <option value="Paperfly">Paperfly</option>
+              <option value="Karatoa Courier">Karatoa Courier</option>
+              <option value="Other">অন্যান্য</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ট্র্যাকিং / কনসাইনমেন্ট নম্বর</label>
+          <input type="text" id="courierTrackingNo" required placeholder="উদা: SND-98451230"
+                 class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">মোবাইল নম্বর</label>
+            <input type="text" id="courierPhone" placeholder="01XXXXXXXXX" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">স্ট্যাটাস</label>
+            <select id="courierStatus" class="w-full px-3 py-2 border rounded-lg text-sm font-semibold">
+              <option value="Sent">Sent (প্রেরিত)</option>
+              <option value="In Transit">In Transit (পথে)</option>
+              <option value="Delivered">Delivered (বিতরণ)</option>
+              <option value="Returned">Returned (ফেরত)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">প্রাপকের ঠিকানা / অফিস</label>
+          <input type="text" id="courierAddress" placeholder="উদা: প্রধান কার্যালয়, ঢাকা"
+                 class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+
+        <div class="mt-3">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">নোট / বিবরণ</label>
+          <textarea id="courierNotes" rows="2" placeholder="ঐচ্ছিক"
+                    class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t">
+        <button type="button" id="cancelCourierModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
+        <button type="submit" class="px-5 py-2 text-sm bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg">সংরক্ষণ করুন</button>
+      </div>
+    </form>
+  </div>
+</div>
 
     <!-- Field User View -->
     <div id="viewField" class="hidden space-y-5">
@@ -203,7 +343,7 @@
 
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
         <div class="flex-1 w-full md:w-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="fieldSearchPolicy" placeholder="রেকর্ড আইডি বা নাম দিয়ে খুঁজুন..." class="w-full px-3.5 py-2 border rounded-lg text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+          <input type="text" id="fieldSearchPolicy" placeholder="রেকর্ড আইডি বা নাম দিয়ে খুঁজুন..." class="w-full px-3.5 py-2 border rounded-lg text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
           <select id="fieldFilterStatus" class="w-full px-3.5 py-2 border rounded-lg text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
             <option value="">সব স্ট্যাটাস</option>
             <option value="Received at Office">Received at Office</option>
@@ -217,7 +357,7 @@
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="px-4 py-3 border-b bg-slate-50 flex justify-between items-center">
           <h2 class="text-sm font-bold text-slate-800">রেকর্ডসমূহ ও ট্র্যাকিং স্ট্যাটাস</h2>
-          <span class="text-xs text-slate-500" id="fieldResultCount">০ টি রেকর্ড পাওয়া গেছে</span>
+          <span class="text-xs text-slate-500" id="fieldResultCount">০ টি রেকর্ড পাওয়া গেছে</span>
         </div>
         <div class="hidden md:block overflow-x-auto">
           <table class="w-full text-left text-sm text-slate-700">
@@ -253,11 +393,11 @@
       </div>
       <form id="createITForm" class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">অফিসিয়াল ইমেইল</label>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">অফিসিয়াল ইমেইল</label>
           <input type="email" id="adminITEmail" required placeholder="user.office@portal.internal" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">ডিফল্ট পাসওয়ার্ড</label>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">ডিফল্ট পাসওয়ার্ড</label>
           <input type="password" id="adminITPassword" required minlength="6" placeholder="••••••••" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
         </div>
         <div>
@@ -335,7 +475,7 @@
         </div>
         <div id="deliveryFields" class="space-y-3 hidden">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">কাকে বুঝিয়ে দেওয়া হলো (নাম/কোড)</label>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কাকে বুঝিয়ে দেওয়া হলো (নাম/কোড)</label>
             <input type="text" id="deliveredTo" placeholder="উদা: আব্দুল্লাহ (CRD-1234)" class="w-full px-3 py-2 border rounded-lg text-sm">
           </div>
           <div>
@@ -364,7 +504,7 @@
           <input type="email" id="newUserEmail" required placeholder="field.user@portal.internal" class="w-full px-3 py-2 border rounded-lg text-sm">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
           <input type="password" id="newUserPassword" required minlength="6" placeholder="••••••••" class="w-full px-3 py-2 border rounded-lg text-sm">
         </div>
         <div>
@@ -402,7 +542,7 @@
 
       <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div class="text-xs text-slate-600">
-          <span class="font-bold text-slate-800">স্টেপ ১:</span> নিচের বাটনে ক্লিক করে সাধারণ প্রম্পটটি কপি করুন এবং AI চ্যাটে ছবির সাথে পাঠিয়ে দিন।
+          <span class="font-bold text-slate-800">স্টেপ ১:</span> নিচের বাটনে ক্লিক করে সাধারণ প্রম্পটটি কপি করুন এবং AI চ্যাটে ছবির সাথে পাঠিয়ে দিন।
         </div>
         <button id="copyPromptBtn" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg shadow transition">
           📋 AI প্রম্পট কপি করুন
@@ -410,7 +550,7 @@
       </div>
 
       <div id="jsonInputContainer" class="space-y-2 flex-1 flex flex-col">
-        <label class="block text-xs font-semibold text-slate-700">AI থেকে পাওয়া JSON কোডটি নিচে পেস্ট করুন:</label>
+        <label class="block text-xs font-semibold text-slate-700">AI থেকে পাওয়া JSON কোডটি নিচে পেস্ট করুন:</label>
         <textarea id="bulkJsonInput" placeholder='[\n  {\n    "refNo": "REF-02860/2026",\n    "policyNo": "010110177896-9",\n    "policyHolderName": "MD SHAHIDUL ISLAM",\n    "bmCode": "10029061",\n    "bmName": "MD. ALAMGIR HOSSAIN",\n    "incomingDate": "2026-07-22"\n  }\n]' class="w-full flex-1 p-3 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-700 focus:outline-none min-h-[160px]"></textarea>
         <div class="flex justify-end gap-2 pt-2">
           <button id="parseJsonBtn" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow">
@@ -421,8 +561,8 @@
 
       <div id="previewContainer" class="hidden space-y-3 flex-1 overflow-hidden flex flex-col">
         <div class="flex justify-between items-center bg-indigo-50 p-2.5 rounded-lg border border-indigo-200">
-          <span class="text-xs font-bold text-indigo-900" id="previewCountBadge">মোট ০ টি রেকর্ড শনাক্ত হয়েছে</span>
-          <button id="backToEditJsonBtn" class="text-xs text-indigo-700 underline font-semibold">JSON পুনরায় সংশোধন করুন</button>
+          <span class="text-xs font-bold text-indigo-900" id="previewCountBadge">মোট ০ টি রেকর্ড শনাক্ত হয়েছে</span>
+          <button id="backToEditJsonBtn" class="text-xs text-indigo-700 underline font-semibold">JSON পুনরায় সংশোধন করুন</button>
         </div>
 
         <div class="border border-slate-200 rounded-lg overflow-y-auto flex-1 max-h-[300px]">
@@ -448,6 +588,87 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: Courier Entry -->
+  <div id="courierModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start md:items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 my-6">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="courierModalTitle" class="text-lg font-bold text-slate-800">নতুন কুরিয়ার এন্ট্রি</h3>
+        <button id="closeCourierModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+      </div>
+      <form id="courierForm" class="space-y-3">
+        <input type="hidden" id="courierEditId">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার তারিখ</label>
+            <input type="date" id="courierDate" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার কোম্পানি</label>
+            <select id="courierCompany" required class="w-full px-3 py-2 border rounded-lg text-sm">
+              <option value="">-- নির্বাচন করুন --</option>
+              <option value="Sundarban Courier">Sundarban Courier</option>
+              <option value="SA Paribahan">SA Paribahan</option>
+              <option value="RedX">RedX</option>
+              <option value="Pathao Courier">Pathao Courier</option>
+              <option value="Steadfast">Steadfast</option>
+              <option value="Paperfly">Paperfly</option>
+              <option value="Karatoa Courier">Karatoa Courier</option>
+              <option value="Other">অন্যান্য</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ট্র্যাকিং / কনসাইনমেন্ট নম্বর</label>
+          <input type="text" id="courierTrackingNo" required placeholder="উদা: SND-98451230" class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">প্রাপকের নাম</label>
+            <input type="text" id="courierRecipient" required placeholder="উদা: মো: রহিম উদ্দিন" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">মোবাইল নম্বর</label>
+            <input type="text" id="courierPhone" placeholder="01XXXXXXXXX" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">প্রাপকের ঠিকানা / অফিস</label>
+          <input type="text" id="courierAddress" required placeholder="উদা: প্রধান কার্যালয়, ঢাকা" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">সংশ্লিষ্ট দলিল / পলিসি নং</label>
+            <input type="text" id="courierPolicyNo" placeholder="ঐচ্ছিক" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">স্ট্যাটাস</label>
+            <select id="courierStatus" class="w-full px-3 py-2 border rounded-lg text-sm font-semibold">
+              <option value="Sent">Sent (প্রেরিত)</option>
+              <option value="In Transit">In Transit (পথে)</option>
+              <option value="Delivered">Delivered (বিতরণ)</option>
+              <option value="Returned">Returned (ফেরত)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">নোট / বিবরণ</label>
+          <textarea id="courierNotes" rows="2" placeholder="ঐচ্ছিক" class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelCourierModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
+          <button type="submit" class="px-5 py-2 text-sm bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg">সংরক্ষণ করুন</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -577,7 +798,7 @@
             createdAt: serverTimestamp()
           });
 
-          alert("অফিসার অ্যাকাউন্ট তৈরি হয়েছে!");
+          alert("অফিসার অ্যাকাউন্ট তৈরি হয়েছে!");
           document.getElementById('createITForm').reset();
           itModal.classList.add('hidden');
         } catch (err) {
@@ -647,10 +868,10 @@
     }
 
     window.adminSetPasswordDirect = async (uid, email) => {
-      const newPass = prompt(`'${email}' এর জন্য নতুন পাসওয়ার্ড লিখুন:`);
-      if (!newPass || newPass.length < 6) return alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
+      const newPass = prompt(`'${email}' এর জন্য নতুন পাসওয়ার্ড লিখুন:`);
+      if (!newPass || newPass.length < 6) return alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
       await updateDoc(doc(db, 'users', uid), { pendingPassword: newPass, lastPasswordResetAt: new Date().toISOString() });
-      alert(`পাসওয়ার্ড সেট হয়েছে!`);
+      alert(`পাসওয়ার্ড সেট হয়েছে!`);
     };
 
     window.adminModifyUser = async (uid, role, office, bm) => {
@@ -666,7 +887,7 @@
     window.adminDeleteUser = async (uid, email) => {
       if (confirm(`আপনি কি নিশ্চিতভাবে ${email} ডিলিট করতে চান?`)) {
         await deleteDoc(doc(db, 'users', uid));
-        alert("ইউজার ডিলিট করা হয়েছে।");
+        alert("ইউজার ডিলিট করা হয়েছে।");
       }
     };
 
@@ -805,7 +1026,7 @@
     function renderITDeeds(deeds) {
       const tbody = document.getElementById('itDeedsTableBody');
       if (deeds.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-slate-500">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-slate-500">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>`;
         return;
       }
 
@@ -883,7 +1104,7 @@
 
       if (newPolicy && newHolder) {
         await updateDoc(doc(db, 'deeds', id), { policyNo: newPolicy, policyHolderName: newHolder, bmCode: newBM, bmName: newBMName });
-        alert("আপডেট হয়েছে!");
+        alert("আপডেট হয়েছে!");
       }
     };
 
@@ -892,10 +1113,10 @@
     };
 
     window.changeFieldPassword = async (uid, email) => {
-      const newPass = prompt(`'${email}' এর নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর):`);
+      const newPass = prompt(`'${email}' এর নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর):`);
       if (!newPass || newPass.length < 6) return alert("কমপক্ষে ৬ অক্ষর দিন!");
       await updateDoc(doc(db, 'users', uid), { pendingPassword: newPass, lastPasswordResetAt: new Date().toISOString() });
-      alert("পাসওয়ার্ড সেট হয়েছে!");
+      alert("পাসওয়ার্ড সেট হয়েছে!");
     };
 
     window.editFieldInfo = async (uid, role, bmCode) => {
@@ -910,7 +1131,7 @@
     window.deleteFieldAccount = async (uid, email) => {
       if (confirm(`নিশ্চিতভাবে ${email} ডিলিট করতে চান?`)) {
         await deleteDoc(doc(db, 'users', uid));
-        alert("ডিলিট হয়েছে।");
+        alert("ডিলিট হয়েছে।");
       }
     };
 
@@ -948,7 +1169,7 @@
     "incomingDate": "2026-07-22"
   }
 ]`;
-        navigator.clipboard.writeText(promptText).then(() => alert("প্রম্পট কপি হয়েছে!"));
+        navigator.clipboard.writeText(promptText).then(() => alert("প্রম্পট কপি হয়েছে!"));
       };
 
       document.getElementById('parseJsonBtn').onclick = () => {
@@ -956,7 +1177,7 @@
         if (!raw) return alert("JSON পেস্ট করুন!");
         try {
           parsedBulkDeeds = JSON.parse(raw);
-          document.getElementById('previewCountBadge').textContent = `মোট ${parsedBulkDeeds.length} টি রেকর্ড পাওয়া গেছে`;
+          document.getElementById('previewCountBadge').textContent = `মোট ${parsedBulkDeeds.length} টি রেকর্ড পাওয়া গেছে`;
           previewTableBody.innerHTML = parsedBulkDeeds.map(d => `
             <tr class="hover:bg-slate-50">
               <td class="p-2.5 font-mono">${d.refNo || 'REF-AUTO'}</td>
@@ -997,7 +1218,7 @@
         });
 
         await batch.commit();
-        alert(`${parsedBulkDeeds.length} টি রেকর্ড সেভ করা হয়েছে!`);
+        alert(`${parsedBulkDeeds.length} টি রেকর্ড সেভ করা হয়েছে!`);
         bulkModal.classList.add('hidden');
       };
 
@@ -1085,11 +1306,11 @@
 
       const desktopTbody = document.getElementById('fieldDesktopTableBody');
       const mobileContainer = document.getElementById('fieldMobileCardContainer');
-      document.getElementById('fieldResultCount').textContent = `${deeds.length} টি রেকর্ড পাওয়া গেছে`;
+      document.getElementById('fieldResultCount').textContent = `${deeds.length} টি রেকর্ড পাওয়া গেছে`;
 
       if (deeds.length === 0) {
-        desktopTbody.innerHTML = `<tr><td colspan="7" class="text-center p-8 text-slate-400">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>`;
-        mobileContainer.innerHTML = `<div class="p-8 text-center text-slate-400">কোনো রেকর্ড পাওয়া যায়নি।</div>`;
+        desktopTbody.innerHTML = `<tr><td colspan="7" class="text-center p-8 text-slate-400">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>`;
+        mobileContainer.innerHTML = `<div class="p-8 text-center text-slate-400">কোনো রেকর্ড পাওয়া যায়নি।</div>`;
         return;
       }
 
@@ -1121,5 +1342,8 @@
       `).join('');
     }
   </script>
+
+  <!-- Courier module (loaded after the main dashboard script) -->
+  <script type="module" src="courier.js"></script>
 </body>
 </html>
