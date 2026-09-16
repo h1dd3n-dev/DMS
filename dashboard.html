@@ -114,7 +114,7 @@
         <div class="flex gap-2 flex-wrap">
           <button id="tabITDeedsBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition">রেকর্ড তালিকা ও ট্র্যাকিং</button>
           <button id="tabITUsersBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">ফিল্ড ইউজার ম্যানেজমেন্ট</button>
-          <button id="tabITCouriersBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚚 কুরিয়ার ট্র্যাকিং</button>
+          <button id="tabITCouriersBtn" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚚 কুরিয়ার এন্ট্রি</button>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <button id="exportBackupBtn" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">📥 অফলাইন ব্যাকআপ (CSV)</button>
@@ -180,145 +180,42 @@
         </div>
       </section>
 
-<!-- Modal: Courier Entry -->
-<div id="courierModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start md:items-center justify-center p-4 overflow-y-auto">
-  <div class="bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-4 my-6">
-    <div class="flex justify-between items-center border-b pb-3">
-      <h3 id="courierModalTitle" class="text-lg font-bold text-slate-800">নতুন কুরিয়ার এন্ট্রি</h3>
-      <button id="closeCourierModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+      <!-- ===================== Courier Section ===================== -->
+      <section id="itCouriersSection" class="hidden space-y-4">
+
+        <!-- Action Bar -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-3 items-stretch lg:items-center">
+          <div class="flex-1">
+            <input type="text" id="courierSearchInput" placeholder="পলিসি নং / নাম / আইটেম / প্রেরক দিয়ে খুঁজুন..."
+                   class="w-full px-3.5 py-2 border rounded-lg text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-slate-700 focus:outline-none">
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="courierResetFilters" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 border rounded-lg text-sm font-semibold transition">রিসেট</button>
+            <button id="courierExportBtn" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">📥 CSV ব্যাকআপ</button>
+            <button id="openCourierModalBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg shadow transition">+ নতুন কুরিয়ার এন্ট্রি</button>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-700">
+            <thead class="bg-slate-100 text-slate-800 font-semibold border-b">
+              <tr>
+                <th class="p-3">তারিখ</th>
+                <th class="p-3">নাম</th>
+                <th class="p-3">পলিসি নং</th>
+                <th class="p-3">কি পাঠানো হচ্ছে</th>
+                <th class="p-3">কে পাঠাচ্ছে</th>
+                <th class="p-3 text-center">অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="courierTableBody" class="divide-y divide-slate-200">
+              <tr><td colspan="6" class="text-center p-6 text-slate-500">তথ্য লোড করা হচ্ছে...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
-    <form id="courierForm" class="space-y-4">
-      <input type="hidden" id="courierEditId">
-
-      <!-- Row 1: Policy No + Name -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">
-            পলিসি নং <span class="text-red-500">*</span>
-          </label>
-          <input type="text" id="courierPolicyNo" required placeholder="উদা: 010110177896-9"
-                 class="w-full px-3 py-2 border rounded-lg text-sm font-mono focus:ring-2 focus:ring-slate-700 focus:outline-none">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">
-            নাম <span class="text-red-500">*</span>
-          </label>
-          <input type="text" id="courierName" required placeholder="উদা: মো: শাহিদুল ইসলাম"
-                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
-        </div>
-      </div>
-
-      <!-- Items checkboxes -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-2">কি পাঠানো হচ্ছে</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="সার্ভেয়ার এর আবেদন + দলিল" class="w-4 h-4 accent-indigo-600">
-            <span>সার্ভেয়ার এর আবেদন + দলিল</span>
-          </label>
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="নির্বাহী রশিদ + ব্যাংক একাউন্ট" class="w-4 h-4 accent-indigo-600">
-            <span>নির্বাহী রশিদ + ব্যাংক একাউন্ট</span>
-          </label>
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="SB (ব্যাংক স্টেটমেন্ট+নির্বাহী রশিদ)" class="w-4 h-4 accent-indigo-600">
-            <span>SB (ব্যাংক স্টেটমেন্ট+নির্বাহী রশিদ)</span>
-          </label>
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="ইজরিন (PUR)" class="w-4 h-4 accent-indigo-600">
-            <span>ইজরিন (PUR)</span>
-          </label>
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="C-XR (X-Ray রিপোর্ট)" class="w-4 h-4 accent-indigo-600">
-            <span>C-XR (X-Ray রিপোর্ট)</span>
-          </label>
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="ছবি" class="w-4 h-4 accent-indigo-600">
-            <span>ছবি</span>
-          </label>
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="বয়স প্রমাণপত্র" class="w-4 h-4 accent-indigo-600">
-            <span>বয়স প্রমাণপত্র</span>
-          </label>
-          <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
-            <input type="checkbox" name="courierItems" value="ম্যাচিউরিটি আবেদন + দলিল" class="w-4 h-4 accent-indigo-600">
-            <span>ম্যাচিউরিটি আবেদন + দলিল</span>
-          </label>
-        </div>
-        <div class="mt-2">
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Other (ঐচ্ছিক)</label>
-          <input type="text" id="courierOtherItems" placeholder="অন্যান্য যা পাঠানো হচ্ছে..."
-                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
-        </div>
-      </div>
-
-      <!-- Courier details -->
-      <div class="border-t pt-3">
-        <div class="text-xs font-bold text-slate-500 uppercase mb-2">কুরিয়ার তথ্য</div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার তারিখ</label>
-            <input type="date" id="courierDate" required class="w-full px-3 py-2 border rounded-lg text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার কোম্পানি</label>
-            <select id="courierCompany" required class="w-full px-3 py-2 border rounded-lg text-sm">
-              <option value="">-- নির্বাচন করুন --</option>
-              <option value="Sundarban Courier">Sundarban Courier</option>
-              <option value="SA Paribahan">SA Paribahan</option>
-              <option value="RedX">RedX</option>
-              <option value="Pathao Courier">Pathao Courier</option>
-              <option value="Steadfast">Steadfast</option>
-              <option value="Paperfly">Paperfly</option>
-              <option value="Karatoa Courier">Karatoa Courier</option>
-              <option value="Other">অন্যান্য</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="mt-3">
-          <label class="block text-xs font-semibold text-slate-600 mb-1">ট্র্যাকিং / কনসাইনমেন্ট নম্বর</label>
-          <input type="text" id="courierTrackingNo" required placeholder="উদা: SND-98451230"
-                 class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">মোবাইল নম্বর</label>
-            <input type="text" id="courierPhone" placeholder="01XXXXXXXXX" class="w-full px-3 py-2 border rounded-lg text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">স্ট্যাটাস</label>
-            <select id="courierStatus" class="w-full px-3 py-2 border rounded-lg text-sm font-semibold">
-              <option value="Sent">Sent (প্রেরিত)</option>
-              <option value="In Transit">In Transit (পথে)</option>
-              <option value="Delivered">Delivered (বিতরণ)</option>
-              <option value="Returned">Returned (ফেরত)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="mt-3">
-          <label class="block text-xs font-semibold text-slate-600 mb-1">প্রাপকের ঠিকানা / অফিস</label>
-          <input type="text" id="courierAddress" placeholder="উদা: প্রধান কার্যালয়, ঢাকা"
-                 class="w-full px-3 py-2 border rounded-lg text-sm">
-        </div>
-
-        <div class="mt-3">
-          <label class="block text-xs font-semibold text-slate-600 mb-1">নোট / বিবরণ</label>
-          <textarea id="courierNotes" rows="2" placeholder="ঐচ্ছিক"
-                    class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-2 pt-2 border-t">
-        <button type="button" id="cancelCourierModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
-        <button type="submit" class="px-5 py-2 text-sm bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg">সংরক্ষণ করুন</button>
-      </div>
-    </form>
-  </div>
-</div>
 
     <!-- Field User View -->
     <div id="viewField" class="hidden space-y-5">
@@ -591,80 +488,93 @@
     </div>
   </div>
 
-  <!-- Modal: Courier Entry -->
+  <!-- Modal: Courier Entry (Simplified) -->
   <div id="courierModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-start md:items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 my-6">
+    <div class="bg-white rounded-2xl w-full max-w-xl p-6 shadow-2xl space-y-4 my-6">
       <div class="flex justify-between items-center border-b pb-3">
         <h3 id="courierModalTitle" class="text-lg font-bold text-slate-800">নতুন কুরিয়ার এন্ট্রি</h3>
         <button id="closeCourierModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
       </div>
-      <form id="courierForm" class="space-y-3">
+      <form id="courierForm" class="space-y-4">
         <input type="hidden" id="courierEditId">
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার তারিখ</label>
-            <input type="date" id="courierDate" required class="w-full px-3 py-2 border rounded-lg text-sm">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">
+              তারিখ <span class="text-red-500">*</span>
+            </label>
+            <input type="date" id="courierDate" required
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">কুরিয়ার কোম্পানি</label>
-            <select id="courierCompany" required class="w-full px-3 py-2 border rounded-lg text-sm">
-              <option value="">-- নির্বাচন করুন --</option>
-              <option value="Sundarban Courier">Sundarban Courier</option>
-              <option value="SA Paribahan">SA Paribahan</option>
-              <option value="RedX">RedX</option>
-              <option value="Pathao Courier">Pathao Courier</option>
-              <option value="Steadfast">Steadfast</option>
-              <option value="Paperfly">Paperfly</option>
-              <option value="Karatoa Courier">Karatoa Courier</option>
-              <option value="Other">অন্যান্য</option>
-            </select>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">
+              নাম <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="courierName" required placeholder="উদা: মো: শাহিদুল ইসলাম"
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">ট্র্যাকিং / কনসাইনমেন্ট নম্বর</label>
-          <input type="text" id="courierTrackingNo" required placeholder="উদা: SND-98451230" class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            পলিসি নং <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="courierPolicyNo" required placeholder="উদা: 010110177896-9"
+                 class="w-full px-3 py-2 border rounded-lg text-sm font-mono focus:ring-2 focus:ring-slate-700 focus:outline-none">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">প্রাপকের নাম</label>
-            <input type="text" id="courierRecipient" required placeholder="উদা: মো: রহিম উদ্দিন" class="w-full px-3 py-2 border rounded-lg text-sm">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-2">কি পাঠানো হচ্ছে</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 border border-slate-200 rounded-xl p-3">
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="সার্ভেয়ার এর আবেদন + দলিল" class="w-4 h-4 accent-indigo-600">
+              <span>সার্ভেয়ার এর আবেদন + দলিল</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="নির্বাহী রশিদ + ব্যাংক একাউন্ট" class="w-4 h-4 accent-indigo-600">
+              <span>নির্বাহী রশিদ + ব্যাংক একাউন্ট</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="SB (ব্যাংক স্টেটমেন্ট+নির্বাহী রশিদ)" class="w-4 h-4 accent-indigo-600">
+              <span>SB (ব্যাংক স্টেটমেন্ট+নির্বাহী রশিদ)</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="ইজরিন (PUR)" class="w-4 h-4 accent-indigo-600">
+              <span>ইজরিন (PUR)</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="C-XR (X-Ray রিপোর্ট)" class="w-4 h-4 accent-indigo-600">
+              <span>C-XR (X-Ray রিপোর্ট)</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="ছবি" class="w-4 h-4 accent-indigo-600">
+              <span>ছবি</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="বয়স প্রমাণপত্র" class="w-4 h-4 accent-indigo-600">
+              <span>বয়স প্রমাণপত্র</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer hover:bg-white px-2 py-1.5 rounded-lg transition">
+              <input type="checkbox" name="courierItems" value="ম্যাচিউরিটি আবেদন + দলিল" class="w-4 h-4 accent-indigo-600">
+              <span>ম্যাচিউরিটি আবেদন + দলিল</span>
+            </label>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">মোবাইল নম্বর</label>
-            <input type="text" id="courierPhone" placeholder="01XXXXXXXXX" class="w-full px-3 py-2 border rounded-lg text-sm">
+          <div class="mt-2">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Other (ঐচ্ছিক)</label>
+            <input type="text" id="courierOtherItems" placeholder="অন্যান্য যা পাঠানো হচ্ছে..."
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">প্রাপকের ঠিকানা / অফিস</label>
-          <input type="text" id="courierAddress" required placeholder="উদা: প্রধান কার্যালয়, ঢাকা" class="w-full px-3 py-2 border rounded-lg text-sm">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            কে পাঠাচ্ছে <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="courierSender" required placeholder="উদা: মো: আলমগীর হোসেন (CRD-6000260)"
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-slate-700 focus:outline-none">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">সংশ্লিষ্ট দলিল / পলিসি নং</label>
-            <input type="text" id="courierPolicyNo" placeholder="ঐচ্ছিক" class="w-full px-3 py-2 border rounded-lg text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">স্ট্যাটাস</label>
-            <select id="courierStatus" class="w-full px-3 py-2 border rounded-lg text-sm font-semibold">
-              <option value="Sent">Sent (প্রেরিত)</option>
-              <option value="In Transit">In Transit (পথে)</option>
-              <option value="Delivered">Delivered (বিতরণ)</option>
-              <option value="Returned">Returned (ফেরত)</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">নোট / বিবরণ</label>
-          <textarea id="courierNotes" rows="2" placeholder="ঐচ্ছিক" class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
-        </div>
-
-        <div class="flex justify-end gap-2 pt-2">
+        <div class="flex justify-end gap-2 pt-2 border-t">
           <button type="button" id="cancelCourierModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
           <button type="submit" class="px-5 py-2 text-sm bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg">সংরক্ষণ করুন</button>
         </div>
@@ -672,11 +582,11 @@
     </div>
   </div>
 
-  <!-- Modular Firebase Scripts -->
+  <!-- Firebase Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, onSnapshot, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, onSnapshot, writeBatch, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
@@ -696,14 +606,13 @@
     let itDeedsList = [];
     let fieldDeedsList = [];
     let parsedBulkDeeds = [];
+    let allCouriers = [];
+    let courierUnsub = null;
 
     document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => window.location.href = 'index.html');
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = 'index.html';
-        return;
-      }
+      if (!user) { window.location.href = 'index.html'; return; }
       try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (!userDoc.exists()) {
@@ -711,7 +620,6 @@
           window.location.href = 'index.html';
           return;
         }
-
         currentUser = { uid: user.uid, email: user.email, ...userDoc.data() };
         setupDashboardByRole(currentUser);
       } catch (err) {
@@ -731,14 +639,12 @@
         document.getElementById('appTitle').textContent = "Central Management Hub";
         document.getElementById('userBadge').textContent = user.email;
         document.getElementById('userBadge').classList.remove('hidden');
-
         document.getElementById('viewSuperAdmin').classList.remove('hidden');
         initSuperAdmin();
       } else if (role === 'it_officer') {
         document.getElementById('appTitle').textContent = "Record Audit & Dispatch";
         document.getElementById('userBadge').textContent = user.email;
         document.getElementById('userBadge').classList.remove('hidden');
-
         document.getElementById('viewITOfficer').classList.remove('hidden');
         initITOfficer();
       } else {
@@ -765,7 +671,6 @@
         tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white";
         tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700";
       };
-
       tabDeedsBtn.onclick = () => {
         deedsSection.classList.remove('hidden');
         usersSection.classList.add('hidden');
@@ -783,27 +688,19 @@
         const email = document.getElementById('adminITEmail').value.trim();
         const password = document.getElementById('adminITPassword').value;
         const branch = document.getElementById('adminITBranch').value.trim();
-
         try {
           const secApp = initializeApp(firebaseConfig, "AdminSecAuth_" + Date.now());
           const secAuth = getAuth(secApp);
           const cred = await createUserWithEmailAndPassword(secAuth, email, password);
-
           await setDoc(doc(db, 'users', cred.user.uid), {
-            uid: cred.user.uid,
-            email: email,
-            role: 'it_officer',
-            officeCode: branch,
-            currentAuthPass: password,
+            uid: cred.user.uid, email, role: 'it_officer',
+            officeCode: branch, currentAuthPass: password,
             createdAt: serverTimestamp()
           });
-
           alert("অফিসার অ্যাকাউন্ট তৈরি হয়েছে!");
           document.getElementById('createITForm').reset();
           itModal.classList.add('hidden');
-        } catch (err) {
-          alert("ত্রুটি: " + err.message);
-        }
+        } catch (err) { alert("ত্রুটি: " + err.message); }
       });
 
       onSnapshot(collection(db, 'users'), (snapshot) => {
@@ -814,7 +711,6 @@
           if (u.role === 'it_officer') itCount++;
           const isRoot = u.role === 'super_admin';
           const passPending = u.pendingPassword ? `<span class="text-xs bg-amber-900 text-amber-300 px-2 py-0.5 rounded font-mono">Pending: ${u.pendingPassword}</span>` : `<span class="text-xs text-slate-500">Active</span>`;
-
           return `
             <tr class="hover:bg-slate-800 transition">
               <td class="p-3 font-mono text-xs text-indigo-400 font-semibold">${u.email}</td>
@@ -836,15 +732,11 @@
       });
 
       onSnapshot(collection(db, 'deeds'), (snapshot) => {
-        let officeCount = 0;
-        let deliveredCount = 0;
+        let officeCount = 0, deliveredCount = 0;
         const tbody = document.getElementById('adminGlobalDeedsBody');
-
         tbody.innerHTML = snapshot.docs.map(docSnap => {
           const d = docSnap.data();
-          if (d.status === 'Delivered') deliveredCount++;
-          else officeCount++;
-
+          if (d.status === 'Delivered') deliveredCount++; else officeCount++;
           return `
             <tr class="hover:bg-slate-800 transition text-xs">
               <td class="p-3 font-semibold text-slate-200">${d.branchName || 'N/A'}</td>
@@ -860,7 +752,6 @@
             </tr>
           `;
         }).join('');
-
         document.getElementById('statAdminTotalDeeds').textContent = snapshot.docs.length;
         document.getElementById('statAdminOfficeDeeds').textContent = officeCount;
         document.getElementById('statAdminDeliveredDeeds').textContent = deliveredCount;
@@ -897,24 +788,37 @@
       }
     };
 
+    /* ============================================================
+       IT Officer
+       ============================================================ */
     function initITOfficer() {
       const tabDeedsBtn = document.getElementById('tabITDeedsBtn');
       const tabUsersBtn = document.getElementById('tabITUsersBtn');
+      const tabCouriersBtn = document.getElementById('tabITCouriersBtn');
       const deedsSection = document.getElementById('itDeedsSection');
       const usersSection = document.getElementById('itUsersSection');
+      const couriersSection = document.getElementById('itCouriersSection');
+
+      const ACTIVE = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition";
+      const INACTIVE = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
 
       tabDeedsBtn.onclick = () => {
         deedsSection.classList.remove('hidden');
         usersSection.classList.add('hidden');
-        tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition";
-        tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+        couriersSection.classList.add('hidden');
+        tabDeedsBtn.className = ACTIVE; tabUsersBtn.className = INACTIVE; tabCouriersBtn.className = INACTIVE;
       };
-
       tabUsersBtn.onclick = () => {
         usersSection.classList.remove('hidden');
         deedsSection.classList.add('hidden');
-        tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white transition";
-        tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+        couriersSection.classList.add('hidden');
+        tabUsersBtn.className = ACTIVE; tabDeedsBtn.className = INACTIVE; tabCouriersBtn.className = INACTIVE;
+      };
+      tabCouriersBtn.onclick = () => {
+        couriersSection.classList.remove('hidden');
+        deedsSection.classList.add('hidden');
+        usersSection.classList.add('hidden');
+        tabCouriersBtn.className = ACTIVE; tabDeedsBtn.className = INACTIVE; tabUsersBtn.className = INACTIVE;
       };
 
       const deedModal = document.getElementById('deedModal');
@@ -933,8 +837,7 @@
       document.getElementById('deedForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         try {
-          const deedsColl = collection(db, 'deeds');
-          const newDocRef = doc(deedsColl);
+          const newDocRef = doc(collection(db, 'deeds'));
           await setDoc(newDocRef, {
             refNo: document.getElementById('itRefNo').value.trim(),
             policyNo: document.getElementById('itPolicyNo').value.trim(),
@@ -944,16 +847,13 @@
             branchName: currentUser.officeCode || 'Internal',
             status: 'Received at Office',
             incomingDate: document.getElementById('itIncomingDate').value,
-            deliveryDate: null,
-            deliveredTo: null,
+            deliveryDate: null, deliveredTo: null,
             itOfficerId: currentUser.uid,
             createdAt: serverTimestamp()
           });
           document.getElementById('deedForm').reset();
           deedModal.classList.add('hidden');
-        } catch (err) {
-          alert("ত্রুটি: " + err.message);
-        }
+        } catch (err) { alert("ত্রুটি: " + err.message); }
       });
 
       const deedsQuery = query(collection(db, 'deeds'), where('branchName', '==', currentUser.officeCode || 'Internal'));
@@ -969,29 +869,20 @@
         const password = document.getElementById('newUserPassword').value;
         const role = document.getElementById('newUserRole').value;
         const bmCode = document.getElementById('newUserBMCode').value.trim();
-
         try {
           const secApp = initializeApp(firebaseConfig, "ITSecAuth_" + Date.now());
           const secAuth = getAuth(secApp);
           const cred = await createUserWithEmailAndPassword(secAuth, email, password);
-
           await setDoc(doc(db, 'users', cred.user.uid), {
-            uid: cred.user.uid,
-            email: email,
-            role: role,
-            bmCode: bmCode,
+            uid: cred.user.uid, email, role, bmCode,
             officeCode: currentUser.officeCode || 'Internal',
-            createdBy: currentUser.uid,
-            currentAuthPass: password,
+            createdBy: currentUser.uid, currentAuthPass: password,
             createdAt: serverTimestamp()
           });
-
           alert("ফিল্ড ইউজার তৈরি সম্পন্ন!");
           document.getElementById('fieldUserForm').reset();
           userModal.classList.add('hidden');
-        } catch (err) {
-          alert("ত্রুটি: " + err.message);
-        }
+        } catch (err) { alert("ত্রুটি: " + err.message); }
       });
 
       const usersQuery = query(collection(db, 'users'), where('createdBy', '==', currentUser.uid));
@@ -1021,15 +912,177 @@
       });
 
       initBulkModal();
+      initCourierModule();
     }
 
+    /* ============================================================
+       COURIER (Simplified: তারিখ, নাম, পলিসি নং, কি পাঠানো হচ্ছে, কে পাঠাচ্ছে)
+       ============================================================ */
+    function initCourierModule() {
+      const modal = document.getElementById('courierModal');
+      const form  = document.getElementById('courierForm');
+
+      document.getElementById('openCourierModalBtn').onclick = () => {
+        document.getElementById('courierModalTitle').textContent = 'নতুন কুরিয়ার এন্ট্রি';
+        document.getElementById('courierEditId').value = '';
+        form.reset();
+        form.querySelectorAll('input[name="courierItems"]').forEach(cb => cb.checked = false);
+        document.getElementById('courierDate').value = new Date().toISOString().split('T')[0];
+        modal.classList.remove('hidden');
+      };
+
+      document.getElementById('closeCourierModal').onclick  = () => modal.classList.add('hidden');
+      document.getElementById('cancelCourierModal').onclick = () => modal.classList.add('hidden');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const editId = document.getElementById('courierEditId').value;
+        const items = Array.from(form.querySelectorAll('input[name="courierItems"]:checked')).map(cb => cb.value);
+        const otherText = (document.getElementById('courierOtherItems')?.value || '').trim();
+        if (otherText) items.push(otherText);
+
+        const payload = {
+          courierDate: document.getElementById('courierDate').value,
+          name:        document.getElementById('courierName').value.trim(),
+          policyNo:    document.getElementById('courierPolicyNo').value.trim(),
+          items:       items,
+          sender:      document.getElementById('courierSender').value.trim(),
+          itOfficerId: currentUser.uid,
+          itOfficerEmail: currentUser.email,
+          branchName:  currentUser.officeCode || 'Internal',
+          updatedAt:   serverTimestamp()
+        };
+
+        try {
+          if (editId) {
+            await updateDoc(doc(db, 'couriers', editId), payload);
+          } else {
+            payload.createdAt = serverTimestamp();
+            await addDoc(collection(db, 'couriers'), payload);
+          }
+          modal.classList.add('hidden');
+          form.reset();
+        } catch (err) { alert("ত্রুটি: " + err.message); }
+      });
+
+      window.editCourier = (id) => {
+        const c = allCouriers.find(x => x.id === id);
+        if (!c) return;
+        document.getElementById('courierModalTitle').textContent = 'কুরিয়ার এন্ট্রি সম্পাদনা';
+        document.getElementById('courierEditId').value    = id;
+        document.getElementById('courierDate').value      = c.courierDate || '';
+        document.getElementById('courierName').value      = c.name || '';
+        document.getElementById('courierPolicyNo').value  = c.policyNo || '';
+        document.getElementById('courierSender').value    = c.sender || '';
+        document.getElementById('courierOtherItems').value = '';
+
+        form.querySelectorAll('input[name="courierItems"]').forEach(cb => cb.checked = false);
+        const savedItems = Array.isArray(c.items) ? c.items : (c.items ? [c.items] : []);
+        const standardValues = Array.from(form.querySelectorAll('input[name="courierItems"]')).map(cb => cb.value);
+        savedItems.forEach(val => {
+          const cb = form.querySelector(`input[name="courierItems"][value="${val}"]`);
+          if (cb) cb.checked = true;
+        });
+        const custom = savedItems.filter(v => !standardValues.includes(v));
+        if (custom.length) document.getElementById('courierOtherItems').value = custom.join(', ');
+
+        modal.classList.remove('hidden');
+      };
+
+      window.deleteCourier = async (id) => {
+        if (!confirm('আপনি কি নিশ্চিতভাবে এই কুরিয়ার রেকর্ডটি মুছে ফেলতে চান?')) return;
+        await deleteDoc(doc(db, 'couriers', id));
+      };
+
+      const searchInput = document.getElementById('courierSearchInput');
+      const resetBtn    = document.getElementById('courierResetFilters');
+
+      const applyCourierFilter = () => {
+        const s = searchInput.value.toLowerCase().trim();
+        const filtered = allCouriers.filter(c => {
+          const itemsJoined = (Array.isArray(c.items) ? c.items.join(' ') : (c.items || '')).toLowerCase();
+          return !s ||
+            (c.policyNo || '').toLowerCase().includes(s) ||
+            (c.name || '').toLowerCase().includes(s) ||
+            (c.sender || '').toLowerCase().includes(s) ||
+            itemsJoined.includes(s);
+        });
+        renderCouriers(filtered);
+      };
+      searchInput.addEventListener('input', applyCourierFilter);
+      resetBtn.onclick = () => { searchInput.value = ''; renderCouriers(allCouriers); };
+
+      document.getElementById('courierExportBtn').onclick = () => {
+        if (!allCouriers.length) return alert("ব্যাকআপ নেওয়ার মতো কোনো কুরিয়ার নেই।");
+        const headers = "Date,Name,Policy No,Items,Sender";
+        const rows = allCouriers.map(c => [
+          `"${c.courierDate || ''}"`,
+          `"${c.name || ''}"`,
+          `"${c.policyNo || ''}"`,
+          `"${(Array.isArray(c.items) ? c.items.join(' | ') : (c.items || '')).replace(/"/g,'""')}"`,
+          `"${c.sender || ''}"`
+        ].join(','));
+        const csv = "data:text/csv;charset=utf-8,\uFEFF" + [headers, ...rows].join("\n");
+        const link = document.createElement("a");
+        link.setAttribute("href", encodeURI(csv));
+        link.setAttribute("download", `Courier_Backup_${currentUser.officeCode || 'Branch'}_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      };
+
+      loadCouriers();
+    }
+
+    function loadCouriers() {
+      if (courierUnsub) courierUnsub();
+      const office = currentUser.officeCode || 'Internal';
+      const q = query(collection(db, 'couriers'), where('branchName', '==', office));
+      courierUnsub = onSnapshot(q, (snap) => {
+        allCouriers = [];
+        snap.forEach(d => allCouriers.push({ id: d.id, ...d.data() }));
+        allCouriers.sort((a, b) => (b.courierDate || '').localeCompare(a.courierDate || ''));
+        renderCouriers(allCouriers);
+      }, (err) => console.error("Courier load error:", err));
+    }
+
+    function renderCouriers(list) {
+      const tbody = document.getElementById('courierTableBody');
+      if (!tbody) return;
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-slate-500">কোনো কুরিয়ার রেকর্ড পাওয়া যায়নি।</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(c => {
+        const itemsArr = Array.isArray(c.items) ? c.items : (c.items ? [c.items] : []);
+        const itemsHtml = itemsArr.length
+          ? itemsArr.map(x => `<span class="inline-block bg-indigo-50 text-indigo-700 border border-indigo-100 text-[11px] px-2 py-0.5 rounded mr-1 mb-1">${x}</span>`).join('')
+          : '<span class="text-slate-400 text-xs">—</span>';
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 text-xs whitespace-nowrap">${c.courierDate || 'N/A'}</td>
+            <td class="p-3 text-sm font-medium">${c.name || 'N/A'}</td>
+            <td class="p-3 font-mono text-xs font-bold text-slate-800">${c.policyNo || '—'}</td>
+            <td class="p-3 max-w-[360px]">${itemsHtml}</td>
+            <td class="p-3 text-sm">${c.sender || 'N/A'}</td>
+            <td class="p-3 text-center space-x-1 whitespace-nowrap">
+              <button onclick="editCourier('${c.id}')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded">এডিট</button>
+              <button onclick="deleteCourier('${c.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-800 px-2 py-1 rounded">ডিলিট</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /* ============================================================
+       IT Deeds rendering
+       ============================================================ */
     function renderITDeeds(deeds) {
       const tbody = document.getElementById('itDeedsTableBody');
       if (deeds.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-slate-500">কোনো রেকর্ড পাওয়া যায়নি।</td></tr>`;
         return;
       }
-
       tbody.innerHTML = deeds.map(deed => {
         const isOwner = deed.itOfficerId === currentUser.uid;
         let badge = deed.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : (deed.status === 'Received at Office' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800');
@@ -1058,16 +1111,13 @@
       const modal = document.getElementById('deliveryModal');
       const updateStatusSelect = document.getElementById('updateStatus');
       const deliveryFields = document.getElementById('deliveryFields');
-
       document.getElementById('editDeedId').value = id;
       updateStatusSelect.value = status;
       if (status === 'Delivered') {
         deliveryFields.classList.remove('hidden');
         document.getElementById('deliveredTo').value = deliveredTo;
         document.getElementById('deliveryDate').value = deliveryDate || new Date().toISOString().split('T')[0];
-      } else {
-        deliveryFields.classList.add('hidden');
-      }
+      } else deliveryFields.classList.add('hidden');
       modal.classList.remove('hidden');
     };
 
@@ -1076,9 +1126,7 @@
       if (e.target.value === 'Delivered') {
         deliveryFields.classList.remove('hidden');
         document.getElementById('deliveryDate').value = new Date().toISOString().split('T')[0];
-      } else {
-        deliveryFields.classList.add('hidden');
-      }
+      } else deliveryFields.classList.add('hidden');
     };
 
     document.getElementById('closeDeliveryModal').onclick = () => document.getElementById('deliveryModal').classList.add('hidden');
@@ -1101,7 +1149,6 @@
       const newHolder = prompt("নাম সংশোধন:", currentHolder);
       const newBM = prompt("কোঅর্ডিনেটর কোড:", currentBM);
       const newBMName = prompt("কোঅর্ডিনেটর নাম:", currentBMName);
-
       if (newPolicy && newHolder) {
         await updateDoc(doc(db, 'deeds', id), { policyNo: newPolicy, policyHolderName: newHolder, bmCode: newBM, bmName: newBMName });
         alert("আপডেট হয়েছে!");
@@ -1148,7 +1195,6 @@
         previewContainer.classList.add('hidden');
         bulkJsonInput.value = '';
       };
-
       document.getElementById('closeBulkModal').onclick = () => bulkModal.classList.add('hidden');
       document.getElementById('cancelPreviewBtn').onclick = () => bulkModal.classList.add('hidden');
       document.getElementById('backToEditJsonBtn').onclick = () => {
@@ -1157,7 +1203,7 @@
       };
 
       document.getElementById('copyPromptBtn').onclick = () => {
-        const promptText = `Extract all tabular records from this document into a strict JSON format. Do not include markdown code block syntax (like \`\`\`json), commentary, or extra text. Output only raw JSON array with objects using this exact schema:
+        const promptText = `Extract all tabular records from this document into a strict JSON format. Do not include markdown code block syntax, commentary, or extra text. Output only raw JSON array with objects using this exact schema:
 
 [
   {
@@ -1190,15 +1236,12 @@
           `).join('');
           jsonInputContainer.classList.add('hidden');
           previewContainer.classList.remove('hidden');
-        } catch (e) {
-          alert("ভুল JSON ফরম্যাট!");
-        }
+        } catch (e) { alert("ভুল JSON ফরম্যাট!"); }
       };
 
       document.getElementById('confirmBulkUploadBtn').onclick = async () => {
         const batch = writeBatch(db);
         const branch = currentUser.officeCode || 'Internal';
-
         parsedBulkDeeds.forEach(deed => {
           const ref = doc(collection(db, 'deeds'));
           batch.set(ref, {
@@ -1210,13 +1253,11 @@
             branchName: branch,
             status: 'Received at Office',
             incomingDate: deed.incomingDate || new Date().toISOString().split('T')[0],
-            deliveryDate: null,
-            deliveredTo: null,
+            deliveryDate: null, deliveredTo: null,
             itOfficerId: currentUser.uid,
             createdAt: serverTimestamp()
           });
         });
-
         await batch.commit();
         alert(`${parsedBulkDeeds.length} টি রেকর্ড সেভ করা হয়েছে!`);
         bulkModal.classList.add('hidden');
@@ -1230,14 +1271,11 @@
           `"${d.bmCode || ''}"`, `"${d.bmName || ''}"`, `"${d.branchName || ''}"`,
           `"${d.status || ''}"`, `"${d.incomingDate || ''}"`, `"${d.deliveryDate || ''}"`, `"${d.deliveredTo || ''}"`
         ].join(','));
-
         const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers, ...rows].join("\n");
         const link = document.createElement("a");
         link.setAttribute("href", encodeURI(csvContent));
         link.setAttribute("download", `Record_Backup_${currentUser.officeCode || 'Unit'}_${new Date().toISOString().split('T')[0]}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
       };
 
       const filterFunc = () => {
@@ -1270,7 +1308,6 @@
       } else {
         q = query(deedsRef, where('branchName', '==', currentUser.officeCode), where('bmCode', '==', currentUser.bmCode));
       }
-
       onSnapshot(q, (snapshot) => {
         fieldDeedsList = [];
         snapshot.forEach(docSnap => fieldDeedsList.push({ id: docSnap.id, ...docSnap.data() }));
@@ -1286,7 +1323,6 @@
         );
         renderFieldDeeds(filtered);
       };
-
       document.getElementById('fieldSearchPolicy').oninput = applyFilters;
       document.getElementById('fieldFilterStatus').onchange = applyFilters;
       document.getElementById('fieldRefreshBtn').onclick = () => renderFieldDeeds(fieldDeedsList);
@@ -1342,8 +1378,5 @@
       `).join('');
     }
   </script>
-
-  <!-- Courier module (loaded after the main dashboard script) -->
-  <script type="module" src="courier.js"></script>
 </body>
 </html>
