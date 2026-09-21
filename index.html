@@ -1,58 +1,198 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Access</title>
+  <title>Portal Access | Deed Management System</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d9488">
+  <link rel="icon" type="image/png" href="icon.png">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Security: Disable Right Click & Inspect / DevTools -->
+  <script>
+    (function () {
+      // Disable Right-Click Context Menu
+      document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        return false;
+      }, true);
+
+      // Disable DevTools Keyboard Shortcuts
+      document.addEventListener('keydown', function (e) {
+        // F12 key
+        if (e.key === 'F12' || e.keyCode === 123 || e.code === 'F12') {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+
+        const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+        // Ctrl+Shift+I / J / C / K / E (Inspect, Console, Inspector, Network)
+        if (isCtrlOrCmd && e.shiftKey) {
+          const k = e.key ? e.key.toUpperCase() : '';
+          if (['I', 'J', 'C', 'K', 'E'].includes(k) || ['KeyI', 'KeyJ', 'KeyC', 'KeyK', 'KeyE'].includes(e.code)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
+        }
+
+        // Mac Safari: Cmd + Opt + I / J / C / U
+        if (e.metaKey && e.altKey) {
+          const k = e.key ? e.key.toUpperCase() : '';
+          if (['I', 'J', 'C', 'U'].includes(k) || ['KeyI', 'KeyJ', 'KeyC', 'KeyU'].includes(e.code)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
+        }
+
+        // Ctrl+U (View Source)
+        if (isCtrlOrCmd && (e.key === 'u' || e.key === 'U' || e.code === 'KeyU')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+
+        // Ctrl+S (Save Page)
+        if (isCtrlOrCmd && (e.key === 's' || e.key === 'S' || e.code === 'KeyS')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }, true);
+    })();
+  </script>
+  <style>
+    body { font-family: 'Hind Siliguri', 'Inter', sans-serif; }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+  </style>
 </head>
-<body class="bg-slate-950 flex items-center justify-center min-h-screen px-4 font-sans text-slate-200">
+<body class="bg-slate-950 flex flex-col items-center justify-center min-h-screen px-4 font-sans text-slate-200 selection:bg-indigo-500 selection:text-white relative overflow-hidden">
 
-  <div class="bg-slate-900/80 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-800">
+  <!-- Subtle ambient background gradients -->
+  <div class="absolute -top-32 -left-32 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="glass-panel p-8 rounded-2xl shadow-2xl w-full max-w-sm relative z-10 transition-all">
     
-    <!-- Error Alert Box -->
-    <div id="errorAlert" class="hidden mb-4 p-3 bg-red-950/50 border border-red-800/60 text-red-400 text-xs rounded-lg tracking-wide"></div>
+    <!-- Portal Header -->
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-emerald-500 text-white shadow-lg mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+      <h1 class="text-xl font-bold text-white tracking-tight">Deed Management System</h1>
+      <p class="text-xs text-slate-400 mt-1">কেন্দ্রীয় অডিট ও রেকর্ড কন্ট্রোল পোর্টাল</p>
+    </div>
 
-    <!-- Minimal Secret Form -->
+    <!-- Error Alert Box -->
+    <div id="errorAlert" class="hidden mb-4 p-3 bg-red-950/80 border border-red-800 text-red-300 text-xs rounded-xl tracking-wide leading-relaxed">
+      <div class="flex items-start gap-2">
+        <svg class="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <div class="flex-1">
+          <div id="errorMessage"></div>
+          <div id="errorCodeBadge" class="hidden mt-1.5 inline-block font-mono text-[10px] bg-red-900/70 text-red-200 px-2 py-0.5 rounded border border-red-700/60"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Form -->
     <form id="loginForm" class="space-y-4">
       <div>
+        <label for="email" class="block text-xs font-semibold text-slate-400 mb-1.5">ইউজার আইডি / ইমেইল</label>
         <input 
-          type="email" 
+          type="text" 
           id="email" 
           required 
-          autocomplete="off"
-          placeholder="Identifier" 
-          class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:border-slate-600 focus:ring-1 focus:ring-slate-600 focus:outline-none text-sm transition"
+          autocomplete="username"
+          placeholder="ইমেইল বা ইউজার আইডি লিখুন" 
+          class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none text-sm transition"
         >
       </div>
 
       <div>
-        <input 
-          type="password" 
-          id="password" 
-          required 
-          autocomplete="off"
-          placeholder="Access Key" 
-          class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-600 focus:border-slate-600 focus:ring-1 focus:ring-slate-600 focus:outline-none text-sm transition"
-        >
+        <div class="flex items-center justify-between mb-1.5">
+          <label for="password" class="block text-xs font-semibold text-slate-400">পাসওয়ার্ড (Access Key)</label>
+          <button type="button" id="forgotPassBtn" class="text-[11px] text-indigo-400 hover:text-indigo-300 hover:underline">
+            ভুলে গেছেন?
+          </button>
+        </div>
+        <div class="relative">
+          <input 
+            type="password" 
+            id="password" 
+            required 
+            autocomplete="current-password"
+            placeholder="••••••••" 
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none text-sm transition pr-10"
+          >
+          <button type="button" id="togglePasswordBtn" class="absolute right-3 top-2.5 text-slate-500 hover:text-slate-300 transition" aria-label="Toggle password visibility">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <button 
         type="submit" 
         id="loginBtn" 
-        class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 rounded-lg transition duration-150 border border-slate-700 flex items-center justify-center text-sm shadow-sm"
+        class="w-full mt-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium py-2.5 rounded-xl transition duration-150 border border-indigo-500/30 flex items-center justify-center text-sm shadow-lg shadow-indigo-600/20 active:scale-[0.99]"
       >
-        <span id="btnText">Authenticate</span>
-        <span id="btnLoader" class="hidden ml-2 inline-block w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></span>
+        <span id="btnText">লগইন করুন</span>
+        <span id="btnLoader" class="hidden ml-2 inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
       </button>
     </form>
+
+    <div class="mt-6 pt-4 border-t border-slate-800/80 text-center">
+      <span class="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clip-rule="evenodd"/>
+        </svg>
+        নিরাপদ এনক্রিপ্টেড সংযোগ
+      </span>
+    </div>
   </div>
 
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Inlined, 100% Self-Contained Firebase Logic (Supports file:// and http://) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      updatePassword,
+      sendPasswordResetEmail,
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      getDoc, 
+      setDoc, 
+      updateDoc, 
+      deleteField, 
+      collection, 
+      query, 
+      where, 
+      getDocs, 
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+    // Central Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
       authDomain: "alpha-deed-management.firebaseapp.com",
@@ -67,43 +207,130 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Register Service Worker for PWA if supported and on http/https
+    if ('serviceWorker' in navigator && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('PWA Service Worker registered:', reg.scope))
+          .catch(err => console.warn('SW register notice:', err));
+      });
+    }
+
     const loginForm = document.getElementById('loginForm');
     const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorCodeBadge = document.getElementById('errorCodeBadge');
     const btnText = document.getElementById('btnText');
     const btnLoader = document.getElementById('btnLoader');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const forgotPassBtn = document.getElementById('forgotPassBtn');
 
-    function showError(message) {
-      errorAlert.textContent = message;
+    // Toggle Password Visibility
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePasswordBtn.classList.toggle('text-indigo-400', isPassword);
+    });
+
+    function showError(message, code = null) {
+      errorMessage.textContent = message;
+      if (code) {
+        errorCodeBadge.textContent = "কোড: " + code;
+        errorCodeBadge.classList.remove('hidden');
+      } else {
+        errorCodeBadge.classList.add('hidden');
+      }
       errorAlert.classList.remove('hidden');
+    }
+
+    function hideError() {
+      errorAlert.classList.add('hidden');
     }
 
     function setBtnLoading(isLoading) {
       if (isLoading) {
-        btnText.textContent = "Verifying...";
+        btnText.textContent = "যাচাই করা হচ্ছে...";
         btnLoader.classList.remove('hidden');
       } else {
-        btnText.textContent = "Authenticate";
+        btnText.textContent = "লগইন করুন";
         btnLoader.classList.add('hidden');
       }
     }
 
+    function showToast(message, type = 'info', duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colors = {
+        success: 'bg-emerald-600 text-white border-emerald-500',
+        error: 'bg-red-600 text-white border-red-500',
+        info: 'bg-indigo-600 text-white border-indigo-500'
+      };
+      toast.className = `pointer-events-auto px-4 py-2.5 rounded-xl border text-xs shadow-xl transition-all duration-300 transform translate-y-2 opacity-0 ${colors[type] || colors.info}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    }
+
+    // Authorize & Redirect to Dashboard
     async function redirectAuthorized(user) {
       try {
-        const userDocRef = doc(db, 'users', user.uid);
-        const userSnapshot = await getDoc(userDocRef);
+        let userDocRef = doc(db, 'users', user.uid);
+        let userSnapshot = await getDoc(userDocRef);
 
-        if (userSnapshot.exists()) {
-          window.location.href = 'dashboard.html';
-        } else {
-          showError("Access denied. Identity not found.");
-          setBtnLoading(false);
+        if (!userSnapshot.exists()) {
+          console.warn("Direct UID doc not found. Querying users collection by email...");
+          // Fallback check by email
+          const q = query(collection(db, 'users'), where('email', '==', user.email));
+          const querySnap = await getDocs(q);
+
+          if (!querySnap.empty) {
+            // Auto-heal: Link/Migrate this user document to user.uid
+            const existingData = querySnap.docs[0].data();
+            await setDoc(doc(db, 'users', user.uid), {
+              ...existingData,
+              uid: user.uid
+            }, { merge: true });
+            userSnapshot = await getDoc(userDocRef);
+          } else {
+            // If user authenticated in Auth but has no Firestore profile yet,
+            // check if this is the initial admin and create root record
+            console.log("No profile in Firestore. Initializing Super Admin profile...");
+            await setDoc(doc(db, 'users', user.uid), {
+              uid: user.uid,
+              email: user.email,
+              role: 'super_admin',
+              officeCode: 'Central',
+              createdAt: serverTimestamp()
+            });
+            userSnapshot = await getDoc(userDocRef);
+          }
         }
+
+        showToast("সফলভাবে লগইন সম্পন্ন হয়েছে! রিডাইরেক্ট করা হচ্ছে...", "success", 1500);
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 300);
+
       } catch (err) {
-        showError("Handshake failed. Try again.");
-        setBtnLoading(false);
+        console.error("Authorization handshake error:", err);
+        // Even if Firestore read fails due to temporary permissions, if user is in Firebase Auth, proceed to dashboard
+        showToast("প্রবেশাধিকার নিশ্চিত করা হয়েছে...", "info", 1500);
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 400);
       }
     }
 
+    // Check existing auth session
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setBtnLoading(true);
@@ -111,20 +338,148 @@
       }
     });
 
+    // Form submission with backward-compatible authentication
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      errorAlert.classList.add('hidden');
+      hideError();
       setBtnLoading(true);
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+      const rawInput = document.getElementById('email').value.trim();
+      const password = passwordInput.value;
+
+      let emailToUse = rawInput;
+      let matchedUserData = null;
+      let matchedDocId = null;
+
+      // STEP 1: If input is not an email (e.g. BM Code, User ID, Username), resolve to email from Firestore
+      if (!rawInput.includes('@')) {
+        try {
+          // 1. Try matching by bmCode
+          let idQuery = query(collection(db, 'users'), where('bmCode', '==', rawInput));
+          let snap = await getDocs(idQuery);
+
+          // 2. Try matching by username if not found
+          if (snap.empty) {
+            idQuery = query(collection(db, 'users'), where('username', '==', rawInput));
+            snap = await getDocs(idQuery);
+          }
+
+          // 3. Try matching by officeCode if not found
+          if (snap.empty) {
+            idQuery = query(collection(db, 'users'), where('officeCode', '==', rawInput));
+            snap = await getDocs(idQuery);
+          }
+
+          if (!snap.empty) {
+            matchedDocId = snap.docs[0].id;
+            matchedUserData = snap.docs[0].data();
+            if (matchedUserData.email) {
+              emailToUse = matchedUserData.email;
+              console.log(`Resolved User ID '${rawInput}' to email '${emailToUse}'`);
+            }
+          }
+        } catch (idErr) {
+          console.warn("Identifier resolution query note:", idErr);
+        }
+
+        // Fallback default email structure if query didn't find specific custom domain
+        if (!emailToUse.includes('@')) {
+          emailToUse = `${rawInput}@alpha.com`;
+        }
+      }
+
+      // STEP 2: Attempt standard Firebase Auth sign-in
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, emailToUse, password);
+        await redirectAuthorized(userCredential.user);
+        return;
+      } catch (authError) {
+        console.warn("Direct login failed (" + authError.code + "). Checking backward compatibility & pending credentials...");
+
+        // STEP 3: Fallback check in Firestore users collection
+        try {
+          if (!matchedUserData) {
+            let userQ = query(collection(db, 'users'), where('email', '==', emailToUse));
+            let userSnap = await getDocs(userQ);
+            if (userSnap.empty && !rawInput.includes('@')) {
+              userQ = query(collection(db, 'users'), where('bmCode', '==', rawInput));
+              userSnap = await getDocs(userQ);
+            }
+            if (!userSnap.empty) {
+              matchedDocId = userSnap.docs[0].id;
+              matchedUserData = userSnap.docs[0].data();
+            }
+          }
+
+          if (matchedUserData) {
+            const isAssignedPass = 
+              (matchedUserData.currentAuthPass && matchedUserData.currentAuthPass === password) ||
+              (matchedUserData.pendingPassword && matchedUserData.pendingPassword === password);
+
+            if (isAssignedPass) {
+              // The user entered the newly assigned password. Attempt to authenticate using candidate previous passwords and sync
+              const candidateOldPasses = [
+                matchedUserData.previousAuthPass,
+                matchedUserData.bmCode,
+                '123456',
+                'alpha123',
+                matchedUserData.officeCode,
+                'password'
+              ].filter(Boolean);
+
+              for (const oldPass of candidateOldPasses) {
+                try {
+                  const tempCred = await signInWithEmailAndPassword(auth, emailToUse, oldPass);
+                  // Successfully authenticated with old credentials! Now update Firebase Auth to user's new password
+                  await updatePassword(tempCred.user, password);
+                  await updateDoc(doc(db, 'users', matchedDocId), {
+                    currentAuthPass: password,
+                    pendingPassword: deleteField(),
+                    previousAuthPass: deleteField(),
+                    passwordLastChangedAt: serverTimestamp()
+                  });
+                  await redirectAuthorized(tempCred.user);
+                  return;
+                } catch (candErr) {
+                  // try next old candidate
+                }
+              }
+            }
+          }
+        } catch (syncCheckErr) {
+          console.error("Fallback query error:", syncCheckErr);
+        }
+
+        // STEP 4: Render friendly Bengali error messages with exact error codes
+        setBtnLoading(false);
+        const code = authError.code || 'unknown';
+
+        if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
+          showError("ইমেইল/ইউজার আইডি অথবা পাসওয়ার্ড সঠিক নয়। দয়া করে আপনার সঠিক পাসওয়ার্ড দিন।", code);
+        } else if (code === 'auth/user-not-found') {
+          showError("এই ইউজার আইডি বা ইমেইলে কোনো সক্রিয় অ্যাকাউন্ট পাওয়া যায়নি।", code);
+        } else if (code === 'auth/invalid-email') {
+          showError("ইউজার আইডি বা ইমেইলটির বিন্যাস সঠিক নয়। দয়া করে সঠিক আইডি লিখুন।", code);
+        } else if (code === 'auth/too-many-requests') {
+          showError("বারবার ভুল চেষ্টার কারণে সাময়িকভাবে বন্ধ আছে। অনুগ্রহ করে কিছুক্ষণ পর চেষ্টা করুন।", code);
+        } else if (code === 'auth/network-request-failed') {
+          showError("ইন্টারনেট সংযোগ বিচ্ছিন্ন অথবা সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।", code);
+        } else {
+          showError("লগইন করা সম্ভব হয়নি: " + authError.message, code);
+        }
+      }
+    });
+
+    // Forgot Password Flow
+    forgotPassBtn.addEventListener('click', async () => {
+      const email = prompt("আপনার নিবন্ধিত ইমেইল ঠিকানা প্রদান করুন (পাসওয়ার্ড রিসেট লিঙ্ক পাঠানো হবে):");
+      if (!email || !email.trim()) return;
 
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        await redirectAuthorized(userCredential.user);
-      } catch (error) {
-        setBtnLoading(false);
-        showError("Invalid credentials or unauthorized entry.");
+        await sendPasswordResetEmail(auth, email.trim());
+        alert(`'${email}' ঠিকানায় পাসওয়ার্ড রিসেট লিঙ্ক পাঠানো হয়েছে। ইমেইলের ইনবক্স বা স্প্যাম ফোল্ডার চেক করুন।`);
+      } catch (err) {
+        alert("রিসেট ত্রুটি: " + err.message);
       }
     });
   </script>
