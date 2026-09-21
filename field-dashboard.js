@@ -1,127 +1,138 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import { initializeApp } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0061\u0070\u0070\u002E\u006A\u0073";
+import { getAuth, onAuthStateChanged, signOut } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0061\u0075\u0074\u0068\u002E\u006A\u0073";
+import { getFirestore, doc, getDoc, collection, query, where, onSnapshot } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0066\u0069\u0072\u0065\u0073\u0074\u006F\u0072\u0065\u002E\u006A\u0073";
+var _0x7bcda = (645716 ^ 645718) + (555109 ^ 555116);
 const firebaseConfig = {
-  apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
-  authDomain: "alpha-deed-management.firebaseapp.com",
-  projectId: "alpha-deed-management",
-  storageBucket: "alpha-deed-management.firebasestorage.app",
-  messagingSenderId: "460540818357",
-  appId: "1:460540818357:web:ae0aac3ef01d690774dffc",
-  measurementId: "G-GZK5JDLCEZ"
+  '\u0061\u0070\u0069\u004B\u0065\u0079': "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
+  '\u0061\u0075\u0074\u0068\u0044\u006F\u006D\u0061\u0069\u006E': "\u0061\u006C\u0070\u0068\u0061\u002D\u0064\u0065\u0065\u0064\u002D\u006D\u0061\u006E\u0061\u0067\u0065\u006D\u0065\u006E\u0074\u002E\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u0061\u0070\u0070\u002E\u0063\u006F\u006D",
+  '\u0070\u0072\u006F\u006A\u0065\u0063\u0074\u0049\u0064': "alpha-deed-management",
+  '\u0073\u0074\u006F\u0072\u0061\u0067\u0065\u0042\u0075\u0063\u006B\u0065\u0074': "alpha-deed-management.firebasestorage.app",
+  '\u006D\u0065\u0073\u0073\u0061\u0067\u0069\u006E\u0067\u0053\u0065\u006E\u0064\u0065\u0072\u0049\u0064': "\u0034\u0036\u0030\u0035\u0034\u0030\u0038\u0031\u0038\u0033\u0035\u0037",
+  "appId": "\u0031\u003A\u0034\u0036\u0030\u0035\u0034\u0030\u0038\u0031\u0038\u0033\u0035\u0037\u003A\u0077\u0065\u0062\u003A\u0061\u0065\u0030\u0061\u0061\u0063\u0033\u0065\u0066\u0030\u0031\u0064\u0036\u0039\u0030\u0037\u0037\u0034\u0064\u0066\u0066\u0063",
+  '\u006D\u0065\u0061\u0073\u0075\u0072\u0065\u006D\u0065\u006E\u0074\u0049\u0064': "G-GZK5JDLCEZ"
 };
-
+_0x7bcda = 538090 ^ 538091;
+var _0x816e = (220185 ^ 220189) + (163500 ^ 163501);
 const app = initializeApp(firebaseConfig);
+_0x816e = 228853 ^ 228860;
 const auth = getAuth(app);
+var _0x618aad = (673076 ^ 673078) + (829073 ^ 829076);
 const db = getFirestore(app);
-
+_0x618aad = (292581 ^ 292580) + (541017 ^ 541017);
+var _0x880bd = (727069 ^ 727068) + (683965 ^ 683956);
 let currentUserProfile = null;
+_0x880bd = 950125 ^ 950127;
+let _0x_0xf1b;
 let fieldDeeds = [];
-
-onAuthStateChanged(auth, async (user) => {
+_0x_0xf1b = (360604 ^ 360601) + (417629 ^ 417630);
+onAuthStateChanged(auth, async user => {
   if (!user) {
-    window.location.href = 'index.html';
+    window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = 'index.html';
     return;
   }
-  const userDoc = await getDoc(doc(db, 'users', user.uid));
-  if (!userDoc.exists()) {
-    alert("প্রোফাইল তথ্য নেই!");
-    window.location.href = 'index.html';
+  var _0x0ea3a = (257889 ^ 257892) + (205311 ^ 205305);
+  const userDoc = await getDoc(doc(db, "\u0075\u0073\u0065\u0072\u0073", user['\u0075\u0069\u0064']));
+  _0x0ea3a = (746161 ^ 746164) + (374528 ^ 374533);
+  if (!userDoc['\u0065\u0078\u0069\u0073\u0074\u0073']()) {
+    alert("\u09AA\u09CD\u09B0\u09CB\u09AB\u09BE\u0987\u09B2\u0020\u09A4\u09A5\u09CD\u09AF\u0020\u09A8\u09C7\u0987\u0021");
+    window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = "\u0069\u006E\u0064\u0065\u0078\u002E\u0068\u0074\u006D\u006C";
     return;
   }
-  currentUserProfile = { uid: user.uid, ...userDoc.data() };
-  document.getElementById('roleBadge').textContent = currentUserProfile.role;
-  document.getElementById('officeInfo').textContent = `অফিস: ${currentUserProfile.officeCode || 'N/A'}`;
-  if (currentUserProfile.bmCode) {
-    const b = document.getElementById('bmCodeBadge');
-    b.textContent = `BM: ${currentUserProfile.bmCode}`;
-    b.classList.remove('hidden');
+  currentUserProfile = {
+    "uid": user['\u0075\u0069\u0064'],
+    ...userDoc['\u0064\u0061\u0074\u0061']()
+  };
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0072\u006F\u006C\u0065\u0042\u0061\u0064\u0067\u0065")['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = currentUserProfile['\u0072\u006F\u006C\u0065'];
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('officeInfo')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = `অফিস: ${currentUserProfile['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || 'N/A'}`;
+  if (currentUserProfile['\u0062\u006D\u0043\u006F\u0064\u0065']) {
+    const b = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('bmCodeBadge');
+    b['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = `BM: ${currentUserProfile['\u0062\u006D\u0043\u006F\u0064\u0065']}`;
+    b['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
   }
   subscribeToDeeds();
 });
-
-document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => window.location.href = 'index.html');
-
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('logoutBtn')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => signOut(auth)['\u0074\u0068\u0065\u006E'](() => window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = "\u0069\u006E\u0064\u0065\u0078\u002E\u0068\u0074\u006D\u006C");
 function subscribeToDeeds() {
   let q;
-  const deedsRef = collection(db, 'deeds');
-  if (['sm', 'asm'].includes(currentUserProfile.role)) {
-    q = query(deedsRef, where('branchName', '==', currentUserProfile.officeCode));
+  let _0x07c32d;
+  const _0x5deg = collection(db, "\u0064\u0065\u0065\u0064\u0073");
+  _0x07c32d = (531564 ^ 531562) + (976250 ^ 976250);
+  if (["\u0073\u006D", 'asm']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](currentUserProfile['\u0072\u006F\u006C\u0065'])) {
+    q = query(_0x5deg, where("\u0062\u0072\u0061\u006E\u0063\u0068\u004E\u0061\u006D\u0065", "\u003D\u003D", currentUserProfile['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065']));
   } else {
-    q = query(deedsRef, where('branchName', '==', currentUserProfile.officeCode), where('bmCode', '==', currentUserProfile.bmCode));
+    q = query(_0x5deg, where('branchName', "\u003D\u003D", currentUserProfile['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065']), where("\u0062\u006D\u0043\u006F\u0064\u0065", "\u003D\u003D", currentUserProfile['\u0062\u006D\u0043\u006F\u0064\u0065']));
   }
-
-  onSnapshot(q, (snapshot) => {
+  onSnapshot(q, snapshot => {
     fieldDeeds = [];
-    snapshot.forEach(docSnap => fieldDeeds.push({ id: docSnap.id, ...docSnap.data() }));
+    snapshot['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](docSnap => fieldDeeds['\u0070\u0075\u0073\u0068']({
+      "id": docSnap['\u0069\u0064'],
+      ...docSnap['\u0064\u0061\u0074\u0061']()
+    }));
     updateMetrics(fieldDeeds);
     renderDeeds(fieldDeeds);
   });
 }
-
 function updateMetrics(deeds) {
-  let p = 0, r = 0, d = 0;
-  deeds.forEach(item => {
-    if (item.status === 'Delivered') d++;
-    else if (item.status === 'Received at Office') r++;
-    else p++;
+  let p = 483576 ^ 483576,
+    r = 974205 ^ 974205,
+    d = 614278 ^ 614278;
+  deeds['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](item => {
+    if (item['\u0073\u0074\u0061\u0074\u0075\u0073'] === "\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064") d++;else if (item['\u0073\u0074\u0061\u0074\u0075\u0073'] === 'Received at Office') r++;else p++;
   });
-  document.getElementById('statTotal').textContent = deeds.length;
-  document.getElementById('statPending').textContent = p;
-  document.getElementById('statReceived').textContent = r;
-  document.getElementById('statDelivered').textContent = d;
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('statTotal')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = deeds['\u006C\u0065\u006E\u0067\u0074\u0068'];
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('statPending')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = p;
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('statReceived')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = r;
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('statDelivered')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = d;
 }
-
 function renderDeeds(deeds) {
-  const desktopTbody = document.getElementById('desktopTableBody');
-  const mobileContainer = document.getElementById('mobileCardContainer');
-  document.getElementById('resultCount').textContent = `${deeds.length} টি দলিল পাওয়া গেছে`;
-
-  if (deeds.length === 0) {
-    desktopTbody.innerHTML = `<tr><td colspan="7" class="text-center p-8 text-slate-400">কোনো দলিলের রেকর্ড পাওয়া যায়নি।</td></tr>`;
-    mobileContainer.innerHTML = `<div class="p-8 text-center text-slate-400">কোনো দলিলের রেকর্ড পাওয়া যায়নি।</div>`;
+  var _0x6727bc = (759740 ^ 759732) + (479101 ^ 479092);
+  const _0x638gb = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u0073\u006B\u0074\u006F\u0070\u0054\u0061\u0062\u006C\u0065\u0042\u006F\u0064\u0079");
+  _0x6727bc = '\u0068\u0064\u0062\u006D\u0064\u0070';
+  var _0xbb770f = (494748 ^ 494747) + (909014 ^ 909011);
+  const _0x5063gb = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('mobileCardContainer');
+  _0xbb770f = (841724 ^ 841723) + (283998 ^ 283999);
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0072\u0065\u0073\u0075\u006C\u0074\u0043\u006F\u0075\u006E\u0074")['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = `${deeds['\u006C\u0065\u006E\u0067\u0074\u0068']} টি দলিল পাওয়া গেছে`;
+  if (deeds['\u006C\u0065\u006E\u0067\u0074\u0068'] === (778502 ^ 778502)) {
+    _0x638gb['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = `<tr><td colspan="7" class="text-center p-8 text-slate-400">কোনো দলিলের রেকর্ড পাওয়া যায়নি।</td></tr>`;
+    _0x5063gb['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = `<div class="p-8 text-center text-slate-400">কোনো দলিলের রেকর্ড পাওয়া যায়নি।</div>`;
     return;
   }
-
-  desktopTbody.innerHTML = deeds.map(d => `
+  _0x638gb['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = deeds['\u006D\u0061\u0070'](d => `
     <tr class="hover:bg-slate-50 transition">
-      <td class="p-3.5 font-mono text-xs">${d.refNo || 'N/A'}</td>
-      <td class="p-3.5 font-bold text-emerald-700">${d.policyNo}</td>
-      <td class="p-3.5 font-medium">${d.policyHolderName}</td>
-      <td class="p-3.5"><div>${d.bmName}</div><div class="text-xs text-slate-400 font-mono">${d.bmCode}</div></td>
-      <td class="p-3.5 text-xs">${d.incomingDate || 'N/A'}</td>
-      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${d.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${d.status}</span></td>
-      <td class="p-3.5 text-xs">${d.deliveredTo ? `<b>${d.deliveredTo}</b> (${d.deliveryDate})` : 'অফিসে সংরক্ষিত'}</td>
+      <td class="p-3.5 font-mono text-xs">${d['\u0072\u0065\u0066\u004E\u006F'] || 'N/A'}</td>
+      <td class="p-3.5 font-bold text-emerald-700">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F']}</td>
+      <td class="p-3.5 font-medium">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065']}</td>
+      <td class="p-3.5"><div>${d['\u0062\u006D\u004E\u0061\u006D\u0065']}</div><div class="text-xs text-slate-400 font-mono">${d['\u0062\u006D\u0043\u006F\u0064\u0065']}</div></td>
+      <td class="p-3.5 text-xs">${d['\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065'] || "\u004E\u002F\u0041"}</td>
+      <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${d['\u0073\u0074\u0061\u0074\u0075\u0073'] === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : "\u0062\u0067\u002D\u0062\u006C\u0075\u0065\u002D\u0031\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0062\u006C\u0075\u0065\u002D\u0038\u0030\u0030"}">${d['\u0073\u0074\u0061\u0074\u0075\u0073']}</span></td>
+      <td class="p-3.5 text-xs">${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F'] ? `<b>${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F']}</b> (${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065']})` : "\u0985\u09AB\u09BF\u09B8\u09C7\u0020\u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09BF\u09A4"}</td>
     </tr>
-  `).join('');
-
-  mobileContainer.innerHTML = deeds.map(d => `
+  `)['\u006A\u006F\u0069\u006E']('');
+  _0x5063gb['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = deeds['\u006D\u0061\u0070'](d => `
     <div class="p-4 space-y-2">
       <div class="flex justify-between items-start">
         <div>
-          <span class="text-xs font-mono text-slate-400">${d.refNo}</span>
-          <div class="text-base font-bold text-emerald-800">${d.policyNo}</div>
+          <span class="text-xs font-mono text-slate-400">${d['\u0072\u0065\u0066\u004E\u006F']}</span>
+          <div class="text-base font-bold text-emerald-800">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F']}</div>
         </div>
-        <span class="px-2 py-0.5 rounded text-xs font-bold ${d.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${d.status}</span>
+        <span class="px-2 py-0.5 rounded text-xs font-bold ${d['\u0073\u0074\u0061\u0074\u0075\u0073'] === "\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064" ? "\u0062\u0067\u002D\u0065\u006D\u0065\u0072\u0061\u006C\u0064\u002D\u0031\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0065\u006D\u0065\u0072\u0061\u006C\u0064\u002D\u0038\u0030\u0030" : 'bg-blue-100 text-blue-800'}">${d['\u0073\u0074\u0061\u0074\u0075\u0073']}</span>
       </div>
-      <div class="text-sm font-semibold">${d.policyHolderName}</div>
-      <div class="text-xs text-slate-500">BM: ${d.bmName} (${d.bmCode}) | তারিখ: ${d.incomingDate || 'N/A'}</div>
-      ${d.deliveredTo ? `<div class="mt-2 text-xs bg-emerald-50 p-2 rounded border border-emerald-100 font-semibold text-emerald-800">গ্রহীতা: ${d.deliveredTo} (${d.deliveryDate})</div>` : ''}
+      <div class="text-sm font-semibold">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065']}</div>
+      <div class="text-xs text-slate-500">BM: ${d['\u0062\u006D\u004E\u0061\u006D\u0065']} (${d['\u0062\u006D\u0043\u006F\u0064\u0065']}) | তারিখ: ${d['\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065'] || "\u004E\u002F\u0041"}</div>
+      ${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F'] ? `<div class="mt-2 text-xs bg-emerald-50 p-2 rounded border border-emerald-100 font-semibold text-emerald-800">গ্রহীতা: ${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F']} (${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065']})</div>` : ''}
     </div>
-  `).join('');
+  `)['\u006A\u006F\u0069\u006E']('');
 }
-
 function applyFilters() {
-  const s = document.getElementById('searchPolicy').value.toLowerCase().trim();
-  const st = document.getElementById('filterStatus').value;
-  const res = fieldDeeds.filter(d => {
-    return (s ? (d.policyNo?.toLowerCase().includes(s) || d.policyHolderName?.toLowerCase().includes(s)) : true) &&
-           (st ? d.status === st : true);
+  const s = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('searchPolicy')['\u0076\u0061\u006C\u0075\u0065']['\u0074\u006F\u004C\u006F\u0077\u0065\u0072\u0043\u0061\u0073\u0065']()['\u0074\u0072\u0069\u006D']();
+  let _0xe3b3cf;
+  const _0xc8b = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0066\u0069\u006C\u0074\u0065\u0072\u0053\u0074\u0061\u0074\u0075\u0073")['\u0076\u0061\u006C\u0075\u0065'];
+  _0xe3b3cf = 885414 ^ 885409;
+  const _0x9c_0xc2f = fieldDeeds['\u0066\u0069\u006C\u0074\u0065\u0072'](d => {
+    return (s ? d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F']?.toLowerCase().includes(s) || d['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065']?.toLowerCase().includes(s) : !![]) && (_0xc8b ? d['\u0073\u0074\u0061\u0074\u0075\u0073'] === _0xc8b : !![]);
   });
-  renderDeeds(res);
+  renderDeeds(_0x9c_0xc2f);
 }
-
-document.getElementById('searchPolicy').oninput = applyFilters;
-document.getElementById('filterStatus').onchange = applyFilters;
-document.getElementById('refreshBtn').onclick = () => renderDeeds(fieldDeeds);
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0073\u0065\u0061\u0072\u0063\u0068\u0050\u006F\u006C\u0069\u0063\u0079")['\u006F\u006E\u0069\u006E\u0070\u0075\u0074'] = applyFilters;
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0066\u0069\u006C\u0074\u0065\u0072\u0053\u0074\u0061\u0074\u0075\u0073")['\u006F\u006E\u0063\u0068\u0061\u006E\u0067\u0065'] = applyFilters;
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('refreshBtn')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => renderDeeds(fieldDeeds);
