@@ -1,121 +1,129 @@
+var _0xa60f = (588023 ^ 588023) + (570987 ^ 570986);
 const firebaseConfig = {
-  apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
-  authDomain: "alpha-deed-management.firebaseapp.com",
-  projectId: "alpha-deed-management",
-  storageBucket: "alpha-deed-management.firebasestorage.app",
-  messagingSenderId: "460540818357",
-  appId: "1:460540818357:web:ae0aac3ef01d690774dffc",
-  measurementId: "G-GZK5JDLCEZ"
+  "apiKey": "\u0041\u0049\u007A\u0061\u0053\u0079\u0042\u004C\u005F\u006E\u0068\u0064\u0045\u0044\u0079\u004C\u0044\u005F\u0033\u0048\u006E\u0068\u006A\u005A\u0031\u0034\u004C\u004F\u0059\u004C\u0043\u006A\u0061\u0078\u004F\u0077\u004A\u0079\u0059",
+  '\u0061\u0075\u0074\u0068\u0044\u006F\u006D\u0061\u0069\u006E': "alpha-deed-management.firebaseapp.com",
+  '\u0070\u0072\u006F\u006A\u0065\u0063\u0074\u0049\u0064': "\u0061\u006C\u0070\u0068\u0061\u002D\u0064\u0065\u0065\u0064\u002D\u006D\u0061\u006E\u0061\u0067\u0065\u006D\u0065\u006E\u0074",
+  '\u0073\u0074\u006F\u0072\u0061\u0067\u0065\u0042\u0075\u0063\u006B\u0065\u0074': "alpha-deed-management.firebasestorage.app",
+  '\u006D\u0065\u0073\u0073\u0061\u0067\u0069\u006E\u0067\u0053\u0065\u006E\u0064\u0065\u0072\u0049\u0064': "460540818357",
+  '\u0061\u0070\u0070\u0049\u0064': "\u0031\u003A\u0034\u0036\u0030\u0035\u0034\u0030\u0038\u0031\u0038\u0033\u0035\u0037\u003A\u0077\u0065\u0062\u003A\u0061\u0065\u0030\u0061\u0061\u0063\u0033\u0065\u0066\u0030\u0031\u0064\u0036\u0039\u0030\u0037\u0037\u0034\u0064\u0066\u0066\u0063",
+  '\u006D\u0065\u0061\u0073\u0075\u0072\u0065\u006D\u0065\u006E\u0074\u0049\u0064': "\u0047\u002D\u0047\u005A\u004B\u0035\u004A\u0044\u004C\u0043\u0045\u005A"
 };
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+_0xa60f = (400561 ^ 400565) + (782047 ^ 782038);
+if (!firebase['\u0061\u0070\u0070\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']) {
+  firebase['\u0069\u006E\u0069\u0074\u0069\u0061\u006C\u0069\u007A\u0065\u0041\u0070\u0070'](firebaseConfig);
 }
-const auth = firebase.auth();
-const db = firebase.firestore();
-
+var _0xa7db4c = (596175 ^ 596167) + (225694 ^ 225695);
+const auth = firebase['\u0061\u0075\u0074\u0068']();
+_0xa7db4c = 123537 ^ 123544;
+let _0x31e;
+const db = firebase['\u0066\u0069\u0072\u0065\u0073\u0074\u006F\u0072\u0065']();
+_0x31e = 719898 ^ 719890;
 let currentITUser = null;
 let allDeeds = [];
+var _0x489g = (436281 ^ 436283) + (310736 ^ 310738);
 let parsedBulkDeeds = [];
-
+_0x489g = (980450 ^ 980454) + (317435 ^ 317439);
 function copyToClipboard(text) {
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text)
-      .then(() => alert("AI প্রম্পট কপি হয়েছে! এবার আপনার AI-তে গিয়ে ছবির সাথে এটি পেস্ট করুন।"))
-      .catch(() => fallbackCopy(text));
+  if (navigator['\u0063\u006C\u0069\u0070\u0062\u006F\u0061\u0072\u0064'] && window['\u0069\u0073\u0053\u0065\u0063\u0075\u0072\u0065\u0043\u006F\u006E\u0074\u0065\u0078\u0074']) {
+    navigator['\u0063\u006C\u0069\u0070\u0062\u006F\u0061\u0072\u0064']['\u0077\u0072\u0069\u0074\u0065\u0054\u0065\u0078\u0074'](text)['\u0074\u0068\u0065\u006E'](() => alert("\u0041\u0049\u0020\u09AA\u09CD\u09B0\u09AE\u09CD\u09AA\u099F\u0020\u0995\u09AA\u09BF\u0020\u09B9\u09DF\u09C7\u099B\u09C7\u0021\u0020\u098F\u09AC\u09BE\u09B0\u0020\u0986\u09AA\u09A8\u09BE\u09B0\u0020\u0041\u0049\u002D\u09A4\u09C7\u0020\u0997\u09BF\u09DF\u09C7\u0020\u099B\u09AC\u09BF\u09B0\u0020\u09B8\u09BE\u09A5\u09C7\u0020\u098F\u099F\u09BF\u0020\u09AA\u09C7\u09B8\u09CD\u099F\u0020\u0995\u09B0\u09C1\u09A8\u0964"))['\u0063\u0061\u0074\u0063\u0068'](() => fallbackCopy(text));
   } else {
     fallbackCopy(text);
   }
 }
-
 function fallbackCopy(text) {
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-  textArea.style.position = "fixed";
-  textArea.style.left = "-999999px";
-  textArea.style.top = "-999999px";
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-
+  var _0xf97b = (316090 ^ 316089) + (933686 ^ 933683);
+  const _0xbe57eb = document['\u0063\u0072\u0065\u0061\u0074\u0065\u0045\u006C\u0065\u006D\u0065\u006E\u0074']("\u0074\u0065\u0078\u0074\u0061\u0072\u0065\u0061");
+  _0xf97b = (504784 ^ 504784) + (493127 ^ 493124);
+  _0xbe57eb['\u0076\u0061\u006C\u0075\u0065'] = text;
+  _0xbe57eb['\u0073\u0074\u0079\u006C\u0065']['\u0070\u006F\u0073\u0069\u0074\u0069\u006F\u006E'] = "fixed";
+  _0xbe57eb['\u0073\u0074\u0079\u006C\u0065']['\u006C\u0065\u0066\u0074'] = "\u002D\u0039\u0039\u0039\u0039\u0039\u0039\u0070\u0078";
+  _0xbe57eb['\u0073\u0074\u0079\u006C\u0065']['\u0074\u006F\u0070'] = "\u002D\u0039\u0039\u0039\u0039\u0039\u0039\u0070\u0078";
+  document['\u0062\u006F\u0064\u0079']['\u0061\u0070\u0070\u0065\u006E\u0064\u0043\u0068\u0069\u006C\u0064'](_0xbe57eb);
+  _0xbe57eb['\u0066\u006F\u0063\u0075\u0073']();
+  _0xbe57eb['\u0073\u0065\u006C\u0065\u0063\u0074']();
   try {
-    const successful = document.execCommand('copy');
-    if (successful) {
-      alert("AI প্রম্পট কপি হয়েছে! এবার আপনার AI-তে গিয়ে ছবির সাথে এটি পেস্ট করুন।");
+    const _0x78fa7c = document['\u0065\u0078\u0065\u0063\u0043\u006F\u006D\u006D\u0061\u006E\u0064']("\u0063\u006F\u0070\u0079");
+    if (_0x78fa7c) {
+      alert("\u0041\u0049\u0020\u09AA\u09CD\u09B0\u09AE\u09CD\u09AA\u099F\u0020\u0995\u09AA\u09BF\u0020\u09B9\u09DF\u09C7\u099B\u09C7\u0021\u0020\u098F\u09AC\u09BE\u09B0\u0020\u0986\u09AA\u09A8\u09BE\u09B0\u0020\u0041\u0049\u002D\u09A4\u09C7\u0020\u0997\u09BF\u09DF\u09C7\u0020\u099B\u09AC\u09BF\u09B0\u0020\u09B8\u09BE\u09A5\u09C7\u0020\u098F\u099F\u09BF\u0020\u09AA\u09C7\u09B8\u09CD\u099F\u0020\u0995\u09B0\u09C1\u09A8\u0964");
     } else {
-      prompt("নিচের প্রম্পটটি ম্যানুয়ালি কপি করে নিন:", text);
+      prompt("\u09A8\u09BF\u099A\u09C7\u09B0\u0020\u09AA\u09CD\u09B0\u09AE\u09CD\u09AA\u099F\u099F\u09BF\u0020\u09AE\u09CD\u09AF\u09BE\u09A8\u09C1\u09AF\u09BC\u09BE\u09B2\u09BF\u0020\u0995\u09AA\u09BF\u0020\u0995\u09B0\u09C7\u0020\u09A8\u09BF\u09A8\u003A", text);
     }
   } catch (err) {
-    prompt("নিচের প্রম্পটটি ম্যানুয়ালি কপি করে নিন:", text);
+    prompt("\u09A8\u09BF\u099A\u09C7\u09B0\u0020\u09AA\u09CD\u09B0\u09AE\u09CD\u09AA\u099F\u099F\u09BF\u0020\u09AE\u09CD\u09AF\u09BE\u09A8\u09C1\u09AF\u09BC\u09BE\u09B2\u09BF\u0020\u0995\u09AA\u09BF\u0020\u0995\u09B0\u09C7\u0020\u09A8\u09BF\u09A8\u003A", text);
   }
-  document.body.removeChild(textArea);
+  document['\u0062\u006F\u0064\u0079']['\u0072\u0065\u006D\u006F\u0076\u0065\u0043\u0068\u0069\u006C\u0064'](_0xbe57eb);
 }
-
-auth.onAuthStateChanged(async (user) => {
+auth['\u006F\u006E\u0041\u0075\u0074\u0068\u0053\u0074\u0061\u0074\u0065\u0043\u0068\u0061\u006E\u0067\u0065\u0064'](async user => {
   if (!user) {
-    window.location.href = 'index.html';
+    window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = "\u0069\u006E\u0064\u0065\u0078\u002E\u0068\u0074\u006D\u006C";
     return;
   }
   try {
-    const userDoc = await db.collection('users').doc(user.uid).get();
-    if (userDoc.exists && userDoc.data().role === 'it_officer') {
-      currentITUser = { uid: user.uid, ...userDoc.data() };
-      document.getElementById('officeBadge').textContent = `সেলস অফিস: ${currentITUser.officeCode || 'General'}`;
-      document.getElementById('userEmailBadge').textContent = user.email;
+    let _0xaef;
+    const userDoc = await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0075\u0073\u0065\u0072\u0073")['\u0064\u006F\u0063'](user['\u0075\u0069\u0064'])['\u0067\u0065\u0074']();
+    _0xaef = 226593 ^ 226593;
+    if (userDoc['\u0065\u0078\u0069\u0073\u0074\u0073'] && userDoc['\u0064\u0061\u0074\u0061']()['\u0072\u006F\u006C\u0065'] === "\u0069\u0074\u005F\u006F\u0066\u0066\u0069\u0063\u0065\u0072") {
+      currentITUser = {
+        "uid": user['\u0075\u0069\u0064'],
+        ...userDoc['\u0064\u0061\u0074\u0061']()
+      };
+      document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('officeBadge')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = `সেলস অফিস: ${currentITUser['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || 'General'}`;
+      document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('userEmailBadge')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = user['\u0065\u006D\u0061\u0069\u006C'];
       loadDeeds();
       loadFieldUsers();
     } else {
-      alert("অননুমোদিত প্রবেশ!");
-      window.location.href = 'index.html';
+      alert("\u0985\u09A8\u09A8\u09C1\u09AE\u09CB\u09A6\u09BF\u09A4\u0020\u09AA\u09CD\u09B0\u09AC\u09C7\u09B6\u0021");
+      window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = 'index.html';
     }
   } catch (err) {
-    console.error("Auth Guard Error:", err);
+    console['\u0065\u0072\u0072\u006F\u0072']("Auth Guard Error:", err);
   }
 });
-
-document.getElementById('logoutBtn').onclick = () => auth.signOut().then(() => window.location.href = 'index.html');
-
-const deedsSection = document.getElementById('deedsSection');
-const usersSection = document.getElementById('usersSection');
-const tabDeedsBtn = document.getElementById('tabDeedsBtn');
-const tabUsersBtn = document.getElementById('tabUsersBtn');
-
-tabDeedsBtn.onclick = () => {
-  deedsSection.classList.remove('hidden');
-  usersSection.classList.add('hidden');
-  tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-700 text-white transition";
-  tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('logoutBtn')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => auth['\u0073\u0069\u0067\u006E\u004F\u0075\u0074']()['\u0074\u0068\u0065\u006E'](() => window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = "\u0069\u006E\u0064\u0065\u0078\u002E\u0068\u0074\u006D\u006C");
+let _0xb395bb;
+const deedsSection = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('deedsSection');
+_0xb395bb = '\u0068\u006D\u0068\u0061\u0066\u006D';
+const usersSection = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0075\u0073\u0065\u0072\u0073\u0053\u0065\u0063\u0074\u0069\u006F\u006E");
+const tabDeedsBtn = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0074\u0061\u0062\u0044\u0065\u0065\u0064\u0073\u0042\u0074\u006E");
+let _0x2f_0x8cb;
+const tabUsersBtn = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('tabUsersBtn');
+_0x2f_0x8cb = '\u0063\u0069\u0069\u006C\u0068\u006D';
+tabDeedsBtn['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  deedsSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  usersSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']('hidden');
+  tabDeedsBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-700 text-white transition";
+  tabUsersBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
 };
-
-tabUsersBtn.onclick = () => {
-  usersSection.classList.remove('hidden');
-  deedsSection.classList.add('hidden');
-  tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-700 text-white transition";
-  tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+tabUsersBtn['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  usersSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  deedsSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  tabUsersBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "\u0070\u0078\u002D\u0034\u0020\u0070\u0079\u002D\u0032\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006D\u0020\u0066\u006F\u006E\u0074\u002D\u0073\u0065\u006D\u0069\u0062\u006F\u006C\u0064\u0020\u0072\u006F\u0075\u006E\u0064\u0065\u0064\u002D\u006C\u0067\u0020\u0062\u0067\u002D\u0065\u006D\u0065\u0072\u0061\u006C\u0064\u002D\u0037\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0077\u0068\u0069\u0074\u0065\u0020\u0074\u0072\u0061\u006E\u0073\u0069\u0074\u0069\u006F\u006E";
+  tabDeedsBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "\u0070\u0078\u002D\u0034\u0020\u0070\u0079\u002D\u0032\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006D\u0020\u0066\u006F\u006E\u0074\u002D\u0073\u0065\u006D\u0069\u0062\u006F\u006C\u0064\u0020\u0072\u006F\u0075\u006E\u0064\u0065\u0064\u002D\u006C\u0067\u0020\u0062\u0067\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0031\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0037\u0030\u0030\u0020\u0068\u006F\u0076\u0065\u0072\u003A\u0062\u0067\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0032\u0030\u0030\u0020\u0074\u0072\u0061\u006E\u0073\u0069\u0074\u0069\u006F\u006E";
 };
-
-const bulkModal = document.getElementById('bulkModal');
-const jsonInputContainer = document.getElementById('jsonInputContainer');
-const previewContainer = document.getElementById('previewContainer');
-const bulkJsonInput = document.getElementById('bulkJsonInput');
-const previewTableBody = document.getElementById('previewTableBody');
-
-document.getElementById('openBulkModalBtn').onclick = () => {
-  bulkModal.classList.remove('hidden');
-  jsonInputContainer.classList.remove('hidden');
-  previewContainer.classList.add('hidden');
-  bulkJsonInput.value = '';
+const bulkModal = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('bulkModal');
+var _0x1538ab = (690475 ^ 690479) + (996444 ^ 996445);
+const jsonInputContainer = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006A\u0073\u006F\u006E\u0049\u006E\u0070\u0075\u0074\u0043\u006F\u006E\u0074\u0061\u0069\u006E\u0065\u0072");
+_0x1538ab = (929347 ^ 929355) + (238724 ^ 238732);
+const previewContainer = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0070\u0072\u0065\u0076\u0069\u0065\u0077\u0043\u006F\u006E\u0074\u0061\u0069\u006E\u0065\u0072");
+var _0xg384g = (459938 ^ 459941) + (417852 ^ 417845);
+const bulkJsonInput = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0062\u0075\u006C\u006B\u004A\u0073\u006F\u006E\u0049\u006E\u0070\u0075\u0074");
+_0xg384g = 237541 ^ 237538;
+var _0x_0xbc3 = (913797 ^ 913805) + (764909 ^ 764905);
+const previewTableBody = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('previewTableBody');
+_0x_0xbc3 = "ompnlp";
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006F\u0070\u0065\u006E\u0042\u0075\u006C\u006B\u004D\u006F\u0064\u0061\u006C\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  bulkModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
+  jsonInputContainer['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
+  previewContainer['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']('hidden');
+  bulkJsonInput['\u0076\u0061\u006C\u0075\u0065'] = '';
 };
-
-document.getElementById('closeBulkModal').onclick = () => bulkModal.classList.add('hidden');
-document.getElementById('cancelPreviewBtn').onclick = () => bulkModal.classList.add('hidden');
-
-document.getElementById('backToEditJsonBtn').onclick = () => {
-  previewContainer.classList.add('hidden');
-  jsonInputContainer.classList.remove('hidden');
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u006C\u006F\u0073\u0065\u0042\u0075\u006C\u006B\u004D\u006F\u0064\u0061\u006C")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => bulkModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u0061\u006E\u0063\u0065\u006C\u0050\u0072\u0065\u0076\u0069\u0065\u0077\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => bulkModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']('hidden');
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0062\u0061\u0063\u006B\u0054\u006F\u0045\u0064\u0069\u0074\u004A\u0073\u006F\u006E\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  previewContainer['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  jsonInputContainer['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
 };
-
-document.getElementById('copyPromptBtn').onclick = () => {
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u006F\u0070\u0079\u0050\u0072\u006F\u006D\u0070\u0074\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
   const promptText = `Extract all insurance deeds from this transmission letter into a strict JSON format. Do not include markdown code block syntax (like \`\`\`json), commentary, or extra text. Output only raw JSON array with objects using this exact schema:
 
 [
@@ -130,362 +138,355 @@ document.getElementById('copyPromptBtn').onclick = () => {
 ]`;
   copyToClipboard(promptText);
 };
-
-document.getElementById('parseJsonBtn').onclick = () => {
-  let rawText = bulkJsonInput.value.trim();
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0070\u0061\u0072\u0073\u0065\u004A\u0073\u006F\u006E\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  var _0x51caa = (850690 ^ 850688) + (380421 ^ 380429);
+  let rawText = bulkJsonInput['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D']();
+  _0x51caa = (936464 ^ 936470) + (178185 ^ 178190);
   if (!rawText) {
     alert("দয়া করে AI থেকে পাওয়া JSON কোডটি পেস্ট করুন।");
     return;
   }
-  rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
-
+  rawText = rawText['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u0060\u0060\u0060\u006A\u0073\u006F\u006E', "gi"), '')['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u0060\u0060\u0060', '\u0067'), '')['\u0074\u0072\u0069\u006D']();
   try {
-    parsedBulkDeeds = JSON.parse(rawText);
-    if (!Array.isArray(parsedBulkDeeds) || parsedBulkDeeds.length === 0) {
+    parsedBulkDeeds = JSON['\u0070\u0061\u0072\u0073\u0065'](rawText);
+    if (!Array['\u0069\u0073\u0041\u0072\u0072\u0061\u0079'](parsedBulkDeeds) || parsedBulkDeeds['\u006C\u0065\u006E\u0067\u0074\u0068'] === (123538 ^ 123538)) {
       throw new Error("JSON ফরম্যাটটি অ্যারে (Array) নয় অথবা কোনো রেকর্ড পাওয়া যায়নি।");
     }
-
-    document.getElementById('previewCountBadge').textContent = `মোট ${parsedBulkDeeds.length} টি দলিল শনাক্ত হয়েছে`;
-    previewTableBody.innerHTML = parsedBulkDeeds.map(d => `
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0070\u0072\u0065\u0076\u0069\u0065\u0077\u0043\u006F\u0075\u006E\u0074\u0042\u0061\u0064\u0067\u0065")['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = `মোট ${parsedBulkDeeds['\u006C\u0065\u006E\u0067\u0074\u0068']} টি দলিল শনাক্ত হয়েছে`;
+    previewTableBody['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = parsedBulkDeeds['\u006D\u0061\u0070'](d => `
       <tr class="hover:bg-slate-50">
-        <td class="p-2.5 font-mono">${d.refNo || 'AILIL-AUTO'}</td>
-        <td class="p-2.5 font-bold text-emerald-700">${d.policyNo || 'N/A'}</td>
-        <td class="p-2.5 font-semibold">${d.policyHolderName || 'N/A'}</td>
-        <td class="p-2.5 font-mono">${d.bmCode || 'N/A'}</td>
-        <td class="p-2.5">${d.bmName || 'N/A'}</td>
-        <td class="p-2.5">${d.incomingDate || new Date().toISOString().split('T')[0]}</td>
+        <td class="p-2.5 font-mono">${d['\u0072\u0065\u0066\u004E\u006F'] || 'AILIL-AUTO'}</td>
+        <td class="p-2.5 font-bold text-emerald-700">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F'] || "\u004E\u002F\u0041"}</td>
+        <td class="p-2.5 font-semibold">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065'] || "\u004E\u002F\u0041"}</td>
+        <td class="p-2.5 font-mono">${d['\u0062\u006D\u0043\u006F\u0064\u0065'] || 'N/A'}</td>
+        <td class="p-2.5">${d['\u0062\u006D\u004E\u0061\u006D\u0065'] || 'N/A'}</td>
+        <td class="p-2.5">${d['\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065'] || new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()['\u0073\u0070\u006C\u0069\u0074']("\u0054")[878722 ^ 878722]}</td>
       </tr>
-    `).join('');
-
-    jsonInputContainer.classList.add('hidden');
-    previewContainer.classList.remove('hidden');
+    `)['\u006A\u006F\u0069\u006E']('');
+    jsonInputContainer['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']('hidden');
+    previewContainer['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
   } catch (err) {
-    alert("ভুল JSON ফরম্যাট! কোডটি সঠিকভাবে পেস্ট করুন।\nত্রুটি: " + err.message);
+    alert("\u09AD\u09C1\u09B2\u0020\u004A\u0053\u004F\u004E\u0020\u09AB\u09B0\u09AE\u09CD\u09AF\u09BE\u099F\u0021\u0020\u0995\u09CB\u09A1\u099F\u09BF\u0020\u09B8\u09A0\u09BF\u0995\u09AD\u09BE\u09AC\u09C7\u0020\u09AA\u09C7\u09B8\u09CD\u099F\u0020\u0995\u09B0\u09C1\u09A8\u0964\u000A\u09A4\u09CD\u09B0\u09C1\u099F\u09BF\u003A\u0020" + err['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);
   }
 };
-
-document.getElementById('confirmBulkUploadBtn').onclick = async () => {
-  if (!parsedBulkDeeds.length) return;
-  const btn = document.getElementById('confirmBulkUploadBtn');
-  btn.disabled = true;
-  btn.textContent = "ডাটাবেজে যুক্ত হচ্ছে...";
-
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('confirmBulkUploadBtn')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = async () => {
+  if (!parsedBulkDeeds['\u006C\u0065\u006E\u0067\u0074\u0068']) return;
+  const btn = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('confirmBulkUploadBtn');
+  btn['\u0064\u0069\u0073\u0061\u0062\u006C\u0065\u0064'] = !![];
+  btn['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = "\u09A1\u09BE\u099F\u09BE\u09AC\u09C7\u099C\u09C7\u0020\u09AF\u09C1\u0995\u09CD\u09A4\u0020\u09B9\u099A\u09CD\u099B\u09C7\u002E\u002E\u002E";
   try {
-    const batch = db.batch();
-    const branch = currentITUser.officeCode || 'Bonpara';
-
-    parsedBulkDeeds.forEach(deed => {
-      const docRef = db.collection('deeds').doc();
-      batch.set(docRef, {
-        refNo: deed.refNo || 'N/A',
-        policyNo: deed.policyNo || 'N/A',
-        policyHolderName: deed.policyHolderName || 'N/A',
-        bmCode: deed.bmCode || 'N/A',
-        bmName: deed.bmName || 'N/A',
-        branchName: branch,
-        status: 'Received at Office',
-        incomingDate: deed.incomingDate || new Date().toISOString().split('T')[0],
-        deliveryDate: null,
-        deliveredTo: null,
-        itOfficerId: currentITUser.uid,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    var _0xe831ge = (120543 ^ 120536) + (468803 ^ 468802);
+    const batch = db['\u0062\u0061\u0074\u0063\u0068']();
+    _0xe831ge = (361934 ^ 361931) + (591426 ^ 591424);
+    let _0xbce67a;
+    const branch = currentITUser['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || "\u0042\u006F\u006E\u0070\u0061\u0072\u0061";
+    _0xbce67a = '\u0070\u0066\u0069\u006E\u0068\u0065';
+    parsedBulkDeeds['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](deed => {
+      const docRef = db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']('deeds')['\u0064\u006F\u0063']();
+      batch['\u0073\u0065\u0074'](docRef, {
+        '\u0072\u0065\u0066\u004E\u006F': deed['\u0072\u0065\u0066\u004E\u006F'] || 'N/A',
+        '\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F': deed['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F'] || "\u004E\u002F\u0041",
+        '\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065': deed['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065'] || 'N/A',
+        '\u0062\u006D\u0043\u006F\u0064\u0065': deed['\u0062\u006D\u0043\u006F\u0064\u0065'] || "\u004E\u002F\u0041",
+        '\u0062\u006D\u004E\u0061\u006D\u0065': deed['\u0062\u006D\u004E\u0061\u006D\u0065'] || "\u004E\u002F\u0041",
+        '\u0062\u0072\u0061\u006E\u0063\u0068\u004E\u0061\u006D\u0065': branch,
+        '\u0073\u0074\u0061\u0074\u0075\u0073': "\u0052\u0065\u0063\u0065\u0069\u0076\u0065\u0064\u0020\u0061\u0074\u0020\u004F\u0066\u0066\u0069\u0063\u0065",
+        "incomingDate": deed['\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065'] || new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()['\u0073\u0070\u006C\u0069\u0074']("\u0054")[725404 ^ 725404],
+        '\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065': null,
+        '\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F': null,
+        '\u0069\u0074\u004F\u0066\u0066\u0069\u0063\u0065\u0072\u0049\u0064': currentITUser['\u0075\u0069\u0064'],
+        "createdAt": firebase['\u0066\u0069\u0072\u0065\u0073\u0074\u006F\u0072\u0065']['\u0046\u0069\u0065\u006C\u0064\u0056\u0061\u006C\u0075\u0065']['\u0073\u0065\u0072\u0076\u0065\u0072\u0054\u0069\u006D\u0065\u0073\u0074\u0061\u006D\u0070']()
       });
     });
-
-    await batch.commit();
-    alert(`আলহামদুলিল্লাহ! ${parsedBulkDeeds.length} টি দলিল একসাথে সফলভাবে যুক্ত হয়েছে।`);
-    bulkModal.classList.add('hidden');
+    await batch['\u0063\u006F\u006D\u006D\u0069\u0074']();
+    alert(`আলহামদুলিল্লাহ! ${parsedBulkDeeds['\u006C\u0065\u006E\u0067\u0074\u0068']} টি দলিল একসাথে সফলভাবে যুক্ত হয়েছে।`);
+    bulkModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']('hidden');
   } catch (err) {
-    alert("বাল্ক আপলোড ত্রুটি: " + err.message);
+    alert("\u09AC\u09BE\u09B2\u09CD\u0995\u0020\u0986\u09AA\u09B2\u09CB\u09A1\u0020\u09A4\u09CD\u09B0\u09C1\u099F\u09BF\u003A\u0020" + err['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);
   } finally {
-    btn.disabled = false;
-    btn.textContent = "কনফার্ম ও ডাটাবেজে সেভ করুন";
+    btn['\u0064\u0069\u0073\u0061\u0062\u006C\u0065\u0064'] = false;
+    btn['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = "\u0995\u09A8\u09AB\u09BE\u09B0\u09CD\u09AE\u0020\u0993\u0020\u09A1\u09BE\u099F\u09BE\u09AC\u09C7\u099C\u09C7\u0020\u09B8\u09C7\u09AD\u0020\u0995\u09B0\u09C1\u09A8";
   }
 };
-
-document.getElementById('exportBackupBtn').onclick = () => {
-  if (!allDeeds.length) {
-    alert("ব্যাকআপ নেওয়ার মতো কোনো দলিল নেই।");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0065\u0078\u0070\u006F\u0072\u0074\u0042\u0061\u0063\u006B\u0075\u0070\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  if (!allDeeds['\u006C\u0065\u006E\u0067\u0074\u0068']) {
+    alert("\u09AC\u09CD\u09AF\u09BE\u0995\u0986\u09AA\u0020\u09A8\u09C7\u0993\u09DF\u09BE\u09B0\u0020\u09AE\u09A4\u09CB\u0020\u0995\u09CB\u09A8\u09CB\u0020\u09A6\u09B2\u09BF\u09B2\u0020\u09A8\u09C7\u0987\u0964");
     return;
   }
   const headers = ["Reference No,Policy No,Policy Holder Name,BM Code,BM Name,Branch,Status,Incoming Date,Delivery Date,Delivered To"];
-  const rows = allDeeds.map(d => [
-    `"${d.refNo || ''}"`,
-    `"${d.policyNo || ''}"`,
-    `"${d.policyHolderName || ''}"`,
-    `"${d.bmCode || ''}"`,
-    `"${d.bmName || ''}"`,
-    `"${d.branchName || ''}"`,
-    `"${d.status || ''}"`,
-    `"${d.incomingDate || ''}"`,
-    `"${d.deliveryDate || ''}"`,
-    `"${d.deliveredTo || ''}"`
-  ].join(','));
-
-  const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers, ...rows].join("\n");
-  const link = document.createElement("a");
-  link.setAttribute("href", encodeURI(csvContent));
-  link.setAttribute("download", `Deed_Backup_${currentITUser.officeCode || 'Branch'}_${new Date().toISOString().split('T')[0]}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  var _0xa26d8e = (771409 ^ 771411) + (570677 ^ 570675);
+  const rows = allDeeds['\u006D\u0061\u0070'](d => [`"${d['\u0072\u0065\u0066\u004E\u006F'] || ''}"`, `"${d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F'] || ''}"`, `"${d['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065'] || ''}"`, `"${d['\u0062\u006D\u0043\u006F\u0064\u0065'] || ''}"`, `"${d['\u0062\u006D\u004E\u0061\u006D\u0065'] || ''}"`, `"${d['\u0062\u0072\u0061\u006E\u0063\u0068\u004E\u0061\u006D\u0065'] || ''}"`, `"${d['\u0073\u0074\u0061\u0074\u0075\u0073'] || ''}"`, `"${d['\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065'] || ''}"`, `"${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065'] || ''}"`, `"${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F'] || ''}"`]['\u006A\u006F\u0069\u006E']("\u002C"));
+  _0xa26d8e = 897454 ^ 897449;
+  var _0xe2e = (474073 ^ 474073) + (265783 ^ 265779);
+  const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers, ...rows]['\u006A\u006F\u0069\u006E']("\u000A");
+  _0xe2e = (178933 ^ 178932) + (132131 ^ 132129);
+  const link = document['\u0063\u0072\u0065\u0061\u0074\u0065\u0045\u006C\u0065\u006D\u0065\u006E\u0074']("\u0061");
+  link['\u0073\u0065\u0074\u0041\u0074\u0074\u0072\u0069\u0062\u0075\u0074\u0065']("href", encodeURI(csvContent));
+  link['\u0073\u0065\u0074\u0041\u0074\u0074\u0072\u0069\u0062\u0075\u0074\u0065']("\u0064\u006F\u0077\u006E\u006C\u006F\u0061\u0064", `Deed_Backup_${currentITUser['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || "\u0042\u0072\u0061\u006E\u0063\u0068"}_${new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()['\u0073\u0070\u006C\u0069\u0074']("\u0054")[672017 ^ 672017]}.csv`);
+  document['\u0062\u006F\u0064\u0079']['\u0061\u0070\u0070\u0065\u006E\u0064\u0043\u0068\u0069\u006C\u0064'](link);
+  link['\u0063\u006C\u0069\u0063\u006B']();
+  document['\u0062\u006F\u0064\u0079']['\u0072\u0065\u006D\u006F\u0076\u0065\u0043\u0068\u0069\u006C\u0064'](link);
 };
-
-const deedModal = document.getElementById('deedModal');
-document.getElementById('openDeedModalBtn').onclick = () => {
-  document.getElementById('incomingDate').value = new Date().toISOString().split('T')[0];
-  deedModal.classList.remove('hidden');
+const deedModal = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u0065\u0064\u004D\u006F\u0064\u0061\u006C");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('openDeedModalBtn')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065")['\u0076\u0061\u006C\u0075\u0065'] = new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()['\u0073\u0070\u006C\u0069\u0074']("\u0054")[749370 ^ 749370];
+  deedModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
 };
-document.getElementById('closeDeedModal').onclick = () => deedModal.classList.add('hidden');
-document.getElementById('cancelDeedModal').onclick = () => deedModal.classList.add('hidden');
-
-document.getElementById('deedForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('closeDeedModal')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => deedModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('cancelDeedModal')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => deedModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u0065\u0064\u0046\u006F\u0072\u006D")['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']("\u0073\u0075\u0062\u006D\u0069\u0074", async e => {
+  e['\u0070\u0072\u0065\u0076\u0065\u006E\u0074\u0044\u0065\u0066\u0061\u0075\u006C\u0074']();
   try {
-    await db.collection('deeds').add({
-      refNo: document.getElementById('refNo').value.trim(),
-      policyNo: document.getElementById('policyNo').value.trim(),
-      policyHolderName: document.getElementById('policyHolderName').value.trim(),
-      bmCode: document.getElementById('bmCode').value.trim(),
-      bmName: document.getElementById('bmName').value.trim(),
-      branchName: currentITUser.officeCode || 'Bonpara',
-      status: 'Received at Office',
-      incomingDate: document.getElementById('incomingDate').value,
-      deliveryDate: null,
-      deliveredTo: null,
-      itOfficerId: currentITUser.uid,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0064\u0065\u0065\u0064\u0073")['\u0061\u0064\u0064']({
+      "refNo": document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0072\u0065\u0066\u004E\u006F")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D'](),
+      '\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F': document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('policyNo')['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D'](),
+      '\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065': document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D'](),
+      '\u0062\u006D\u0043\u006F\u0064\u0065': document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('bmCode')['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D'](),
+      '\u0062\u006D\u004E\u0061\u006D\u0065': document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('bmName')['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D'](),
+      '\u0062\u0072\u0061\u006E\u0063\u0068\u004E\u0061\u006D\u0065': currentITUser['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || "\u0042\u006F\u006E\u0070\u0061\u0072\u0061",
+      '\u0073\u0074\u0061\u0074\u0075\u0073': "\u0052\u0065\u0063\u0065\u0069\u0076\u0065\u0064\u0020\u0061\u0074\u0020\u004F\u0066\u0066\u0069\u0063\u0065",
+      '\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065': document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('incomingDate')['\u0076\u0061\u006C\u0075\u0065'],
+      '\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065': null,
+      "deliveredTo": null,
+      '\u0069\u0074\u004F\u0066\u0066\u0069\u0063\u0065\u0072\u0049\u0064': currentITUser['\u0075\u0069\u0064'],
+      '\u0063\u0072\u0065\u0061\u0074\u0065\u0064\u0041\u0074': firebase['\u0066\u0069\u0072\u0065\u0073\u0074\u006F\u0072\u0065']['\u0046\u0069\u0065\u006C\u0064\u0056\u0061\u006C\u0075\u0065']['\u0073\u0065\u0072\u0076\u0065\u0072\u0054\u0069\u006D\u0065\u0073\u0074\u0061\u006D\u0070']()
     });
-    document.getElementById('deedForm').reset();
-    deedModal.classList.add('hidden');
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('deedForm')['\u0072\u0065\u0073\u0065\u0074']();
+    deedModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
   } catch (err) {
-    alert("ত্রুটি: " + err.message);
+    alert("ত্রুটি: " + err['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);
   }
 });
-
 function loadDeeds() {
-  db.collection('deeds')
-    .where('branchName', '==', currentITUser.officeCode || 'Bonpara')
-    .onSnapshot((snapshot) => {
-      allDeeds = [];
-      snapshot.forEach(doc => allDeeds.push({ id: doc.id, ...doc.data() }));
-      renderDeeds(allDeeds);
-    });
+  db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0064\u0065\u0065\u0064\u0073")['\u0077\u0068\u0065\u0072\u0065']('branchName', '==', currentITUser['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || 'Bonpara')['\u006F\u006E\u0053\u006E\u0061\u0070\u0073\u0068\u006F\u0074'](snapshot => {
+    allDeeds = [];
+    snapshot['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](doc => allDeeds['\u0070\u0075\u0073\u0068']({
+      '\u0069\u0064': doc['\u0069\u0064'],
+      ...doc['\u0064\u0061\u0074\u0061']()
+    }));
+    renderDeeds(allDeeds);
+  });
 }
-
 function renderDeeds(deeds) {
-  const tbody = document.getElementById('deedsTableBody');
-  if (deeds.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-slate-500">কোনো দলিলের রেকর্ড পাওয়া যায়নি।</td></tr>`;
+  const _0x3e872c = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u0065\u0064\u0073\u0054\u0061\u0062\u006C\u0065\u0042\u006F\u0064\u0079");
+  if (deeds['\u006C\u0065\u006E\u0067\u0074\u0068'] === (315137 ^ 315137)) {
+    _0x3e872c['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = `<tr><td colspan="8" class="text-center p-6 text-slate-500">কোনো দলিলের রেকর্ড পাওয়া যায়নি।</td></tr>`;
     return;
   }
-
-  tbody.innerHTML = deeds.map(deed => {
-    const isOwner = deed.itOfficerId === currentITUser.uid;
-    let badge = deed.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' : (deed.status === 'Received at Office' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800');
+  _0x3e872c['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = deeds['\u006D\u0061\u0070'](deed => {
+    var _0x3e780b = (423616 ^ 423617) + (655249 ^ 655250);
+    const _0x13dd = deed['\u0069\u0074\u004F\u0066\u0066\u0069\u0063\u0065\u0072\u0049\u0064'] === currentITUser['\u0075\u0069\u0064'];
+    _0x3e780b = 844459 ^ 844458;
+    let _0x31c = deed['\u0073\u0074\u0061\u0074\u0075\u0073'] === 'Delivered' ? "\u0062\u0067\u002D\u0065\u006D\u0065\u0072\u0061\u006C\u0064\u002D\u0031\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0065\u006D\u0065\u0072\u0061\u006C\u0064\u002D\u0038\u0030\u0030" : deed['\u0073\u0074\u0061\u0074\u0075\u0073'] === "\u0052\u0065\u0063\u0065\u0069\u0076\u0065\u0064\u0020\u0061\u0074\u0020\u004F\u0066\u0066\u0069\u0063\u0065" ? 'bg-blue-100 text-blue-800' : "\u0062\u0067\u002D\u0061\u006D\u0062\u0065\u0072\u002D\u0031\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0061\u006D\u0062\u0065\u0072\u002D\u0038\u0030\u0030";
     return `
       <tr class="hover:bg-slate-50 transition">
-        <td class="p-3 font-medium">${deed.refNo}</td>
-        <td class="p-3 font-semibold text-emerald-700">${deed.policyNo}</td>
-        <td class="p-3">${deed.policyHolderName}</td>
-        <td class="p-3"><div>${deed.bmName}</div><span class="text-xs text-slate-400 font-mono">${deed.bmCode}</span></td>
-        <td class="p-3 text-xs">${deed.incomingDate || 'N/A'}</td>
-        <td class="p-3"><span class="text-xs px-2.5 py-1 rounded-full font-bold ${badge}">${deed.status}</span></td>
-        <td class="p-3 text-xs">${deed.deliveredTo ? `<b>${deed.deliveredTo}</b><br><span class="text-slate-400">${deed.deliveryDate}</span>` : 'অসম্পূর্ণ'}</td>
+        <td class="p-3 font-medium">${deed['\u0072\u0065\u0066\u004E\u006F']}</td>
+        <td class="p-3 font-semibold text-emerald-700">${deed['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F']}</td>
+        <td class="p-3">${deed['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065']}</td>
+        <td class="p-3"><div>${deed['\u0062\u006D\u004E\u0061\u006D\u0065']}</div><span class="text-xs text-slate-400 font-mono">${deed['\u0062\u006D\u0043\u006F\u0064\u0065']}</span></td>
+        <td class="p-3 text-xs">${deed['\u0069\u006E\u0063\u006F\u006D\u0069\u006E\u0067\u0044\u0061\u0074\u0065'] || "\u004E\u002F\u0041"}</td>
+        <td class="p-3"><span class="text-xs px-2.5 py-1 rounded-full font-bold ${_0x31c}">${deed['\u0073\u0074\u0061\u0074\u0075\u0073']}</span></td>
+        <td class="p-3 text-xs">${deed['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F'] ? `<b>${deed['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F']}</b><br><span class="text-slate-400">${deed['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065']}</span>` : 'অসম্পূর্ণ'}</td>
         <td class="p-3 text-center space-x-1">
-          <button onclick="openDeliveryModal('${deed.id}', '${deed.status}', '${deed.deliveredTo || ''}', '${deed.deliveryDate || ''}')" class="text-xs bg-slate-100 hover:bg-slate-200 border px-2 py-1 rounded">স্ট্যাটাস</button>
-          ${isOwner ? `
-            <button onclick="editDeedDetails('${deed.id}', '${deed.policyNo}', '${deed.policyHolderName}', '${deed.bmCode}', '${deed.bmName}')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded">এডিট</button>
-            <button onclick="deleteDeedRecord('${deed.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-800 px-2 py-1 rounded">ডিলিট</button>
+          <button onclick="openDeliveryModal('${deed['\u0069\u0064']}', '${deed['\u0073\u0074\u0061\u0074\u0075\u0073']}', '${deed['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F'] || ''}', '${deed['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065'] || ''}')" class="text-xs bg-slate-100 hover:bg-slate-200 border px-2 py-1 rounded">স্ট্যাটাস</button>
+          ${_0x13dd ? `
+            <button onclick="editDeedDetails('${deed['\u0069\u0064']}', '${deed['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F']}', '${deed['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065']}', '${deed['\u0062\u006D\u0043\u006F\u0064\u0065']}', '${deed['\u0062\u006D\u004E\u0061\u006D\u0065']}')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded">এডিট</button>
+            <button onclick="deleteDeedRecord('${deed['\u0069\u0064']}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-800 px-2 py-1 rounded">ডিলিট</button>
           ` : ''}
         </td>
       </tr>
     `;
-  }).join('');
+  })['\u006A\u006F\u0069\u006E']('');
 }
-
-const deliveryModal = document.getElementById('deliveryModal');
-const updateStatusSelect = document.getElementById('updateStatus');
-const deliveryFields = document.getElementById('deliveryFields');
-
-updateStatusSelect.onchange = (e) => {
-  if (e.target.value === 'Delivered') {
-    deliveryFields.classList.remove('hidden');
-    document.getElementById('deliveryDate').value = new Date().toISOString().split('T')[0];
+var _0x6f6cbf = (950250 ^ 950251) + (354641 ^ 354640);
+const deliveryModal = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('deliveryModal');
+_0x6f6cbf = (346565 ^ 346573) + (262091 ^ 262088);
+const updateStatusSelect = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0075\u0070\u0064\u0061\u0074\u0065\u0053\u0074\u0061\u0074\u0075\u0073");
+var _0x25b8f = (769413 ^ 769421) + (253749 ^ 253757);
+const deliveryFields = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0046\u0069\u0065\u006C\u0064\u0073");
+_0x25b8f = '\u0070\u0066\u0069\u0066\u0070\u0067';
+updateStatusSelect['\u006F\u006E\u0063\u0068\u0061\u006E\u0067\u0065'] = e => {
+  if (e['\u0074\u0061\u0072\u0067\u0065\u0074']['\u0076\u0061\u006C\u0075\u0065'] === 'Delivered') {
+    deliveryFields['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065")['\u0076\u0061\u006C\u0075\u0065'] = new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()['\u0073\u0070\u006C\u0069\u0074']("\u0054")[322132 ^ 322132];
   } else {
-    deliveryFields.classList.add('hidden');
+    deliveryFields['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']('hidden');
   }
 };
-
-window.openDeliveryModal = (id, status, deliveredTo, deliveryDate) => {
-  document.getElementById('editDeedId').value = id;
-  updateStatusSelect.value = status;
+window['\u006F\u0070\u0065\u006E\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u004D\u006F\u0064\u0061\u006C'] = (id, status, deliveredTo, deliveryDate) => {
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('editDeedId')['\u0076\u0061\u006C\u0075\u0065'] = id;
+  updateStatusSelect['\u0076\u0061\u006C\u0075\u0065'] = status;
   if (status === 'Delivered') {
-    deliveryFields.classList.remove('hidden');
-    document.getElementById('deliveredTo').value = deliveredTo;
-    document.getElementById('deliveryDate').value = deliveryDate || new Date().toISOString().split('T')[0];
+    deliveryFields['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F")['\u0076\u0061\u006C\u0075\u0065'] = deliveredTo;
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065")['\u0076\u0061\u006C\u0075\u0065'] = deliveryDate || new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()['\u0073\u0070\u006C\u0069\u0074']("\u0054")[256121 ^ 256121];
   } else {
-    deliveryFields.classList.add('hidden');
+    deliveryFields['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
   }
-  deliveryModal.classList.remove('hidden');
+  deliveryModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
 };
-
-document.getElementById('closeDeliveryModal').onclick = () => deliveryModal.classList.add('hidden');
-document.getElementById('cancelDeliveryModal').onclick = () => deliveryModal.classList.add('hidden');
-
-document.getElementById('deliveryForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const id = document.getElementById('editDeedId').value;
-  const status = updateStatusSelect.value;
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u006C\u006F\u0073\u0065\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u004D\u006F\u0064\u0061\u006C")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => deliveryModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u0061\u006E\u0063\u0065\u006C\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u004D\u006F\u0064\u0061\u006C")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => deliveryModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('deliveryForm')['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']('submit', async e => {
+  e['\u0070\u0072\u0065\u0076\u0065\u006E\u0074\u0044\u0065\u0066\u0061\u0075\u006C\u0074']();
+  var _0x2ad = (545147 ^ 545149) + (375764 ^ 375763);
+  const id = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('editDeedId')['\u0076\u0061\u006C\u0075\u0065'];
+  _0x2ad = (730022 ^ 730030) + (980333 ^ 980325);
+  const status = updateStatusSelect['\u0076\u0061\u006C\u0075\u0065'];
   const payload = {
-    status,
-    deliveredTo: status === 'Delivered' ? document.getElementById('deliveredTo').value.trim() : null,
-    deliveryDate: status === 'Delivered' ? document.getElementById('deliveryDate').value : null
+    '\u0073\u0074\u0061\u0074\u0075\u0073': status,
+    '\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F': status === 'Delivered' ? document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('deliveredTo')['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D']() : null,
+    '\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065': status === 'Delivered' ? document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('deliveryDate')['\u0076\u0061\u006C\u0075\u0065'] : null
   };
-  await db.collection('deeds').doc(id).update(payload);
-  deliveryModal.classList.add('hidden');
+  await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0064\u0065\u0065\u0064\u0073")['\u0064\u006F\u0063'](id)['\u0075\u0070\u0064\u0061\u0074\u0065'](payload);
+  deliveryModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
 });
-
-window.editDeedDetails = async (id, currentPolicy, currentHolder, currentBM, currentBMName) => {
-  const newPolicy = prompt("পলিসি নং সংশোধন করুন:", currentPolicy);
-  const newHolder = prompt("গ্রাহকের নাম সংশোধন করুন:", currentHolder);
-  const newBM = prompt("BM কোড সংশোধন করুন:", currentBM);
+window['\u0065\u0064\u0069\u0074\u0044\u0065\u0065\u0064\u0044\u0065\u0074\u0061\u0069\u006C\u0073'] = async (id, currentPolicy, currentHolder, currentBM, currentBMName) => {
+  const newPolicy = prompt("\u09AA\u09B2\u09BF\u09B8\u09BF\u0020\u09A8\u0982\u0020\u09B8\u0982\u09B6\u09CB\u09A7\u09A8\u0020\u0995\u09B0\u09C1\u09A8\u003A", currentPolicy);
+  var _0xfebcbc = (350249 ^ 350248) + (979405 ^ 979397);
+  const newHolder = prompt("\u0997\u09CD\u09B0\u09BE\u09B9\u0995\u09C7\u09B0\u0020\u09A8\u09BE\u09AE\u0020\u09B8\u0982\u09B6\u09CB\u09A7\u09A8\u0020\u0995\u09B0\u09C1\u09A8\u003A", currentHolder);
+  _0xfebcbc = '\u0070\u0068\u0067\u0067\u0067\u0071';
+  var _0x81cfa = (912280 ^ 912273) + (949179 ^ 949179);
+  const newBM = prompt("\u0042\u004D\u0020\u0995\u09CB\u09A1\u0020\u09B8\u0982\u09B6\u09CB\u09A7\u09A8\u0020\u0995\u09B0\u09C1\u09A8\u003A", currentBM);
+  _0x81cfa = 123896 ^ 123888;
+  let _0x3d1fe;
   const newBMName = prompt("BM-এর নাম সংশোধন করুন:", currentBMName);
-
+  _0x3d1fe = (379862 ^ 379871) + (978554 ^ 978555);
   if (newPolicy && newHolder) {
-    await db.collection('deeds').doc(id).update({
-      policyNo: newPolicy,
-      policyHolderName: newHolder,
-      bmCode: newBM,
-      bmName: newBMName
+    await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0064\u0065\u0065\u0064\u0073")['\u0064\u006F\u0063'](id)['\u0075\u0070\u0064\u0061\u0074\u0065']({
+      '\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F': newPolicy,
+      '\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065': newHolder,
+      '\u0062\u006D\u0043\u006F\u0064\u0065': newBM,
+      "bmName": newBMName
     });
-    alert("দলিল তথ্য সফলভাবে হালনাগাদ করা হয়েছে!");
+    alert("\u09A6\u09B2\u09BF\u09B2\u0020\u09A4\u09A5\u09CD\u09AF\u0020\u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7\u0020\u09B9\u09BE\u09B2\u09A8\u09BE\u0997\u09BE\u09A6\u0020\u0995\u09B0\u09BE\u0020\u09B9\u09DF\u09C7\u099B\u09C7\u0021");
   }
 };
-
-window.deleteDeedRecord = async (id) => {
+window['\u0064\u0065\u006C\u0065\u0074\u0065\u0044\u0065\u0065\u0064\u0052\u0065\u0063\u006F\u0072\u0064'] = async id => {
   if (confirm("আপনি কি নিশ্চিতভাবে এই দলিলটি মুছে ফেলতে চান?")) {
-    await db.collection('deeds').doc(id).delete();
+    await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']('deeds')['\u0064\u006F\u0063'](id)['\u0064\u0065\u006C\u0065\u0074\u0065']();
   }
 };
-
-const userModal = document.getElementById('userModal');
-document.getElementById('openUserModalBtn').onclick = () => userModal.classList.remove('hidden');
-document.getElementById('closeUserModal').onclick = () => userModal.classList.add('hidden');
-document.getElementById('cancelUserModal').onclick = () => userModal.classList.add('hidden');
-
+var _0x8d62d = (578814 ^ 578810) + (962580 ^ 962578);
+const userModal = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('userModal');
+_0x8d62d = (618166 ^ 618174) + (418974 ^ 418971);
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006F\u0070\u0065\u006E\u0055\u0073\u0065\u0072\u004D\u006F\u0064\u0061\u006C\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => userModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('closeUserModal')['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => userModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u0061\u006E\u0063\u0065\u006C\u0055\u0073\u0065\u0072\u004D\u006F\u0064\u0061\u006C")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => userModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
 function loadFieldUsers() {
-  db.collection('users')
-    .where('createdBy', '==', currentITUser.uid)
-    .onSnapshot((snapshot) => {
-      const tbody = document.getElementById('usersTableBody');
-      if (snapshot.empty) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-500">আপনার তৈরি করা কোনো ফিল্ড অফিসার পাওয়া যায়নি।</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = snapshot.docs.map(docSnap => {
-        const u = docSnap.data();
-        const passPending = u.pendingPassword ? `<span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-mono">Pending: ${u.pendingPassword}</span>` : `<span class="text-xs text-slate-400">সিঙ্কড</span>`;
-        return `
+  db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']('users')['\u0077\u0068\u0065\u0072\u0065']("\u0063\u0072\u0065\u0061\u0074\u0065\u0064\u0042\u0079", "\u003D\u003D", currentITUser['\u0075\u0069\u0064'])['\u006F\u006E\u0053\u006E\u0061\u0070\u0073\u0068\u006F\u0074'](snapshot => {
+    var _0xe9f8e = (104203 ^ 104204) + (823988 ^ 823997);
+    const _0x2cg = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0075\u0073\u0065\u0072\u0073\u0054\u0061\u0062\u006C\u0065\u0042\u006F\u0064\u0079");
+    _0xe9f8e = (182086 ^ 182087) + (967516 ^ 967516);
+    if (snapshot['\u0065\u006D\u0070\u0074\u0079']) {
+      _0x2cg['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = `<tr><td colspan="5" class="text-center p-6 text-slate-500">আপনার তৈরি করা কোনো ফিল্ড অফিসার পাওয়া যায়নি।</td></tr>`;
+      return;
+    }
+    _0x2cg['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = snapshot['\u0064\u006F\u0063\u0073']['\u006D\u0061\u0070'](docSnap => {
+      let _0x7g19e;
+      const u = docSnap['\u0064\u0061\u0074\u0061']();
+      _0x7g19e = (501636 ^ 501645) + (332379 ^ 332378);
+      const _0x67bca = u['\u0070\u0065\u006E\u0064\u0069\u006E\u0067\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064'] ? `<span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-mono">Pending: ${u['\u0070\u0065\u006E\u0064\u0069\u006E\u0067\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064']}</span>` : `<span class="text-xs text-slate-400">সিঙ্কড</span>`;
+      return `
           <tr class="hover:bg-slate-50 transition">
-            <td class="p-3 font-medium">${u.email}</td>
-            <td class="p-3"><span class="uppercase text-xs font-bold px-2 py-0.5 bg-slate-100 border rounded">${u.role}</span></td>
-            <td class="p-3 font-mono text-emerald-700">${u.bmCode || 'N/A'}</td>
-            <td class="p-3">${passPending}</td>
+            <td class="p-3 font-medium">${u['\u0065\u006D\u0061\u0069\u006C']}</td>
+            <td class="p-3"><span class="uppercase text-xs font-bold px-2 py-0.5 bg-slate-100 border rounded">${u['\u0072\u006F\u006C\u0065']}</span></td>
+            <td class="p-3 font-mono text-emerald-700">${u['\u0062\u006D\u0043\u006F\u0064\u0065'] || "\u004E\u002F\u0041"}</td>
+            <td class="p-3">${_0x67bca}</td>
             <td class="p-3 text-center space-x-1">
-              <button onclick="changeFieldUserPassword('${docSnap.id}', '${u.email}')" class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded">পাসওয়ার্ড পরিবর্তন</button>
-              <button onclick="editFieldUserInfo('${docSnap.id}', '${u.role}', '${u.bmCode || ''}')" class="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded">এডিট</button>
-              <button onclick="deleteFieldUserRecord('${docSnap.id}', '${u.email}')" class="text-xs bg-red-50 text-red-700 border border-red-200 px-2 py-1 rounded">ডিলিট</button>
+              <button onclick="changeFieldUserPassword('${docSnap['\u0069\u0064']}', '${u['\u0065\u006D\u0061\u0069\u006C']}')" class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded">পাসওয়ার্ড পরিবর্তন</button>
+              <button onclick="editFieldUserInfo('${docSnap['\u0069\u0064']}', '${u['\u0072\u006F\u006C\u0065']}', '${u['\u0062\u006D\u0043\u006F\u0064\u0065'] || ''}')" class="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded">এডিট</button>
+              <button onclick="deleteFieldUserRecord('${docSnap['\u0069\u0064']}', '${u['\u0065\u006D\u0061\u0069\u006C']}')" class="text-xs bg-red-50 text-red-700 border border-red-200 px-2 py-1 rounded">ডিলিট</button>
             </td>
           </tr>
         `;
-      }).join('');
-    });
+    })['\u006A\u006F\u0069\u006E']('');
+  });
 }
-
-window.changeFieldUserPassword = async (uid, email) => {
+window['\u0063\u0068\u0061\u006E\u0067\u0065\u0046\u0069\u0065\u006C\u0064\u0055\u0073\u0065\u0072\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064'] = async (uid, email) => {
   const newPass = prompt(`'${email}' এর জন্য নতুন পাসওয়ার্ড লিখুন (কমপক্ষে ৬ অক্ষর):`);
   if (!newPass) return;
-  if (newPass.length < 6) {
-    alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
+  if (newPass['\u006C\u0065\u006E\u0067\u0074\u0068'] < (379804 ^ 379802)) {
+    alert("\u09AA\u09BE\u09B8\u0993\u09DF\u09BE\u09B0\u09CD\u09A1\u0020\u0995\u09AE\u09AA\u0995\u09CD\u09B7\u09C7\u0020\u09EC\u0020\u0985\u0995\u09CD\u09B7\u09B0\u09C7\u09B0\u0020\u09B9\u09A4\u09C7\u0020\u09B9\u09AC\u09C7\u0021");
     return;
   }
-  await db.collection('users').doc(uid).update({
-    pendingPassword: newPass,
-    lastPasswordResetAt: new Date().toISOString()
+  await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']('users')['\u0064\u006F\u0063'](uid)['\u0075\u0070\u0064\u0061\u0074\u0065']({
+    '\u0070\u0065\u006E\u0064\u0069\u006E\u0067\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064': newPass,
+    '\u006C\u0061\u0073\u0074\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064\u0052\u0065\u0073\u0065\u0074\u0041\u0074': new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()
   });
   alert(`পাসওয়ার্ড সেট হয়েছে! ফিল্ড অফিসার এখন (${newPass}) দিয়ে সরাসরি লগইন করতে পারবেন।`);
 };
-
-window.editFieldUserInfo = async (uid, role, bmCode) => {
-  const newRole = prompt("নতুন পদবী দিন (bm / um / fa / sm / asm):", role);
-  const newBM = prompt("নতুন BM কোড দিন:", bmCode);
+window['\u0065\u0064\u0069\u0074\u0046\u0069\u0065\u006C\u0064\u0055\u0073\u0065\u0072\u0049\u006E\u0066\u006F'] = async (uid, role, bmCode) => {
+  let _0x3c1b;
+  const newRole = prompt("\u09A8\u09A4\u09C1\u09A8\u0020\u09AA\u09A6\u09AC\u09C0\u0020\u09A6\u09BF\u09A8\u0020\u0028\u0062\u006D\u0020\u002F\u0020\u0075\u006D\u0020\u002F\u0020\u0066\u0061\u0020\u002F\u0020\u0073\u006D\u0020\u002F\u0020\u0061\u0073\u006D\u0029\u003A", role);
+  _0x3c1b = (823978 ^ 823979) + (281522 ^ 281520);
+  const newBM = prompt("\u09A8\u09A4\u09C1\u09A8\u0020\u0042\u004D\u0020\u0995\u09CB\u09A1\u0020\u09A6\u09BF\u09A8\u003A", bmCode);
   if (newRole) {
-    await db.collection('users').doc(uid).update({
-      role: newRole,
-      bmCode: newBM || null
+    await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0075\u0073\u0065\u0072\u0073")['\u0064\u006F\u0063'](uid)['\u0075\u0070\u0064\u0061\u0074\u0065']({
+      '\u0072\u006F\u006C\u0065': newRole,
+      '\u0062\u006D\u0043\u006F\u0064\u0065': newBM || null
     });
     alert("ইউজার তথ্য আপডেট হয়েছে!");
   }
 };
-
-window.deleteFieldUserRecord = async (uid, email) => {
+window['\u0064\u0065\u006C\u0065\u0074\u0065\u0046\u0069\u0065\u006C\u0064\u0055\u0073\u0065\u0072\u0052\u0065\u0063\u006F\u0072\u0064'] = async (uid, email) => {
   if (confirm(`আপনি কি নিশ্চিতভাবে ${email} অ্যাকাউন্টটি ডিলিট করতে চান?`)) {
-    await db.collection('users').doc(uid).delete();
+    await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0075\u0073\u0065\u0072\u0073")['\u0064\u006F\u0063'](uid)['\u0064\u0065\u006C\u0065\u0074\u0065']();
     alert("ইউজার ডিলিট করা হয়েছে।");
   }
 };
-
-document.getElementById('fieldUserForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('newUserEmail').value.trim();
-  const password = document.getElementById('newUserPassword').value;
-  const role = document.getElementById('newUserRole').value;
-  const bmCode = document.getElementById('newUserBMCode').value.trim();
-
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0066\u0069\u0065\u006C\u0064\u0055\u0073\u0065\u0072\u0046\u006F\u0072\u006D")['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']("\u0073\u0075\u0062\u006D\u0069\u0074", async e => {
+  e['\u0070\u0072\u0065\u0076\u0065\u006E\u0074\u0044\u0065\u0066\u0061\u0075\u006C\u0074']();
+  const email = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006E\u0065\u0077\u0055\u0073\u0065\u0072\u0045\u006D\u0061\u0069\u006C")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D']();
+  const password = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006E\u0065\u0077\u0055\u0073\u0065\u0072\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064")['\u0076\u0061\u006C\u0075\u0065'];
+  var _0x1a2bga = (716694 ^ 716688) + (704873 ^ 704864);
+  const role = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006E\u0065\u0077\u0055\u0073\u0065\u0072\u0052\u006F\u006C\u0065")['\u0076\u0061\u006C\u0075\u0065'];
+  _0x1a2bga = "oqfdji";
+  let _0xe_0xb6e;
+  const bmCode = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006E\u0065\u0077\u0055\u0073\u0065\u0072\u0042\u004D\u0043\u006F\u0064\u0065")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D']();
+  _0xe_0xb6e = (159460 ^ 159469) + (626367 ^ 626366);
   try {
-    const secondaryApp = firebase.initializeApp(firebaseConfig, "ITSecAuthApp");
-    const newUserCredential = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
-
-    await db.collection('users').doc(newUserCredential.user.uid).set({
-      uid: newUserCredential.user.uid,
-      email: email,
-      role: role,
-      bmCode: bmCode,
-      officeCode: currentITUser.officeCode || 'Bonpara',
-      createdBy: currentITUser.uid,
-      currentAuthPass: password,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    var _0xd47a = (355000 ^ 355002) + (966517 ^ 966525);
+    const secondaryApp = firebase['\u0069\u006E\u0069\u0074\u0069\u0061\u006C\u0069\u007A\u0065\u0041\u0070\u0070'](firebaseConfig, "\u0049\u0054\u0053\u0065\u0063\u0041\u0075\u0074\u0068\u0041\u0070\u0070");
+    _0xd47a = 216510 ^ 216510;
+    const newUserCredential = await secondaryApp['\u0061\u0075\u0074\u0068']()['\u0063\u0072\u0065\u0061\u0074\u0065\u0055\u0073\u0065\u0072\u0057\u0069\u0074\u0068\u0045\u006D\u0061\u0069\u006C\u0041\u006E\u0064\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064'](email, password);
+    await db['\u0063\u006F\u006C\u006C\u0065\u0063\u0074\u0069\u006F\u006E']("\u0075\u0073\u0065\u0072\u0073")['\u0064\u006F\u0063'](newUserCredential['\u0075\u0073\u0065\u0072']['\u0075\u0069\u0064'])['\u0073\u0065\u0074']({
+      "uid": newUserCredential['\u0075\u0073\u0065\u0072']['\u0075\u0069\u0064'],
+      "email": email,
+      '\u0072\u006F\u006C\u0065': role,
+      "bmCode": bmCode,
+      '\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065': currentITUser['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || 'Bonpara',
+      '\u0063\u0072\u0065\u0061\u0074\u0065\u0064\u0042\u0079': currentITUser['\u0075\u0069\u0064'],
+      '\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0041\u0075\u0074\u0068\u0050\u0061\u0073\u0073': password,
+      '\u0063\u0072\u0065\u0061\u0074\u0065\u0064\u0041\u0074': firebase['\u0066\u0069\u0072\u0065\u0073\u0074\u006F\u0072\u0065']['\u0046\u0069\u0065\u006C\u0064\u0056\u0061\u006C\u0075\u0065']['\u0073\u0065\u0072\u0076\u0065\u0072\u0054\u0069\u006D\u0065\u0073\u0074\u0061\u006D\u0070']()
     });
-
-    await secondaryApp.delete();
-    alert("ফিল্ড অফিসার সফলভাবে তৈরি করা হয়েছে!");
-    document.getElementById('fieldUserForm').reset();
-    userModal.classList.add('hidden');
+    await secondaryApp['\u0064\u0065\u006C\u0065\u0074\u0065']();
+    alert("\u09AB\u09BF\u09B2\u09CD\u09A1\u0020\u0985\u09AB\u09BF\u09B8\u09BE\u09B0\u0020\u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7\u0020\u09A4\u09C8\u09B0\u09BF\u0020\u0995\u09B0\u09BE\u0020\u09B9\u09DF\u09C7\u099B\u09C7\u0021");
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('fieldUserForm')['\u0072\u0065\u0073\u0065\u0074']();
+    userModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
   } catch (err) {
-    alert("ত্রুটি: " + err.message);
+    alert("\u09A4\u09CD\u09B0\u09C1\u099F\u09BF\u003A\u0020" + err['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);
   }
 });
-
 function applyFilters() {
-  const p = document.getElementById('searchPolicy').value.toLowerCase().trim();
-  const b = document.getElementById('searchBM').value.toLowerCase().trim();
-  const s = document.getElementById('filterStatus').value;
-
-  const res = allDeeds.filter(d => {
-    return (p ? d.policyNo && d.policyNo.toLowerCase().includes(p) : true) &&
-           (b ? d.bmCode && d.bmCode.toLowerCase().includes(b) : true) &&
-           (s ? d.status === s : true);
+  const p = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('searchPolicy')['\u0076\u0061\u006C\u0075\u0065']['\u0074\u006F\u004C\u006F\u0077\u0065\u0072\u0043\u0061\u0073\u0065']()['\u0074\u0072\u0069\u006D']();
+  var _0x52cd = (167663 ^ 167663) + (618334 ^ 618328);
+  const b = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0073\u0065\u0061\u0072\u0063\u0068\u0042\u004D")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u006F\u004C\u006F\u0077\u0065\u0072\u0043\u0061\u0073\u0065']()['\u0074\u0072\u0069\u006D']();
+  _0x52cd = (375449 ^ 375440) + (409621 ^ 409618);
+  let _0xe1a;
+  const s = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0066\u0069\u006C\u0074\u0065\u0072\u0053\u0074\u0061\u0074\u0075\u0073")['\u0076\u0061\u006C\u0075\u0065'];
+  _0xe1a = '\u0067\u006D\u0063\u0063\u0069\u0065';
+  const _0x32aa = allDeeds['\u0066\u0069\u006C\u0074\u0065\u0072'](d => {
+    return (p ? d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F'] && d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F']['\u0074\u006F\u004C\u006F\u0077\u0065\u0072\u0043\u0061\u0073\u0065']()['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](p) : !![]) && (b ? d['\u0062\u006D\u0043\u006F\u0064\u0065'] && d['\u0062\u006D\u0043\u006F\u0064\u0065']['\u0074\u006F\u004C\u006F\u0077\u0065\u0072\u0043\u0061\u0073\u0065']()['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](b) : !![]) && (s ? d['\u0073\u0074\u0061\u0074\u0075\u0073'] === s : !![]);
   });
-  renderDeeds(res);
+  renderDeeds(_0x32aa);
 }
-
-document.getElementById('searchPolicy').oninput = applyFilters;
-document.getElementById('searchBM').oninput = applyFilters;
-document.getElementById('filterStatus').onchange = applyFilters;
-document.getElementById('resetFilters').onclick = () => {
-  document.getElementById('searchPolicy').value = '';
-  document.getElementById('searchBM').value = '';
-  document.getElementById('filterStatus').value = '';
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('searchPolicy')['\u006F\u006E\u0069\u006E\u0070\u0075\u0074'] = applyFilters;
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0073\u0065\u0061\u0072\u0063\u0068\u0042\u004D")['\u006F\u006E\u0069\u006E\u0070\u0075\u0074'] = applyFilters;
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0066\u0069\u006C\u0074\u0065\u0072\u0053\u0074\u0061\u0074\u0075\u0073")['\u006F\u006E\u0063\u0068\u0061\u006E\u0067\u0065'] = applyFilters;
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0072\u0065\u0073\u0065\u0074\u0046\u0069\u006C\u0074\u0065\u0072\u0073")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('searchPolicy')['\u0076\u0061\u006C\u0075\u0065'] = '';
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0073\u0065\u0061\u0072\u0063\u0068\u0042\u004D")['\u0076\u0061\u006C\u0075\u0065'] = '';
+  document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0066\u0069\u006C\u0074\u0065\u0072\u0053\u0074\u0061\u0074\u0075\u0073")['\u0076\u0061\u006C\u0075\u0065'] = '';
   renderDeeds(allDeeds);
 };
