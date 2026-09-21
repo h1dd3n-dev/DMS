@@ -1,193 +1,203 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import { initializeApp } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0061\u0070\u0070\u002E\u006A\u0073";
+import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0061\u0075\u0074\u0068\u002E\u006A\u0073";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot, serverTimestamp } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0066\u0069\u0072\u0065\u0073\u0074\u006F\u0072\u0065\u002E\u006A\u0073";
+var _0x58712b = (429480 ^ 429480) + (543652 ^ 543648);
 const firebaseConfig = {
-  apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
-  authDomain: "alpha-deed-management.firebaseapp.com",
-  projectId: "alpha-deed-management",
-  storageBucket: "alpha-deed-management.firebasestorage.app",
-  messagingSenderId: "460540818357",
-  appId: "1:460540818357:web:ae0aac3ef01d690774dffc",
-  measurementId: "G-GZK5JDLCEZ"
+  "apiKey": "\u0041\u0049\u007A\u0061\u0053\u0079\u0042\u004C\u005F\u006E\u0068\u0064\u0045\u0044\u0079\u004C\u0044\u005F\u0033\u0048\u006E\u0068\u006A\u005A\u0031\u0034\u004C\u004F\u0059\u004C\u0043\u006A\u0061\u0078\u004F\u0077\u004A\u0079\u0059",
+  '\u0061\u0075\u0074\u0068\u0044\u006F\u006D\u0061\u0069\u006E': "alpha-deed-management.firebaseapp.com",
+  "projectId": "\u0061\u006C\u0070\u0068\u0061\u002D\u0064\u0065\u0065\u0064\u002D\u006D\u0061\u006E\u0061\u0067\u0065\u006D\u0065\u006E\u0074",
+  '\u0073\u0074\u006F\u0072\u0061\u0067\u0065\u0042\u0075\u0063\u006B\u0065\u0074': "\u0061\u006C\u0070\u0068\u0061\u002D\u0064\u0065\u0065\u0064\u002D\u006D\u0061\u006E\u0061\u0067\u0065\u006D\u0065\u006E\u0074\u002E\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u0073\u0074\u006F\u0072\u0061\u0067\u0065\u002E\u0061\u0070\u0070",
+  '\u006D\u0065\u0073\u0073\u0061\u0067\u0069\u006E\u0067\u0053\u0065\u006E\u0064\u0065\u0072\u0049\u0064': "\u0034\u0036\u0030\u0035\u0034\u0030\u0038\u0031\u0038\u0033\u0035\u0037",
+  '\u0061\u0070\u0070\u0049\u0064': "\u0031\u003A\u0034\u0036\u0030\u0035\u0034\u0030\u0038\u0031\u0038\u0033\u0035\u0037\u003A\u0077\u0065\u0062\u003A\u0061\u0065\u0030\u0061\u0061\u0063\u0033\u0065\u0066\u0030\u0031\u0064\u0036\u0039\u0030\u0037\u0037\u0034\u0064\u0066\u0066\u0063",
+  '\u006D\u0065\u0061\u0073\u0075\u0072\u0065\u006D\u0065\u006E\u0074\u0049\u0064': "G-GZK5JDLCEZ"
 };
-
+_0x58712b = '\u006C\u0062\u006C\u006B\u006C\u0064';
+let _0x347dfc;
 const app = initializeApp(firebaseConfig);
+_0x347dfc = (967848 ^ 967849) + (283190 ^ 283190);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async user => {
   if (!user) {
-    window.location.href = 'index.html';
+    window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = "\u0069\u006E\u0064\u0065\u0078\u002E\u0068\u0074\u006D\u006C";
     return;
   }
-  const userSnap = await getDoc(doc(db, 'users', user.uid));
-  if (userSnap.exists() && userSnap.data().role === 'super_admin') {
-    document.getElementById('adminEmail').textContent = user.email;
+  var _0xb72a6f = (582279 ^ 582275) + (552804 ^ 552813);
+  const userSnap = await getDoc(doc(db, 'users', user['\u0075\u0069\u0064']));
+  _0xb72a6f = (853325 ^ 853326) + (906468 ^ 906467);
+  if (userSnap['\u0065\u0078\u0069\u0073\u0074\u0073']() && userSnap['\u0064\u0061\u0074\u0061']()['\u0072\u006F\u006C\u0065'] === "\u0073\u0075\u0070\u0065\u0072\u005F\u0061\u0064\u006D\u0069\u006E") {
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0061\u0064\u006D\u0069\u006E\u0045\u006D\u0061\u0069\u006C")['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = user['\u0065\u006D\u0061\u0069\u006C'];
     loadSystemUsers();
     loadGlobalDeeds();
   } else {
-    alert("অননুমোদিত অ্যাক্সেস!");
-    window.location.href = 'index.html';
+    alert("\u0985\u09A8\u09A8\u09C1\u09AE\u09CB\u09A6\u09BF\u09A4\u0020\u0985\u09CD\u09AF\u09BE\u0995\u09CD\u09B8\u09C7\u09B8\u0021");
+    window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = 'index.html';
   }
 });
-
-document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => window.location.href = 'index.html');
-
-const tabUsersBtn = document.getElementById('tabUsersBtn');
-const tabDeedsBtn = document.getElementById('tabDeedsBtn');
-const usersSection = document.getElementById('usersSection');
-const deedsSection = document.getElementById('deedsSection');
-
-tabUsersBtn.onclick = () => {
-  usersSection.classList.remove('hidden');
-  deedsSection.classList.add('hidden');
-  tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white";
-  tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700";
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006C\u006F\u0067\u006F\u0075\u0074\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => signOut(auth)['\u0074\u0068\u0065\u006E'](() => window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = "\u0069\u006E\u0064\u0065\u0078\u002E\u0068\u0074\u006D\u006C");
+const tabUsersBtn = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0074\u0061\u0062\u0055\u0073\u0065\u0072\u0073\u0042\u0074\u006E");
+let _0xf98e;
+const tabDeedsBtn = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0074\u0061\u0062\u0044\u0065\u0065\u0064\u0073\u0042\u0074\u006E");
+_0xf98e = 415222 ^ 415231;
+const usersSection = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('usersSection');
+const deedsSection = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0064\u0065\u0065\u0064\u0073\u0053\u0065\u0063\u0074\u0069\u006F\u006E");
+tabUsersBtn['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  usersSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']('hidden');
+  deedsSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  tabUsersBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "\u0070\u0078\u002D\u0034\u0020\u0070\u0079\u002D\u0032\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006D\u0020\u0066\u006F\u006E\u0074\u002D\u0073\u0065\u006D\u0069\u0062\u006F\u006C\u0064\u0020\u0072\u006F\u0075\u006E\u0064\u0065\u0064\u002D\u006C\u0067\u0020\u0062\u0067\u002D\u0065\u006D\u0065\u0072\u0061\u006C\u0064\u002D\u0036\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0077\u0068\u0069\u0074\u0065";
+  tabDeedsBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "\u0070\u0078\u002D\u0034\u0020\u0070\u0079\u002D\u0032\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006D\u0020\u0066\u006F\u006E\u0074\u002D\u0073\u0065\u006D\u0069\u0062\u006F\u006C\u0064\u0020\u0072\u006F\u0075\u006E\u0064\u0065\u0064\u002D\u006C\u0067\u0020\u0062\u0067\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0038\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0033\u0030\u0030\u0020\u0068\u006F\u0076\u0065\u0072\u003A\u0062\u0067\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0037\u0030\u0030";
 };
-
-tabDeedsBtn.onclick = () => {
-  deedsSection.classList.remove('hidden');
-  usersSection.classList.add('hidden');
-  tabDeedsBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white";
-  tabUsersBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700";
+tabDeedsBtn['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => {
+  deedsSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  usersSection['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  tabDeedsBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "\u0070\u0078\u002D\u0034\u0020\u0070\u0079\u002D\u0032\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006D\u0020\u0066\u006F\u006E\u0074\u002D\u0073\u0065\u006D\u0069\u0062\u006F\u006C\u0064\u0020\u0072\u006F\u0075\u006E\u0064\u0065\u0064\u002D\u006C\u0067\u0020\u0062\u0067\u002D\u0065\u006D\u0065\u0072\u0061\u006C\u0064\u002D\u0036\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0077\u0068\u0069\u0074\u0065";
+  tabUsersBtn['\u0063\u006C\u0061\u0073\u0073\u004E\u0061\u006D\u0065'] = "\u0070\u0078\u002D\u0034\u0020\u0070\u0079\u002D\u0032\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006D\u0020\u0066\u006F\u006E\u0074\u002D\u0073\u0065\u006D\u0069\u0062\u006F\u006C\u0064\u0020\u0072\u006F\u0075\u006E\u0064\u0065\u0064\u002D\u006C\u0067\u0020\u0062\u0067\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0038\u0030\u0030\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0033\u0030\u0030\u0020\u0068\u006F\u0076\u0065\u0072\u003A\u0062\u0067\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0037\u0030\u0030";
 };
-
-const itModal = document.getElementById('itModal');
-document.getElementById('openITModalBtn').onclick = () => itModal.classList.remove('hidden');
-document.getElementById('closeITModal').onclick = () => itModal.classList.add('hidden');
-document.getElementById('cancelITModal').onclick = () => itModal.classList.add('hidden');
-
-document.getElementById('createITForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('itEmail').value.trim();
-  const password = document.getElementById('itPassword').value;
-  const branch = document.getElementById('itBranch').value.trim();
-
+let _0x21bcc;
+const itModal = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('itModal');
+_0x21bcc = 309178 ^ 309179;
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006F\u0070\u0065\u006E\u0049\u0054\u004D\u006F\u0064\u0061\u006C\u0042\u0074\u006E")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => itModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u006C\u006F\u0073\u0065\u0049\u0054\u004D\u006F\u0064\u0061\u006C")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => itModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u0061\u006E\u0063\u0065\u006C\u0049\u0054\u004D\u006F\u0064\u0061\u006C")['\u006F\u006E\u0063\u006C\u0069\u0063\u006B'] = () => itModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('createITForm')['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']("\u0073\u0075\u0062\u006D\u0069\u0074", async e => {
+  e['\u0070\u0072\u0065\u0076\u0065\u006E\u0074\u0044\u0065\u0066\u0061\u0075\u006C\u0074']();
+  let _0xcbafbe;
+  const email = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0069\u0074\u0045\u006D\u0061\u0069\u006C")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D']();
+  _0xcbafbe = (662887 ^ 662885) + (632125 ^ 632122);
+  const password = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('itPassword')['\u0076\u0061\u006C\u0075\u0065'];
+  var _0x6ea4f = (299451 ^ 299448) + (777452 ^ 777448);
+  const branch = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0069\u0074\u0042\u0072\u0061\u006E\u0063\u0068")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D']();
+  _0x6ea4f = (442608 ^ 442610) + (219871 ^ 219864);
   try {
     const secApp = initializeApp(firebaseConfig, "AdminSecAuth");
     const secAuth = getAuth(secApp);
+    let _0xd3323e;
     const cred = await createUserWithEmailAndPassword(secAuth, email, password);
-
-    await setDoc(doc(db, 'users', cred.user.uid), {
-      uid: cred.user.uid,
-      email: email,
-      role: 'it_officer',
-      officeCode: branch,
-      currentAuthPass: password,
-      createdAt: serverTimestamp()
+    _0xd3323e = 498312 ^ 498316;
+    await setDoc(doc(db, 'users', cred['\u0075\u0073\u0065\u0072']['\u0075\u0069\u0064']), {
+      '\u0075\u0069\u0064': cred['\u0075\u0073\u0065\u0072']['\u0075\u0069\u0064'],
+      "email": email,
+      "role": "\u0069\u0074\u005F\u006F\u0066\u0066\u0069\u0063\u0065\u0072",
+      '\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065': branch,
+      '\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0041\u0075\u0074\u0068\u0050\u0061\u0073\u0073': password,
+      '\u0063\u0072\u0065\u0061\u0074\u0065\u0064\u0041\u0074': serverTimestamp()
     });
-
-    alert("আইটি অফিসার সফলভাবে তৈরি হয়েছে!");
-    document.getElementById('createITForm').reset();
-    itModal.classList.add('hidden');
+    alert("\u0986\u0987\u099F\u09BF\u0020\u0985\u09AB\u09BF\u09B8\u09BE\u09B0\u0020\u09B8\u09AB\u09B2\u09AD\u09BE\u09AC\u09C7\u0020\u09A4\u09C8\u09B0\u09BF\u0020\u09B9\u09DF\u09C7\u099B\u09C7\u0021");
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0063\u0072\u0065\u0061\u0074\u0065\u0049\u0054\u0046\u006F\u0072\u006D")['\u0072\u0065\u0073\u0065\u0074']();
+    itModal['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
   } catch (err) {
-    alert("ত্রুটি: " + err.message);
+    alert("\u09A4\u09CD\u09B0\u09C1\u099F\u09BF\u003A\u0020" + err['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);
   }
 });
-
 function loadSystemUsers() {
-  onSnapshot(collection(db, 'users'), (snapshot) => {
-    let itCount = 0;
-    const tbody = document.getElementById('userTableBody');
-    tbody.innerHTML = snapshot.docs.map(docSnap => {
-      const u = docSnap.data();
-      if (u.role === 'it_officer') itCount++;
-      const isRoot = u.role === 'super_admin';
-      const passPending = u.pendingPassword ? `<span class="text-xs bg-amber-900 text-amber-300 px-2 py-0.5 rounded font-mono">Pending: ${u.pendingPassword}</span>` : `<span class="text-xs text-slate-500">Active</span>`;
-
+  onSnapshot(collection(db, "\u0075\u0073\u0065\u0072\u0073"), snapshot => {
+    var _0x89b90e = (388221 ^ 388221) + (925341 ^ 925343);
+    let _0xdd_0x81a = 538218 ^ 538218;
+    _0x89b90e = "dgding";
+    var _0x19ecd = (665971 ^ 665969) + (470249 ^ 470240);
+    const _0xb91b = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0075\u0073\u0065\u0072\u0054\u0061\u0062\u006C\u0065\u0042\u006F\u0064\u0079");
+    _0x19ecd = (748197 ^ 748194) + (542525 ^ 542523);
+    _0xb91b['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = snapshot['\u0064\u006F\u0063\u0073']['\u006D\u0061\u0070'](docSnap => {
+      let _0xa39ba;
+      const u = docSnap['\u0064\u0061\u0074\u0061']();
+      _0xa39ba = '\u006F\u0065\u0067\u0066\u0067\u0062';
+      if (u['\u0072\u006F\u006C\u0065'] === 'it_officer') _0xdd_0x81a++;
+      const _0x85a96a = u['\u0072\u006F\u006C\u0065'] === 'super_admin';
+      const _0x7ec3ae = u['\u0070\u0065\u006E\u0064\u0069\u006E\u0067\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064'] ? `<span class="text-xs bg-amber-900 text-amber-300 px-2 py-0.5 rounded font-mono">Pending: ${u['\u0070\u0065\u006E\u0064\u0069\u006E\u0067\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064']}</span>` : `<span class="text-xs text-slate-500">Active</span>`;
       return `
         <tr class="hover:bg-slate-800 transition">
-          <td class="p-3 font-mono text-xs text-emerald-400 font-semibold">${u.email}</td>
-          <td class="p-3"><span class="px-2 py-0.5 text-xs uppercase font-bold rounded bg-slate-900 border border-slate-700">${u.role}</span></td>
-          <td class="p-3">${u.officeCode || 'Central'}</td>
-          <td class="p-3 font-mono text-xs">${u.bmCode || '—'}</td>
-          <td class="p-3">${passPending}</td>
+          <td class="p-3 font-mono text-xs text-emerald-400 font-semibold">${u['\u0065\u006D\u0061\u0069\u006C']}</td>
+          <td class="p-3"><span class="px-2 py-0.5 text-xs uppercase font-bold rounded bg-slate-900 border border-slate-700">${u['\u0072\u006F\u006C\u0065']}</span></td>
+          <td class="p-3">${u['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || "\u0043\u0065\u006E\u0074\u0072\u0061\u006C"}</td>
+          <td class="p-3 font-mono text-xs">${u['\u0062\u006D\u0043\u006F\u0064\u0065'] || "\u2014"}</td>
+          <td class="p-3">${_0x7ec3ae}</td>
           <td class="p-3 text-center space-x-1">
-            ${!isRoot ? `
-              <button onclick="adminSetPasswordDirect('${docSnap.id}', '${u.email}')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2.5 py-1 rounded">পাসওয়ার্ড পরিবর্তন</button>
-              <button onclick="adminModifyUser('${docSnap.id}', '${u.role}', '${u.officeCode || ''}', '${u.bmCode || ''}')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2 py-1 rounded">এডিট</button>
-              <button onclick="adminDeleteUser('${docSnap.id}', '${u.email}')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded">ডিলিট</button>
-            ` : '<span class="text-xs text-slate-500">Protected Root</span>'}
+            ${!_0x85a96a ? `
+              <button onclick="adminSetPasswordDirect('${docSnap['\u0069\u0064']}', '${u['\u0065\u006D\u0061\u0069\u006C']}')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2.5 py-1 rounded">পাসওয়ার্ড পরিবর্তন</button>
+              <button onclick="adminModifyUser('${docSnap['\u0069\u0064']}', '${u['\u0072\u006F\u006C\u0065']}', '${u['\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065'] || ''}', '${u['\u0062\u006D\u0043\u006F\u0064\u0065'] || ''}')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2 py-1 rounded">এডিট</button>
+              <button onclick="adminDeleteUser('${docSnap['\u0069\u0064']}', '${u['\u0065\u006D\u0061\u0069\u006C']}')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded">ডিলিট</button>
+            ` : "\u003C\u0073\u0070\u0061\u006E\u0020\u0063\u006C\u0061\u0073\u0073\u003D\u0022\u0074\u0065\u0078\u0074\u002D\u0078\u0073\u0020\u0074\u0065\u0078\u0074\u002D\u0073\u006C\u0061\u0074\u0065\u002D\u0035\u0030\u0030\u0022\u003E\u0050\u0072\u006F\u0074\u0065\u0063\u0074\u0065\u0064\u0020\u0052\u006F\u006F\u0074\u003C\u002F\u0073\u0070\u0061\u006E\u003E"}
           </td>
         </tr>
       `;
-    }).join('');
-    document.getElementById('statTotalIT').textContent = itCount;
+    })['\u006A\u006F\u0069\u006E']('');
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('statTotalIT')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = _0xdd_0x81a;
   });
 }
-
-window.adminSetPasswordDirect = async (uid, email) => {
+window['\u0061\u0064\u006D\u0069\u006E\u0053\u0065\u0074\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064\u0044\u0069\u0072\u0065\u0063\u0074'] = async (uid, email) => {
   const newPass = prompt(`'${email}' এর জন্য নতুন পাসওয়ার্ড লিখুন:`);
   if (!newPass) return;
-  if (newPass.length < 6) {
+  if (newPass['\u006C\u0065\u006E\u0067\u0074\u0068'] < (676684 ^ 676682)) {
     alert("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
     return;
   }
-  await updateDoc(doc(db, 'users', uid), {
-    pendingPassword: newPass,
-    lastPasswordResetAt: new Date().toISOString()
+  await updateDoc(doc(db, "\u0075\u0073\u0065\u0072\u0073", uid), {
+    '\u0070\u0065\u006E\u0064\u0069\u006E\u0067\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064': newPass,
+    '\u006C\u0061\u0073\u0074\u0050\u0061\u0073\u0073\u0077\u006F\u0072\u0064\u0052\u0065\u0073\u0065\u0074\u0041\u0074': new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()
   });
   alert(`পাসওয়ার্ড সেট হয়েছে! ইউজার (${newPass}) দিয়ে লগইন করতে পারবেন।`);
 };
-
-window.adminModifyUser = async (uid, role, office, bm) => {
-  const newRole = prompt("নতুন Role দিন (super_admin / it_officer / sm / asm / bm / um / fa):", role);
+window['\u0061\u0064\u006D\u0069\u006E\u004D\u006F\u0064\u0069\u0066\u0079\u0055\u0073\u0065\u0072'] = async (uid, role, office, bm) => {
+  var _0x28be3c = (342205 ^ 342203) + (454666 ^ 454665);
+  const newRole = prompt("\u09A8\u09A4\u09C1\u09A8\u0020\u0052\u006F\u006C\u0065\u0020\u09A6\u09BF\u09A8\u0020\u0028\u0073\u0075\u0070\u0065\u0072\u005F\u0061\u0064\u006D\u0069\u006E\u0020\u002F\u0020\u0069\u0074\u005F\u006F\u0066\u0066\u0069\u0063\u0065\u0072\u0020\u002F\u0020\u0073\u006D\u0020\u002F\u0020\u0061\u0073\u006D\u0020\u002F\u0020\u0062\u006D\u0020\u002F\u0020\u0075\u006D\u0020\u002F\u0020\u0066\u0061\u0029\u003A", role);
+  _0x28be3c = '\u006E\u006D\u0069\u0062\u006F\u0068';
+  let _0x279cdb;
   const newOffice = prompt("নতুন সেলস অফিস কোড:", office);
-  const newBM = prompt("নতুন BM কোড:", bm);
-
+  _0x279cdb = 531727 ^ 531725;
+  let _0xc05dab;
+  const newBM = prompt("\u09A8\u09A4\u09C1\u09A8\u0020\u0042\u004D\u0020\u0995\u09CB\u09A1\u003A", bm);
+  _0xc05dab = (746959 ^ 746957) + (387761 ^ 387767);
   if (newRole && newOffice) {
-    await updateDoc(doc(db, 'users', uid), {
-      role: newRole,
-      officeCode: newOffice,
-      bmCode: newBM || null
+    await updateDoc(doc(db, "\u0075\u0073\u0065\u0072\u0073", uid), {
+      '\u0072\u006F\u006C\u0065': newRole,
+      '\u006F\u0066\u0066\u0069\u0063\u0065\u0043\u006F\u0064\u0065': newOffice,
+      "bmCode": newBM || null
     });
     alert("ইউজার প্রোফাইল সফলভাবে আপডেট হয়েছে!");
   }
 };
-
-window.adminDeleteUser = async (uid, email) => {
+window['\u0061\u0064\u006D\u0069\u006E\u0044\u0065\u006C\u0065\u0074\u0065\u0055\u0073\u0065\u0072'] = async (uid, email) => {
   if (confirm(`আপনি কি নিশ্চিতভাবে ${email} অ্যাকাউন্টটি ডিলিট করতে চান?`)) {
-    await deleteDoc(doc(db, 'users', uid));
+    await deleteDoc(doc(db, "\u0075\u0073\u0065\u0072\u0073", uid));
     alert("ইউজার ডাটাবেজ থেকে মুছে ফেলা হয়েছে।");
   }
 };
-
 function loadGlobalDeeds() {
-  onSnapshot(collection(db, 'deeds'), (snapshot) => {
-    let officeCount = 0;
-    let deliveredCount = 0;
-    const tbody = document.getElementById('globalDeedsBody');
-
-    tbody.innerHTML = snapshot.docs.map(docSnap => {
-      const d = docSnap.data();
-      if (d.status === 'Delivered') deliveredCount++;
-      else officeCount++;
-
+  onSnapshot(collection(db, "\u0064\u0065\u0065\u0064\u0073"), snapshot => {
+    var _0xe8fc = (838491 ^ 838482) + (506023 ^ 506018);
+    let _0x6767fa = 293479 ^ 293479;
+    _0xe8fc = 620226 ^ 620228;
+    var _0xag5cg = (807469 ^ 807471) + (628613 ^ 628612);
+    let _0x91ga = 624665 ^ 624665;
+    _0xag5cg = (750375 ^ 750370) + (822498 ^ 822499);
+    const _0x51284a = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('globalDeedsBody');
+    _0x51284a['\u0069\u006E\u006E\u0065\u0072\u0048\u0054\u004D\u004C'] = snapshot['\u0064\u006F\u0063\u0073']['\u006D\u0061\u0070'](docSnap => {
+      let _0x82d67b;
+      const d = docSnap['\u0064\u0061\u0074\u0061']();
+      _0x82d67b = 788464 ^ 788464;
+      if (d['\u0073\u0074\u0061\u0074\u0075\u0073'] === "\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064") _0x91ga++;else _0x6767fa++;
       return `
         <tr class="hover:bg-slate-800 transition text-xs">
-          <td class="p-3 font-semibold text-slate-200">${d.branchName || 'N/A'}</td>
-          <td class="p-3 font-mono text-slate-400">${d.refNo}</td>
-          <td class="p-3 font-bold text-emerald-400 font-mono">${d.policyNo}</td>
-          <td class="p-3 text-slate-200">${d.policyHolderName}</td>
-          <td class="p-3">${d.bmName} (${d.bmCode})</td>
-          <td class="p-3 font-bold ${d.status === 'Delivered' ? 'text-emerald-400' : 'text-amber-400'}">${d.status}</td>
-          <td class="p-3">${d.deliveredTo ? `${d.deliveredTo} (${d.deliveryDate})` : '—'}</td>
+          <td class="p-3 font-semibold text-slate-200">${d['\u0062\u0072\u0061\u006E\u0063\u0068\u004E\u0061\u006D\u0065'] || "\u004E\u002F\u0041"}</td>
+          <td class="p-3 font-mono text-slate-400">${d['\u0072\u0065\u0066\u004E\u006F']}</td>
+          <td class="p-3 font-bold text-emerald-400 font-mono">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u004E\u006F']}</td>
+          <td class="p-3 text-slate-200">${d['\u0070\u006F\u006C\u0069\u0063\u0079\u0048\u006F\u006C\u0064\u0065\u0072\u004E\u0061\u006D\u0065']}</td>
+          <td class="p-3">${d['\u0062\u006D\u004E\u0061\u006D\u0065']} (${d['\u0062\u006D\u0043\u006F\u0064\u0065']})</td>
+          <td class="p-3 font-bold ${d['\u0073\u0074\u0061\u0074\u0075\u0073'] === "\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064" ? 'text-emerald-400' : "\u0074\u0065\u0078\u0074\u002D\u0061\u006D\u0062\u0065\u0072\u002D\u0034\u0030\u0030"}">${d['\u0073\u0074\u0061\u0074\u0075\u0073']}</td>
+          <td class="p-3">${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F'] ? `${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0054\u006F']} (${d['\u0064\u0065\u006C\u0069\u0076\u0065\u0072\u0079\u0044\u0061\u0074\u0065']})` : "\u2014"}</td>
           <td class="p-3 text-center">
-            <button onclick="adminDeleteDeed('${docSnap.id}')" class="text-red-400 hover:text-red-300 font-bold">ডিলিট</button>
+            <button onclick="adminDeleteDeed('${docSnap['\u0069\u0064']}')" class="text-red-400 hover:text-red-300 font-bold">ডিলিট</button>
           </td>
         </tr>
       `;
-    }).join('');
-
-    document.getElementById('statTotalDeeds').textContent = snapshot.docs.length;
-    document.getElementById('statOfficeDeeds').textContent = officeCount;
-    document.getElementById('statDeliveredDeeds').textContent = deliveredCount;
+    })['\u006A\u006F\u0069\u006E']('');
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('statTotalDeeds')['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = snapshot['\u0064\u006F\u0063\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'];
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0073\u0074\u0061\u0074\u004F\u0066\u0066\u0069\u0063\u0065\u0044\u0065\u0065\u0064\u0073")['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = _0x6767fa;
+    document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0073\u0074\u0061\u0074\u0044\u0065\u006C\u0069\u0076\u0065\u0072\u0065\u0064\u0044\u0065\u0065\u0064\u0073")['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = _0x91ga;
   });
 }
-
-window.adminDeleteDeed = async (id) => {
+window['\u0061\u0064\u006D\u0069\u006E\u0044\u0065\u006C\u0065\u0074\u0065\u0044\u0065\u0065\u0064'] = async id => {
   if (confirm("এই দলিলটি পুরোপুরি মুছে ফেলতে চান?")) {
-    await deleteDoc(doc(db, 'deeds', id));
+    await deleteDoc(doc(db, "\u0064\u0065\u0065\u0064\u0073", id));
   }
 };
