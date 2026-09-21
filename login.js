@@ -1,96 +1,98 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import { initializeApp } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0061\u0070\u0070\u002E\u006A\u0073";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0061\u0075\u0074\u0068\u002E\u006A\u0073";
+import { getFirestore, doc, getDoc } from "\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0077\u0077\u0077\u002E\u0067\u0073\u0074\u0061\u0074\u0069\u0063\u002E\u0063\u006F\u006D\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u006A\u0073\u002F\u0031\u0030\u002E\u0031\u0032\u002E\u0030\u002F\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u002D\u0066\u0069\u0072\u0065\u0073\u0074\u006F\u0072\u0065\u002E\u006A\u0073";
+var _0xdga23b = (742898 ^ 742897) + (987267 ^ 987264);
 const firebaseConfig = {
-  apiKey: "AIzaSyBL_nhdEDyLD_3HnhjZ14LOYLCjaxOwJyY",
-  authDomain: "alpha-deed-management.firebaseapp.com",
-  projectId: "alpha-deed-management",
-  storageBucket: "alpha-deed-management.firebasestorage.app",
-  messagingSenderId: "460540818357",
-  appId: "1:460540818357:web:ae0aac3ef01d690774dffc",
-  measurementId: "G-GZK5JDLCEZ"
+  '\u0061\u0070\u0069\u004B\u0065\u0079': "\u0041\u0049\u007A\u0061\u0053\u0079\u0042\u004C\u005F\u006E\u0068\u0064\u0045\u0044\u0079\u004C\u0044\u005F\u0033\u0048\u006E\u0068\u006A\u005A\u0031\u0034\u004C\u004F\u0059\u004C\u0043\u006A\u0061\u0078\u004F\u0077\u004A\u0079\u0059",
+  '\u0061\u0075\u0074\u0068\u0044\u006F\u006D\u0061\u0069\u006E': "\u0061\u006C\u0070\u0068\u0061\u002D\u0064\u0065\u0065\u0064\u002D\u006D\u0061\u006E\u0061\u0067\u0065\u006D\u0065\u006E\u0074\u002E\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u0061\u0070\u0070\u002E\u0063\u006F\u006D",
+  '\u0070\u0072\u006F\u006A\u0065\u0063\u0074\u0049\u0064': "\u0061\u006C\u0070\u0068\u0061\u002D\u0064\u0065\u0065\u0064\u002D\u006D\u0061\u006E\u0061\u0067\u0065\u006D\u0065\u006E\u0074",
+  '\u0073\u0074\u006F\u0072\u0061\u0067\u0065\u0042\u0075\u0063\u006B\u0065\u0074': "\u0061\u006C\u0070\u0068\u0061\u002D\u0064\u0065\u0065\u0064\u002D\u006D\u0061\u006E\u0061\u0067\u0065\u006D\u0065\u006E\u0074\u002E\u0066\u0069\u0072\u0065\u0062\u0061\u0073\u0065\u0073\u0074\u006F\u0072\u0061\u0067\u0065\u002E\u0061\u0070\u0070",
+  '\u006D\u0065\u0073\u0073\u0061\u0067\u0069\u006E\u0067\u0053\u0065\u006E\u0064\u0065\u0072\u0049\u0064': "460540818357",
+  '\u0061\u0070\u0070\u0049\u0064': "1:460540818357:web:ae0aac3ef01d690774dffc",
+  "measurementId": "\u0047\u002D\u0047\u005A\u004B\u0035\u004A\u0044\u004C\u0043\u0045\u005A"
 };
-
+_0xdga23b = '\u0061\u0068\u0063\u0064\u0070\u0063';
 const app = initializeApp(firebaseConfig);
+var _0x874ddb = (317537 ^ 317542) + (587880 ^ 587886);
 const auth = getAuth(app);
+_0x874ddb = 690864 ^ 690870;
 const db = getFirestore(app);
-
-const loginForm = document.getElementById('loginForm');
-const errorAlert = document.getElementById('errorAlert');
-const btnText = document.getElementById('btnText');
-const btnLoader = document.getElementById('btnLoader');
-
+let _0xac93bb;
+const loginForm = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006C\u006F\u0067\u0069\u006E\u0046\u006F\u0072\u006D");
+_0xac93bb = 236066 ^ 236065;
+const errorAlert = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0065\u0072\u0072\u006F\u0072\u0041\u006C\u0065\u0072\u0074");
+var _0x85d = (702962 ^ 702967) + (332477 ^ 332476);
+const btnText = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0062\u0074\u006E\u0054\u0065\u0078\u0074");
+_0x85d = 976163 ^ 976160;
+const btnLoader = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('btnLoader');
 function showError(message) {
-  errorAlert.textContent = message;
-  errorAlert.classList.remove('hidden');
+  errorAlert['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = message;
+  errorAlert['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
 }
-
 function setBtnLoading(isLoading) {
   if (isLoading) {
-    btnText.textContent = "যাচাই করা হচ্ছে...";
-    btnLoader.classList.remove('hidden');
+    btnText['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = "\u09AF\u09BE\u099A\u09BE\u0987\u0020\u0995\u09B0\u09BE\u0020\u09B9\u099A\u09CD\u099B\u09C7\u002E\u002E\u002E";
+    btnLoader['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0068\u0069\u0064\u0064\u0065\u006E");
   } else {
-    btnText.textContent = "লগইন করুন";
-    btnLoader.classList.add('hidden');
+    btnText['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074'] = "লগইন করুন";
+    btnLoader['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
   }
 }
-
 async function redirectByRole(user) {
   try {
-    const userDocRef = doc(db, 'users', user.uid);
-    const userSnapshot = await getDoc(userDocRef);
-
-    if (userSnapshot.exists()) {
-      const userData = userSnapshot.data();
-      const role = userData.role;
-
-      if (role === 'super_admin') {
-        window.location.href = 'admin-dashboard.html';
-      } else if (role === 'it_officer') {
-        window.location.href = 'it-dashboard.html';
-      } else if (['sm', 'asm', 'bm', 'um', 'fa'].includes(role)) {
-        window.location.href = 'field-dashboard.html';
+    let _0xd_0x6f2;
+    const _0xc_0x112 = doc(db, "\u0075\u0073\u0065\u0072\u0073", user['\u0075\u0069\u0064']);
+    _0xd_0x6f2 = (183198 ^ 183191) + (716342 ^ 716341);
+    var _0x4fd9d = (471320 ^ 471313) + (227531 ^ 227522);
+    const _0xda8bbd = await getDoc(_0xc_0x112);
+    _0x4fd9d = "eijcdk";
+    if (_0xda8bbd['\u0065\u0078\u0069\u0073\u0074\u0073']()) {
+      const _0x06edfd = _0xda8bbd['\u0064\u0061\u0074\u0061']();
+      const _0x543c5f = _0x06edfd['\u0072\u006F\u006C\u0065'];
+      if (_0x543c5f === "\u0073\u0075\u0070\u0065\u0072\u005F\u0061\u0064\u006D\u0069\u006E") {
+        window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = "\u0061\u0064\u006D\u0069\u006E\u002D\u0064\u0061\u0073\u0068\u0062\u006F\u0061\u0072\u0064\u002E\u0068\u0074\u006D\u006C";
+      } else if (_0x543c5f === 'it_officer') {
+        window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = 'it-dashboard.html';
+      } else if (["\u0073\u006D", 'asm', "\u0062\u006D", "\u0075\u006D", "\u0066\u0061"]['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](_0x543c5f)) {
+        window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066'] = 'field-dashboard.html';
       } else {
-        showError("আপনার অ্যাকাউন্টে কোনো নির্ধারিত রোল (Role) পাওয়া যায়নি।");
+        showError("\u0986\u09AA\u09A8\u09BE\u09B0\u0020\u0985\u09CD\u09AF\u09BE\u0995\u09BE\u0989\u09A8\u09CD\u099F\u09C7\u0020\u0995\u09CB\u09A8\u09CB\u0020\u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09BF\u09A4\u0020\u09B0\u09CB\u09B2\u0020\u0028\u0052\u006F\u006C\u0065\u0029\u0020\u09AA\u09BE\u0993\u09DF\u09BE\u0020\u09AF\u09BE\u09DF\u09A8\u09BF\u0964");
         setBtnLoading(false);
       }
     } else {
-      showError("ডাটাবেজে আপনার প্রোফাইল পাওয়া যায়নি। আইটি এডমিনের সাথে যোগাযোগ করুন।");
+      showError("\u09A1\u09BE\u099F\u09BE\u09AC\u09C7\u099C\u09C7\u0020\u0986\u09AA\u09A8\u09BE\u09B0\u0020\u09AA\u09CD\u09B0\u09CB\u09AB\u09BE\u0987\u09B2\u0020\u09AA\u09BE\u0993\u09DF\u09BE\u0020\u09AF\u09BE\u09DF\u09A8\u09BF\u0964\u0020\u0986\u0987\u099F\u09BF\u0020\u098F\u09A1\u09AE\u09BF\u09A8\u09C7\u09B0\u0020\u09B8\u09BE\u09A5\u09C7\u0020\u09AF\u09CB\u0997\u09BE\u09AF\u09CB\u0997\u0020\u0995\u09B0\u09C1\u09A8\u0964");
       setBtnLoading(false);
     }
   } catch (err) {
-    showError("ডেটা লোড করতে সমস্যা হয়েছে: " + err.message);
+    showError("ডেটা লোড করতে সমস্যা হয়েছে: " + err['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);
     setBtnLoading(false);
   }
 }
-
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, user => {
   if (user) {
-    setBtnLoading(true);
+    setBtnLoading(!![]);
     redirectByRole(user);
   }
 });
-
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  errorAlert.classList.add('hidden');
-  setBtnLoading(true);
-
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-
+loginForm['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']("\u0073\u0075\u0062\u006D\u0069\u0074", async e => {
+  e['\u0070\u0072\u0065\u0076\u0065\u006E\u0074\u0044\u0065\u0066\u0061\u0075\u006C\u0074']();
+  errorAlert['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0068\u0069\u0064\u0064\u0065\u006E");
+  setBtnLoading(!![]);
+  const email = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0065\u006D\u0061\u0069\u006C")['\u0076\u0061\u006C\u0075\u0065']['\u0074\u0072\u0069\u006D']();
+  const password = document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']('password')['\u0076\u0061\u006C\u0075\u0065'];
   try {
+    var _0x38eda = (669579 ^ 669579) + (297038 ^ 297030);
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    await redirectByRole(userCredential.user);
+    _0x38eda = (436494 ^ 436487) + (643530 ^ 643530);
+    await redirectByRole(userCredential['\u0075\u0073\u0065\u0072']);
   } catch (error) {
     setBtnLoading(false);
-    if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-      showError("ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।");
-    } else if (error.code === 'auth/too-many-requests') {
-      showError("অতিরিক্ত ভুল চেষ্টার কারণে সাময়িকভাবে ব্লক করা হয়েছে। কিছুক্ষণ পর চেষ্টা করুন।");
+    if (error['\u0063\u006F\u0064\u0065'] === 'auth/invalid-credential' || error['\u0063\u006F\u0064\u0065'] === 'auth/user-not-found' || error['\u0063\u006F\u0064\u0065'] === "\u0061\u0075\u0074\u0068\u002F\u0077\u0072\u006F\u006E\u0067\u002D\u0070\u0061\u0073\u0073\u0077\u006F\u0072\u0064") {
+      showError("\u0987\u09AE\u09C7\u0987\u09B2\u0020\u0985\u09A5\u09AC\u09BE\u0020\u09AA\u09BE\u09B8\u0993\u09DF\u09BE\u09B0\u09CD\u09A1\u0020\u09B8\u09A0\u09BF\u0995\u0020\u09A8\u09DF\u0964");
+    } else if (error['\u0063\u006F\u0064\u0065'] === 'auth/too-many-requests') {
+      showError("\u0985\u09A4\u09BF\u09B0\u09BF\u0995\u09CD\u09A4\u0020\u09AD\u09C1\u09B2\u0020\u099A\u09C7\u09B7\u09CD\u099F\u09BE\u09B0\u0020\u0995\u09BE\u09B0\u09A3\u09C7\u0020\u09B8\u09BE\u09AE\u09DF\u09BF\u0995\u09AD\u09BE\u09AC\u09C7\u0020\u09AC\u09CD\u09B2\u0995\u0020\u0995\u09B0\u09BE\u0020\u09B9\u09DF\u09C7\u099B\u09C7\u0964\u0020\u0995\u09BF\u099B\u09C1\u0995\u09CD\u09B7\u09A3\u0020\u09AA\u09B0\u0020\u099A\u09C7\u09B7\u09CD\u099F\u09BE\u0020\u0995\u09B0\u09C1\u09A8\u0964");
     } else {
-      showError("লগইন ত্রুটি: " + error.message);
+      showError("\u09B2\u0997\u0987\u09A8\u0020\u09A4\u09CD\u09B0\u09C1\u099F\u09BF\u003A\u0020" + error['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);
     }
   }
 });
