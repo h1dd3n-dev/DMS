@@ -354,6 +354,11 @@
             <span>📑</span>
             <span>কেন্দ্রীয় রেকর্ড তালিকা</span>
           </button>
+          <button id="tabAdminAuditBtn"
+            class="flex-1 py-2 px-3 text-xs md:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 mobile-tap">
+            <span>📋</span>
+            <span>কেন্দ্রীয় অডিট লগ</span>
+          </button>
         </div>
 
         <!-- Secondary Action Buttons Bar -->
@@ -450,6 +455,75 @@
         <!-- Mobile Deeds Cards -->
         <div id="adminDeedsMobileCards" class="block md:hidden space-y-2.5">
           <div class="text-center p-8 text-slate-500 bg-slate-800/80 rounded-2xl border border-slate-700">লোড করা হচ্ছে...</div>
+        </div>
+      </section>
+
+      <!-- Super Admin Audit & Activity Logs Section -->
+      <section id="adminAuditSection" class="hidden space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-1">
+          <div>
+            <h2 class="text-sm md:text-base font-bold text-slate-200 flex items-center gap-2">
+              <span>📋</span>
+              <span>কেন্দ্রীয় সিস্টেম অডিট ও অ্যাক্টিভিটি ট্রেইল</span>
+            </h2>
+            <p class="text-xs text-slate-400">সকল আইটি অফিসার ও ইউজারের কার্যক্রম, ব্যাকআপ, ডিলিট এবং সংশোধন লগ</p>
+          </div>
+          <span id="adminAuditCountBadge" class="text-xs text-indigo-300 bg-indigo-950/80 px-2.5 py-1 rounded-full border border-indigo-800/60 font-mono font-bold w-fit">
+            0 টি রেকর্ড
+          </span>
+        </div>
+
+        <!-- Filter Controls Bar -->
+        <div class="bg-slate-800/90 p-3 rounded-2xl border border-slate-700/80 shadow-md flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <input type="text" id="adminAuditSearchInput" placeholder="ইউজার, পলিসি নং, অ্যাকশন খুঁজুন..."
+              class="px-3 py-1.5 border border-slate-700 rounded-xl text-xs w-full sm:w-60 bg-slate-900 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <select id="adminAuditActionFilter"
+              class="px-3 py-1.5 border border-slate-700 rounded-xl text-xs bg-slate-900 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+              <option value="">সব অ্যাকশন</option>
+              <option value="CREATE">CREATE (নতুন এন্ট্রি)</option>
+              <option value="STATUS">STATUS (স্ট্যাটাস পরিবর্তন)</option>
+              <option value="UPDATE">UPDATE (সংশোধন)</option>
+              <option value="DELETE">DELETE (মুছে ফেলা)</option>
+              <option value="AUTH">AUTH (পাসওয়ার্ড/ইউজার)</option>
+              <option value="COURIER">COURIER (কুরিয়ার)</option>
+              <option value="OCR">OCR (বাল্ক স্ক্যান)</option>
+              <option value="BACKUP">BACKUP (ব্যাকআপ/রিস্টোর)</option>
+            </select>
+            <select id="adminAuditUserFilter"
+              class="px-3 py-1.5 border border-slate-700 rounded-xl text-xs bg-slate-900 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+              <option value="">সকল ইউজার</option>
+            </select>
+          </div>
+          <button id="adminRefreshAuditBtn"
+            class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 rounded-xl text-xs font-semibold transition mobile-tap flex items-center gap-1">
+            <span>🔄</span><span>রিফ্রেশ</span>
+          </button>
+        </div>
+
+        <!-- Desktop Audit Table -->
+        <div class="hidden md:block bg-slate-800 rounded-2xl border border-slate-700 overflow-x-auto shadow text-white">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-700">
+              <tr>
+                <th class="p-3 w-40">সময় ও তারিখ</th>
+                <th class="p-3 w-28">অ্যাকশন</th>
+                <th class="p-3">ইউজার (User)</th>
+                <th class="p-3">টার্গেট / পলিসি নং</th>
+                <th class="p-3">বিস্তারিত বিবরণ</th>
+              </tr>
+            </thead>
+            <tbody id="adminAuditTableBody" class="divide-y divide-slate-700">
+              <tr>
+                <td colspan="5" class="text-center p-6 text-slate-500">অডিট লগ লোড করা হচ্ছে...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Audit Cards -->
+        <div id="adminAuditMobileCards" class="block md:hidden space-y-2.5">
+          <div class="text-center p-8 text-slate-500 bg-slate-800/80 rounded-2xl border border-slate-700">অডিট লগ লোড করা হচ্ছে...</div>
         </div>
       </section>
     </div>
@@ -861,13 +935,13 @@
           class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div>
             <div class="flex items-center gap-2">
-              <h2 class="text-lg font-bold text-slate-800">📋 সিস্টেম অডিট ও নিরাপত্তা লগ</h2>
+              <h2 class="text-lg font-bold text-slate-800">📋 আমার অ্যাক্টিভিটি ও অডিট লগ</h2>
               <span id="auditCountBadge"
                 class="bg-slate-100 text-slate-800 text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border border-slate-200">0
                 টি রেকর্ড</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">শুধু আপনার এন্ট্রি</span>
             </div>
-            <p class="text-xs text-slate-500">রেকর্ড তৈরি, সংশোধন, স্ট্যাটাস পরিবর্তন, ইউজার ও সিকিউরিটি অ্যাক্টিভিটি
-              ট্র্যাক</p>
+            <p class="text-xs text-slate-500">আপনার নিজস্ব আইডি ও ইমেইল দিয়ে সম্পন্ন সমস্ত রেকর্ড, কুরিয়ার ও অ্যাক্টিভিটি ট্র্যাকিং</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <input type="text" id="auditSearchInput" placeholder="ইউজার, পলিসি নং, অ্যাকশন খুঁজুন..."
@@ -2610,22 +2684,27 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
       if (role === 'super_admin') {
         nav.innerHTML = `
           <button id="mNavAdminUsers" type="button"
-            class="flex flex-col items-center justify-center py-1 px-3 text-indigo-400 font-bold text-[11px] transition mobile-tap">
+            class="flex flex-col items-center justify-center py-1 px-2 text-indigo-400 font-bold text-[11px] transition mobile-tap">
             <span class="text-base">👥</span>
             <span>ইউজার্স</span>
           </button>
           <button id="mNavAdminDeeds" type="button"
-            class="flex flex-col items-center justify-center py-1 px-3 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap">
+            class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap">
             <span class="text-base">📑</span>
-            <span>সকল রেকর্ড</span>
+            <span>রেকর্ড</span>
+          </button>
+          <button id="mNavAdminAudit" type="button"
+            class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap">
+            <span class="text-base">📋</span>
+            <span>অডিট লগ</span>
           </button>
           <button id="mNavAdminBackup" type="button"
-            class="flex flex-col items-center justify-center py-1 px-3 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap">
+            class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap">
             <span class="text-base">📥</span>
             <span>ব্যাকআপ</span>
           </button>
           <button id="mNavAdminRestore" type="button"
-            class="flex flex-col items-center justify-center py-1 px-3 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap">
+            class="flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap">
             <span class="text-base">📤</span>
             <span>রিস্টোর</span>
           </button>
@@ -2633,15 +2712,16 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
 
         const btnUsers = document.getElementById('mNavAdminUsers');
         const btnDeeds = document.getElementById('mNavAdminDeeds');
+        const btnAudit = document.getElementById('mNavAdminAudit');
         const btnBackup = document.getElementById('mNavAdminBackup');
         const btnRestore = document.getElementById('mNavAdminRestore');
 
         const setAdminTabActive = (activeBtn) => {
-          [btnUsers, btnDeeds].forEach(b => {
+          [btnUsers, btnDeeds, btnAudit].forEach(b => {
             if (b === activeBtn) {
-              b.className = "flex flex-col items-center justify-center py-1 px-3 text-indigo-400 font-bold text-[11px] transition mobile-tap";
+              b.className = "flex flex-col items-center justify-center py-1 px-2 text-indigo-400 font-bold text-[11px] transition mobile-tap";
             } else {
-              b.className = "flex flex-col items-center justify-center py-1 px-3 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap";
+              b.className = "flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap";
             }
           });
         };
@@ -2656,6 +2736,12 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
           const tab = document.getElementById('tabAdminDeedsBtn');
           if (tab) tab.click();
           setAdminTabActive(btnDeeds);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        if (btnAudit) btnAudit.onclick = () => {
+          const tab = document.getElementById('tabAdminAuditBtn');
+          if (tab) tab.click();
+          setAdminTabActive(btnAudit);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         };
         if (btnBackup) btnBackup.onclick = () => {
@@ -2733,29 +2819,50 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
     function initSuperAdmin() {
       const tabUsersBtn = document.getElementById('tabAdminUsersBtn');
       const tabDeedsBtn = document.getElementById('tabAdminDeedsBtn');
+      const tabAuditBtn = document.getElementById('tabAdminAuditBtn');
       const usersSection = document.getElementById('adminUsersSection');
       const deedsSection = document.getElementById('adminDeedsSection');
+      const auditSection = document.getElementById('adminAuditSection');
 
-      tabUsersBtn.onclick = () => {
-        usersSection.classList.remove('hidden');
-        deedsSection.classList.add('hidden');
-        tabUsersBtn.className = "flex-1 py-2 px-3 text-xs md:text-sm font-bold rounded-lg bg-indigo-600 text-white shadow transition flex items-center justify-center gap-1.5 mobile-tap";
-        tabDeedsBtn.className = "flex-1 py-2 px-3 text-xs md:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 mobile-tap";
-        const mUsers = document.getElementById('mNavAdminUsers');
-        const mDeeds = document.getElementById('mNavAdminDeeds');
-        if (mUsers) mUsers.className = "flex flex-col items-center justify-center py-1 px-3 text-indigo-400 font-bold text-[11px] transition mobile-tap";
-        if (mDeeds) mDeeds.className = "flex flex-col items-center justify-center py-1 px-3 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap";
-      };
-      tabDeedsBtn.onclick = () => {
-        deedsSection.classList.remove('hidden');
+      const TAB_ADMIN_ACTIVE = "flex-1 py-2 px-3 text-xs md:text-sm font-bold rounded-lg bg-indigo-600 text-white shadow transition flex items-center justify-center gap-1.5 mobile-tap";
+      const TAB_ADMIN_INACTIVE = "flex-1 py-2 px-3 text-xs md:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 mobile-tap";
+
+      function switchAdminTab(activeTab) {
         usersSection.classList.add('hidden');
-        tabDeedsBtn.className = "flex-1 py-2 px-3 text-xs md:text-sm font-bold rounded-lg bg-indigo-600 text-white shadow transition flex items-center justify-center gap-1.5 mobile-tap";
-        tabUsersBtn.className = "flex-1 py-2 px-3 text-xs md:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 mobile-tap";
+        deedsSection.classList.add('hidden');
+        if (auditSection) auditSection.classList.add('hidden');
+
+        tabUsersBtn.className = TAB_ADMIN_INACTIVE;
+        tabDeedsBtn.className = TAB_ADMIN_INACTIVE;
+        if (tabAuditBtn) tabAuditBtn.className = TAB_ADMIN_INACTIVE;
+
         const mUsers = document.getElementById('mNavAdminUsers');
         const mDeeds = document.getElementById('mNavAdminDeeds');
-        if (mDeeds) mDeeds.className = "flex flex-col items-center justify-center py-1 px-3 text-indigo-400 font-bold text-[11px] transition mobile-tap";
-        if (mUsers) mUsers.className = "flex flex-col items-center justify-center py-1 px-3 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap";
-      };
+        const mAudit = document.getElementById('mNavAdminAudit');
+        const mReset = (el) => { if (el) el.className = "flex flex-col items-center justify-center py-1 px-2 text-slate-400 hover:text-white text-[11px] font-medium transition mobile-tap"; };
+        const mActive = (el) => { if (el) el.className = "flex flex-col items-center justify-center py-1 px-2 text-indigo-400 font-bold text-[11px] transition mobile-tap"; };
+        mReset(mUsers); mReset(mDeeds); mReset(mAudit);
+
+        if (activeTab === 'users') {
+          usersSection.classList.remove('hidden');
+          tabUsersBtn.className = TAB_ADMIN_ACTIVE;
+          mActive(mUsers);
+        } else if (activeTab === 'deeds') {
+          deedsSection.classList.remove('hidden');
+          tabDeedsBtn.className = TAB_ADMIN_ACTIVE;
+          mActive(mDeeds);
+        } else if (activeTab === 'audit') {
+          if (auditSection) auditSection.classList.remove('hidden');
+          if (tabAuditBtn) tabAuditBtn.className = TAB_ADMIN_ACTIVE;
+          mActive(mAudit);
+        }
+      }
+
+      tabUsersBtn.onclick = () => switchAdminTab('users');
+      tabDeedsBtn.onclick = () => switchAdminTab('deeds');
+      if (tabAuditBtn) tabAuditBtn.onclick = () => switchAdminTab('audit');
+
+      initAuditLogsModule();
 
       // Super Admin Add Any User Modal
       const userModal = document.getElementById('adminUserModal');
@@ -4592,18 +4699,72 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
     let auditUnsub = null;
 
     function initAuditLogsModule() {
-      const searchInput = document.getElementById('auditSearchInput');
-      const actionFilter = document.getElementById('auditActionFilter');
-      const refreshBtn = document.getElementById('refreshAuditBtn');
-      const countBadge = document.getElementById('auditCountBadge');
-      const tbody = document.getElementById('itAuditTableBody');
-      const mobileCards = document.getElementById('itAuditMobileCards');
+      if (!currentUser) return;
+      const role = currentUser.role;
+      // Strict access restriction: Only Super Admin and IT Officer can access audit logs
+      if (role !== 'super_admin' && role !== 'it_officer') return;
+
+      const isSuper = role === 'super_admin';
+
+      // IT Officer elements
+      const itSearchInput = document.getElementById('auditSearchInput');
+      const itActionFilter = document.getElementById('auditActionFilter');
+      const itRefreshBtn = document.getElementById('refreshAuditBtn');
+      const itCountBadge = document.getElementById('auditCountBadge');
+      const itTbody = document.getElementById('itAuditTableBody');
+      const itMobileCards = document.getElementById('itAuditMobileCards');
+
+      // Super Admin elements
+      const adminSearchInput = document.getElementById('adminAuditSearchInput');
+      const adminActionFilter = document.getElementById('adminAuditActionFilter');
+      const adminUserFilter = document.getElementById('adminAuditUserFilter');
+      const adminRefreshBtn = document.getElementById('adminRefreshAuditBtn');
+      const adminCountBadge = document.getElementById('adminAuditCountBadge');
+      const adminTbody = document.getElementById('adminAuditTableBody');
+      const adminMobileCards = document.getElementById('adminAuditMobileCards');
 
       const applyAuditFilter = () => {
-        const s = (searchInput?.value || '').trim().toLowerCase();
-        const action = actionFilter?.value || '';
+        const userEmail = (currentUser?.email || '').trim().toLowerCase();
+        const userUid = currentUser?.uid || '';
+
+        const s = isSuper
+          ? (adminSearchInput?.value || '').trim().toLowerCase()
+          : (itSearchInput?.value || '').trim().toLowerCase();
+
+        const action = isSuper
+          ? (adminActionFilter?.value || '')
+          : (itActionFilter?.value || '');
+
+        const selectedUser = isSuper
+          ? (adminUserFilter?.value || '').trim().toLowerCase()
+          : '';
+
+        // For Super Admin: populate the user filter dropdown dynamically from available logs
+        if (isSuper && adminUserFilter) {
+          const currentVal = adminUserFilter.value;
+          const emails = [...new Set(allAuditLogs.map(l => (l.actorEmail || '').trim()).filter(Boolean))].sort();
+          if (adminUserFilter.options.length <= 1 || (adminUserFilter.options.length - 1) !== emails.length) {
+            adminUserFilter.innerHTML = '<option value="">সকল ইউজার (' + emails.length + ')</option>' +
+              emails.map(em => `<option value="${em}" ${em.toLowerCase() === currentVal.toLowerCase() ? 'selected' : ''}>${em}</option>`).join('');
+          }
+        }
 
         const filtered = allAuditLogs.filter(log => {
+          // STRICT SECURITY ENFORCEMENT:
+          // IT Officers CANNOT see any other user's audit logs under any circumstance
+          if (!isSuper) {
+            const logEmail = (log.actorEmail || '').trim().toLowerCase();
+            const logUid = log.actorUid || '';
+            const isOwn = (userEmail && logEmail === userEmail) || (userUid && logUid === userUid);
+            if (!isOwn) return false;
+          } else {
+            // Super Admin can filter by selected user if chosen
+            if (selectedUser) {
+              const logEmail = (log.actorEmail || '').trim().toLowerCase();
+              if (logEmail !== selectedUser) return false;
+            }
+          }
+
           const matchAction = !action || log.action === action;
           const matchSearch = !s ||
             (log.details || '').toLowerCase().includes(s) ||
@@ -4614,49 +4775,73 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
           return matchAction && matchSearch;
         });
 
-        if (countBadge) countBadge.textContent = `${filtered.length} টি রেকর্ড`;
-        renderAuditLogs(filtered);
+        if (isSuper) {
+          if (adminCountBadge) adminCountBadge.textContent = `${filtered.length} টি রেকর্ড`;
+          renderAdminAuditLogs(filtered);
+        } else {
+          if (itCountBadge) itCountBadge.textContent = `${filtered.length} টি রেকর্ড`;
+          renderITAuditLogs(filtered);
+        }
       };
 
-      if (searchInput) searchInput.oninput = applyAuditFilter;
-      if (actionFilter) actionFilter.onchange = applyAuditFilter;
-      if (refreshBtn) refreshBtn.onclick = () => loadAuditLogs();
+      if (itSearchInput) itSearchInput.oninput = applyAuditFilter;
+      if (itActionFilter) itActionFilter.onchange = applyAuditFilter;
+      if (itRefreshBtn) itRefreshBtn.onclick = () => loadAuditLogs();
 
-      function renderAuditLogs(logs) {
-        if (!tbody && !mobileCards) return;
+      if (adminSearchInput) adminSearchInput.oninput = applyAuditFilter;
+      if (adminActionFilter) adminActionFilter.onchange = applyAuditFilter;
+      if (adminUserFilter) adminUserFilter.onchange = applyAuditFilter;
+      if (adminRefreshBtn) adminRefreshBtn.onclick = () => loadAuditLogs();
+
+      const getActionBadge = (act) => {
+        switch (act) {
+          case 'CREATE': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+          case 'STATUS': return 'bg-blue-100 text-blue-800 border-blue-200';
+          case 'UPDATE': return 'bg-amber-100 text-amber-800 border-amber-200';
+          case 'DELETE': return 'bg-red-100 text-red-800 border-red-200';
+          case 'AUTH': return 'bg-purple-100 text-purple-800 border-purple-200';
+          case 'COURIER': return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+          case 'OCR': return 'bg-teal-100 text-teal-800 border-teal-200';
+          case 'BACKUP': return 'bg-slate-100 text-slate-800 border-slate-200';
+          default: return 'bg-slate-100 text-slate-700 border-slate-200';
+        }
+      };
+
+      const getAdminActionBadge = (act) => {
+        switch (act) {
+          case 'CREATE': return 'bg-emerald-950 text-emerald-300 border-emerald-700/80';
+          case 'STATUS': return 'bg-blue-950 text-blue-300 border-blue-700/80';
+          case 'UPDATE': return 'bg-amber-950 text-amber-300 border-amber-700/80';
+          case 'DELETE': return 'bg-rose-950 text-rose-300 border-rose-700/80';
+          case 'AUTH': return 'bg-purple-950 text-purple-300 border-purple-700/80';
+          case 'COURIER': return 'bg-indigo-950 text-indigo-300 border-indigo-700/80';
+          case 'OCR': return 'bg-teal-950 text-teal-300 border-teal-700/80';
+          case 'BACKUP': return 'bg-slate-800 text-slate-300 border-slate-600';
+          default: return 'bg-slate-800 text-slate-300 border-slate-600';
+        }
+      };
+
+      const formatTime = (log) => {
+        if (log.timestamp && log.timestamp.toDate) {
+          return log.timestamp.toDate().toLocaleString('bn-BD', { hour12: true });
+        }
+        if (log.createdAtClient) {
+          return new Date(log.createdAtClient).toLocaleString('bn-BD', { hour12: true });
+        }
+        return 'N/A';
+      };
+
+      // Render for IT Officer (Light Theme, Self-only)
+      function renderITAuditLogs(logs) {
+        if (!itTbody && !itMobileCards) return;
         if (!logs.length) {
-          if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-slate-400">কোনো অডিট লগ পাওয়া যায়নি।</td></tr>`;
-          if (mobileCards) mobileCards.innerHTML = `<div class="text-center p-8 text-slate-400 bg-white rounded-xl border border-slate-200">কোনো অডিট লগ পাওয়া যায়নি।</div>`;
+          if (itTbody) itTbody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-slate-400">আপনার অ্যাকাউন্টের কোনো অডিট লগ পাওয়া যায়নি।</td></tr>`;
+          if (itMobileCards) itMobileCards.innerHTML = `<div class="text-center p-8 text-slate-400 bg-white rounded-xl border border-slate-200">আপনার অ্যাকাউন্টের কোনো অডিট লগ পাওয়া যায়নি।</div>`;
           return;
         }
 
-        const getActionBadge = (act) => {
-          switch (act) {
-            case 'CREATE': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-            case 'STATUS': return 'bg-blue-100 text-blue-800 border-blue-200';
-            case 'UPDATE': return 'bg-amber-100 text-amber-800 border-amber-200';
-            case 'DELETE': return 'bg-red-100 text-red-800 border-red-200';
-            case 'AUTH': return 'bg-purple-100 text-purple-800 border-purple-200';
-            case 'COURIER': return 'bg-indigo-100 text-indigo-800 border-indigo-200';
-            case 'OCR': return 'bg-teal-100 text-teal-800 border-teal-200';
-            case 'BACKUP': return 'bg-slate-100 text-slate-800 border-slate-200';
-            default: return 'bg-slate-100 text-slate-700 border-slate-200';
-          }
-        };
-
-        const formatTime = (log) => {
-          if (log.timestamp && log.timestamp.toDate) {
-            return log.timestamp.toDate().toLocaleString('bn-BD', { hour12: true });
-          }
-          if (log.createdAtClient) {
-            return new Date(log.createdAtClient).toLocaleString('bn-BD', { hour12: true });
-          }
-          return 'N/A';
-        };
-
-        // Desktop Table
-        if (tbody) {
-          tbody.innerHTML = logs.map(log => {
+        if (itTbody) {
+          itTbody.innerHTML = logs.map(log => {
             const badgeClass = getActionBadge(log.action);
             return `
               <tr class="hover:bg-slate-50 transition text-xs">
@@ -4665,7 +4850,10 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
                   <span class="px-2 py-0.5 rounded text-[11px] font-bold border ${badgeClass}">${log.action || 'INFO'}</span>
                 </td>
                 <td class="p-3">
-                  <div class="font-medium text-slate-800">${log.actorEmail || 'সিস্টেম'}</div>
+                  <div class="font-medium text-slate-800 flex items-center gap-1.5">
+                    <span>${log.actorEmail || 'সিস্টেম'}</span>
+                    <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1 py-0.2 rounded font-semibold border border-emerald-200">আপনি (Self)</span>
+                  </div>
                   <div class="text-[10px] text-slate-400 font-mono">${log.actorRole || ''} ${log.branchName ? `(${log.branchName})` : ''}</div>
                 </td>
                 <td class="p-3 font-mono font-semibold text-slate-700">${log.target || '—'}</td>
@@ -4675,9 +4863,8 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
           }).join('');
         }
 
-        // Mobile Cards
-        if (mobileCards) {
-          mobileCards.innerHTML = logs.map(log => {
+        if (itMobileCards) {
+          itMobileCards.innerHTML = logs.map(log => {
             const badgeClass = getActionBadge(log.action);
             return `
               <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
@@ -4687,7 +4874,7 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
                 </div>
                 <div class="text-xs text-slate-800 font-medium">${log.details || '—'}</div>
                 <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
-                  <span class="truncate max-w-[180px]">👤 ${log.actorEmail || 'সিস্টেম'}</span>
+                  <span class="truncate max-w-[200px] font-medium text-emerald-700">👤 ${log.actorEmail || 'সিস্টেম'} <span class="text-[9px] bg-emerald-50 text-emerald-700 px-1 py-0.2 rounded border border-emerald-200 font-normal">নিজের</span></span>
                   ${log.target ? `<span class="font-mono font-semibold text-indigo-700">${log.target}</span>` : ''}
                 </div>
               </div>
@@ -4696,26 +4883,125 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
         }
       }
 
+      // Render for Super Admin (Dark Theme, Global Trail)
+      function renderAdminAuditLogs(logs) {
+        if (!adminTbody && !adminMobileCards) return;
+        if (!logs.length) {
+          if (adminTbody) adminTbody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-slate-500">কোনো অডিট লগ পাওয়া যায়নি।</td></tr>`;
+          if (adminMobileCards) adminMobileCards.innerHTML = `<div class="text-center p-8 text-slate-500 bg-slate-800/80 rounded-2xl border border-slate-700">কোনো অডিট লগ পাওয়া যায়নি।</div>`;
+          return;
+        }
+
+        if (adminTbody) {
+          adminTbody.innerHTML = logs.map(log => {
+            const badgeClass = getAdminActionBadge(log.action);
+            return `
+              <tr class="hover:bg-slate-800/60 transition text-xs border-b border-slate-700/50">
+                <td class="p-3 font-mono text-slate-400 whitespace-nowrap">${formatTime(log)}</td>
+                <td class="p-3 whitespace-nowrap">
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold border ${badgeClass}">${log.action || 'INFO'}</span>
+                </td>
+                <td class="p-3">
+                  <div class="font-medium text-slate-200">${log.actorEmail || 'সিস্টেম'}</div>
+                  <div class="text-[10px] text-slate-400 font-mono">${log.actorRole || ''} ${log.branchName ? `(${log.branchName})` : ''}</div>
+                </td>
+                <td class="p-3 font-mono font-semibold text-indigo-300">${log.target || '—'}</td>
+                <td class="p-3 text-slate-300 max-w-md break-words">${log.details || '—'}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        if (adminMobileCards) {
+          adminMobileCards.innerHTML = logs.map(log => {
+            const badgeClass = getAdminActionBadge(log.action);
+            return `
+              <div class="bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700/80 shadow-md space-y-2">
+                <div class="flex items-center justify-between gap-2 border-b border-slate-700/60 pb-1.5">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeClass}">${log.action || 'INFO'}</span>
+                  <span class="text-[10px] font-mono text-slate-400">${formatTime(log)}</span>
+                </div>
+                <div class="text-xs text-slate-200 font-medium">${log.details || '—'}</div>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-700/60">
+                  <span class="truncate max-w-[200px] text-indigo-300 font-mono">👤 ${log.actorEmail || 'সিস্টেম'}</span>
+                  ${log.target ? `<span class="font-mono font-semibold text-amber-300">${log.target}</span>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
       function loadAuditLogs() {
-        if (auditUnsub) auditUnsub();
+        if (auditUnsub) {
+          auditUnsub();
+          auditUnsub = null;
+        }
+        if (!currentUser) return;
+
+        const userEmail = (currentUser.email || '').trim().toLowerCase();
+        const userUid = currentUser.uid || '';
+
         try {
-          const q = query(collection(db, 'activity_logs'), orderBy('timestamp', 'desc'), limit(150));
-          auditUnsub = onSnapshot(q, (snap) => {
-            allAuditLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            applyAuditFilter();
-          }, (err) => {
-            console.warn("Audit logs ordered query failed, falling back to unordered:", err);
-            const fallbackQ = query(collection(db, 'activity_logs'), limit(150));
-            auditUnsub = onSnapshot(fallbackQ, (fallbackSnap) => {
-              allAuditLogs = fallbackSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-              allAuditLogs.sort((a, b) => {
-                const ta = a.timestamp?.seconds || (a.createdAtClient ? new Date(a.createdAtClient).getTime() : 0);
-                const tb = b.timestamp?.seconds || (b.createdAtClient ? new Date(b.createdAtClient).getTime() : 0);
-                return tb - ta;
+          if (isSuper) {
+            // Super Admin: query all activity logs
+            const q = query(collection(db, 'activity_logs'), orderBy('timestamp', 'desc'), limit(250));
+            auditUnsub = onSnapshot(q, (snap) => {
+              allAuditLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+              applyAuditFilter();
+            }, (err) => {
+              console.warn("Admin audit ordered query failed, falling back to unordered:", err);
+              const fallbackQ = query(collection(db, 'activity_logs'), limit(250));
+              auditUnsub = onSnapshot(fallbackQ, (fallbackSnap) => {
+                allAuditLogs = fallbackSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                allAuditLogs.sort((a, b) => {
+                  const ta = a.timestamp?.seconds || (a.createdAtClient ? new Date(a.createdAtClient).getTime() : 0);
+                  const tb = b.timestamp?.seconds || (b.createdAtClient ? new Date(b.createdAtClient).getTime() : 0);
+                  return tb - ta;
+                });
+                applyAuditFilter();
+              });
+            });
+          } else {
+            // IT Officer: query ONLY their own activity logs
+            const q = query(
+              collection(db, 'activity_logs'),
+              where('actorEmail', '==', currentUser.email),
+              orderBy('timestamp', 'desc'),
+              limit(150)
+            );
+            auditUnsub = onSnapshot(q, (snap) => {
+              allAuditLogs = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(log => {
+                const logEmail = (log.actorEmail || '').trim().toLowerCase();
+                const logUid = log.actorUid || '';
+                return (userEmail && logEmail === userEmail) || (userUid && logUid === userUid);
               });
               applyAuditFilter();
+            }, (err) => {
+              console.warn("IT audit ordered query failed (composite index may be pending), falling back to unordered:", err);
+              const fallbackQ = query(
+                collection(db, 'activity_logs'),
+                where('actorEmail', '==', currentUser.email),
+                limit(150)
+              );
+              auditUnsub = onSnapshot(fallbackQ, (fallbackSnap) => {
+                const docs = fallbackSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(log => {
+                  const logEmail = (log.actorEmail || '').trim().toLowerCase();
+                  const logUid = log.actorUid || '';
+                  return (userEmail && logEmail === userEmail) || (userUid && logUid === userUid);
+                });
+                docs.sort((a, b) => {
+                  const ta = a.timestamp?.seconds || (a.createdAtClient ? new Date(a.createdAtClient).getTime() : 0);
+                  const tb = b.timestamp?.seconds || (b.createdAtClient ? new Date(b.createdAtClient).getTime() : 0);
+                  return tb - ta;
+                });
+                allAuditLogs = docs;
+                applyAuditFilter();
+              }, (fallbackErr) => {
+                console.error("IT audit fallback query also failed:", fallbackErr);
+              });
             });
-          });
+          }
         } catch (e) {
           console.warn("Error setting up audit listener:", e);
         }
