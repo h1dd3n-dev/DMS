@@ -1,5 +1,5 @@
 // sw.js - Service Worker for Deed Management System (PWA)
-const CACHE_NAME = 'dms-pwa-cache-v2';
+const CACHE_NAME = 'dms-pwa-cache-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
