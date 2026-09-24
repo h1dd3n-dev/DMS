@@ -1191,12 +1191,12 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">রেকর্ড আইডি / ট্র্যাকিং নং</label>
-            <input type="text" id="itPolicyNo" required placeholder="010110177896-9"
+            <input type="text" id="itPolicyNo" required placeholder="010110123896-2"
               class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">গ্রাহকের নাম</label>
-            <input type="text" id="itPolicyHolderName" required placeholder="মো: রহিম"
+            <input type="text" id="itPolicyHolderName" required placeholder="মো: করিম"
               class="w-full px-3 py-2 border rounded-lg text-sm">
           </div>
         </div>
@@ -1499,7 +1499,7 @@
           </button>
         </div>
         <textarea id="bulkJsonInput"
-          placeholder='[\n  {\n    "refNo": "AILIL-02860/2026",\n    "policyNo": "010110123896-9",\n    "policyHolderName": "MD SHAHIDUL ISLAM",\n    "bmCode": "10028060",\n    "bmName": "MD. JAHANGIR HOSSAIN",\n    "incomingDate": "2026-07-22"\n  }\n]'
+          placeholder='[\n  {\n    "refNo": "AILIL-02860/2026",\n    "policyNo": "010110123456-1",\n    "policyHolderName": "MD RAFIQUL ISLAM",\n    "bmCode": "10028060",\n    "bmName": "MD. JAHANGIR HOSSAIN",\n    "incomingDate": "2026-07-22"\n  }\n]'
           class="w-full flex-1 p-3 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-700 focus:outline-none min-h-[140px]"></textarea>
         <div class="flex justify-end gap-2 pt-1">
           <button id="parseJsonBtn"
@@ -1597,7 +1597,7 @@
             <label class="block text-xs font-semibold text-slate-600 mb-1">
               রেকর্ড আইডি / পলিসি নং <span class="text-red-500">*</span>
             </label>
-            <input type="text" id="courierPolicyNo" required placeholder="উদা: 010110177896-9"
+            <input type="text" id="courierPolicyNo" required placeholder="উদা: 010110123456-1"
               class="w-full px-3 py-2 border rounded-lg text-sm font-mono focus:ring-2 focus:ring-slate-700 focus:outline-none">
           </div>
           <div>
@@ -2469,8 +2469,8 @@
 Extract all record and deed entries from this transmission letter / dispatch sheet.
 Output MUST be a strict JSON array of objects with the exact following fields:
 - refNo: Reference number (e.g. "REF-02860/2026" or similar, or empty string if not found)
-- policyNo: Record / Policy ID number (e.g. "010110177896-9")
-- policyHolderName: Name of the customer / recipient (e.g. "MD SHAHIDUL ISLAM")
+- policyNo: Record / Policy ID number (e.g. "010110123456-1")
+- policyHolderName: Name of the customer / recipient (e.g. "MD SHORIFUL ISLAM")
 - bmCode: Branch Manager / Coordinator code (numeric or alphanumeric, e.g. "10028060")
 - bmName: Name of Coordinator / Manager (e.g. "MD. JAHANGIR HOSSAIN")
 - incomingDate: Date on transmission letter in YYYY-MM-DD format (or today's date if missing)
@@ -2499,8 +2499,8 @@ Extract all record and deed entries from all attached transmission letter pages 
 Consolidate every record found across all images into a single JSON array without duplicates.
 Output MUST be a strict JSON array of objects with the exact following fields:
 - refNo: Reference number (e.g. "REF-02860/2026" or similar, or empty string if not found)
-- policyNo: Record / Policy ID number (e.g. "010110177896-9")
-- policyHolderName: Name of the customer / recipient (e.g. "MD SHAHIDUL ISLAM")
+- policyNo: Record / Policy ID number (e.g. "010110123456-1")
+- policyHolderName: Name of the customer / recipient (e.g. "MD SHORIFUL ISLAM")
 - bmCode: Branch Manager / Coordinator code (numeric or alphanumeric, e.g. "10028060")
 - bmName: Name of Coordinator / Manager (e.g. "MD. JAHANGIR HOSSAIN")
 - incomingDate: Date on transmission letter in YYYY-MM-DD format (or today's date if missing)
