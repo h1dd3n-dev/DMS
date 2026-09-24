@@ -752,6 +752,12 @@
               <span>এআই বাল্ক</span>
               <span class="text-[9px] bg-indigo-200/80 text-indigo-800 px-1 py-0.2 rounded font-mono">OCR</span>
             </button>
+            <button id="openBulkDeliveryBtn"
+              class="flex-shrink-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 hover:from-emerald-500/20 hover:to-teal-500/20 text-emerald-900 border border-emerald-300 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-xs mobile-tap"
+              title="একই ব্যক্তির নিকট ফিল্টার করে একাধিক দলিল একসাথে ডেলিভারি করুন">
+              <span>📦</span>
+              <span class="font-bold">বাল্ক ডেলিভারি</span>
+            </button>
             <button id="printChallanBtn"
               class="flex-shrink-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 text-amber-900 border border-amber-300 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-xs mobile-tap"
               title="ডেলিভারিকৃত দলিলের তারিখ ও বিএম ভিত্তিক চালান ও সিগনেচার শিট প্রিন্ট করুন">
@@ -1501,7 +1507,12 @@
           <p class="text-xs text-slate-500">ট্রান্সমিশন লেটারের ছবি সরাসরি স্ক্যান করুন অথবা জেনারেটেড JSON পেস্ট করুন
           </p>
         </div>
-        <button id="closeBulkModal" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+        <div class="flex items-center gap-2">
+          <button type="button" id="bulkGeminiConfigBtn" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-2.5 py-1.5 rounded-xl font-medium flex items-center gap-1 transition mobile-tap" title="Gemini AI Key পরিবর্তন বা যাচাই করুন">
+            <span>⚙️</span><span>AI Key সেটিংস</span>
+          </button>
+          <button id="closeBulkModal" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+        </div>
       </div>
 
       <!-- Ingestion Mode Tabs -->
@@ -1861,26 +1872,211 @@
   <div id="geminiKeyModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-base font-bold text-slate-800">Gemini AI কনফিগারেশন</h3>
+        <div class="flex items-center gap-2">
+          <span class="text-xl">⚙️</span>
+          <h3 class="text-base font-bold text-slate-800">Gemini AI কনফিগারেশন</h3>
+        </div>
         <button id="closeGeminiModal" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
       </div>
-      <div class="text-xs text-slate-600 leading-relaxed">
-        ডকুমেন্টের ছবি থেকে সরাসরি রেকর্ড শনাক্ত করার জন্য আপনার Google AI Studio থেকে প্রাপ্ত <b>Gemini API Key</b> টি
-        এখানে সংরক্ষণ করুন। এটি আপনার ব্রাউজারে সংরক্ষিত থাকবে।
+
+      <!-- Current Status Badge -->
+      <div id="geminiKeyStatusText" class="text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+        <span class="text-slate-500 font-medium">কী স্ট্যাটাস লোড হচ্ছে...</span>
       </div>
+
+      <div class="text-xs text-slate-600 leading-relaxed bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 space-y-1">
+        <p class="font-semibold text-indigo-900">💡 ব্যক্তিগত ও নিরবচ্ছিন্ন API Key ব্যবস্থা:</p>
+        <p>প্রতিটি আইটি অফিসার তার নিজস্ব Google অ্যাকাউন্ট থেকে প্রাপ্ত <b>Gemini API Key</b> ব্যবহার করবেন। এটি সরাসরি আপনার নিজস্ব অ্যাকাউন্টে ও ব্রাউজারে সংরক্ষিত থাকবে এবং অন্য কারো সাথে শেয়ার বা ওভাররাইট হবে না, যার ফলে ফ্রি লিমিটের কোনো সমস্যা হবে না।</p>
+      </div>
+
       <form id="geminiKeyForm" class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Gemini API Key</label>
-          <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..."
-            class="w-full px-3 py-2 border rounded-lg text-sm font-mono focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-xs font-semibold text-slate-700">Google Gemini API Key <span class="text-rose-500">*</span></label>
+            <button type="button" id="toggleGeminiKeyVisibility" class="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium">👁️ দেখুন</button>
+          </div>
+          <input type="password" id="geminiApiKeyInput" placeholder="AQ.Ab8... অথবা AIzaSy..." required
+            class="w-full px-3 py-2 border rounded-xl text-xs font-mono focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <div class="flex justify-between items-center mt-1">
+            <span class="text-[10px] text-slate-400">Google AI Studio থেকে প্রাপ্ত কী দিন</span>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer"
+              class="text-[10px] text-indigo-600 hover:underline font-semibold">ফ্রি কী তৈরি করতে ক্লিক করুন ↗</a>
+          </div>
         </div>
-        <div class="flex justify-end gap-2 pt-2">
-          <button type="button" id="cancelGeminiModal" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">বাতিল</button>
-          <button type="submit"
-            class="px-5 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg">সংরক্ষণ
-            করুন</button>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+          <button type="button" id="cancelGeminiModal" class="px-4 py-2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">বাতিল</button>
+          <button type="submit" id="saveGeminiKeyBtn"
+            class="px-5 py-2 text-xs bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold rounded-xl shadow-md transition">
+            💾 স্থায়ীভাবে সংরক্ষণ করুন
+          </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal: Bulk Delivery Hub -->
+  <div id="bulkDeliveryModal"
+    class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div
+      class="bg-white rounded-2xl w-full max-w-4xl max-h-[92vh] flex flex-col p-4 sm:p-6 shadow-2xl space-y-4 my-auto overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center border-b border-slate-200 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-xs">
+            📦
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-800">বাল্ক দলিল ডেলিভারি হাব (Bulk Delivery)</h3>
+            <p class="text-xs text-slate-500">একই গ্রহীতার নিকট ফিল্টার করে একাধিক দলিল সহজে নির্বাচন ও ডেলিভারি দিন</p>
+          </div>
+        </div>
+        <button id="closeBulkDeliveryModal"
+          class="text-slate-400 hover:text-slate-700 text-2xl font-bold w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center transition">
+          &times;
+        </button>
+      </div>
+
+      <!-- Main Content: Split Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-y-auto pr-1 flex-1">
+        
+        <!-- Left Column: Filter & Deeds Selection (7 Cols) -->
+        <div class="lg:col-span-7 flex flex-col space-y-2.5 border border-slate-200 rounded-xl p-3 bg-slate-50/60">
+          <div class="flex items-center justify-between pb-1 border-b border-slate-200">
+            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <span>📑</span> ১. ডেলিভারির দলিল ফিল্টার ও নির্বাচন করুন
+            </span>
+            <span id="bulkDeedsFoundBadge" class="text-[11px] font-mono font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">
+              ০ টি পাওয়া গেছে
+            </span>
+          </div>
+
+          <!-- Filters Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">অনুসন্ধান (পলিসি / নাম)</label>
+              <input type="text" id="bulkDeedSearchInput" placeholder="পলিসি নং বা গ্রাহকের নাম..."
+                class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">বিএম / কোঅর্ডিনেটর ফিল্টার</label>
+              <select id="bulkDeedBMFilter"
+                class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <option value="">সকল বিএম কোড</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 text-xs pt-1">
+            <div class="flex items-center gap-2">
+              <label class="flex items-center gap-1.5 font-semibold text-slate-700 cursor-pointer select-none">
+                <input type="checkbox" id="bulkDeedsSelectAll" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer">
+                <span>সবগুলো সিলেক্ট করুন</span>
+              </label>
+            </div>
+            <div class="flex items-center gap-1 text-[11px]">
+              <button type="button" id="bulkDeedQuickOfficeBtn" class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold border border-emerald-600 shadow-2xs">অফিসে রক্ষিত</button>
+              <button type="button" id="bulkDeedQuickAllBtn" class="px-2 py-0.5 rounded bg-white hover:bg-slate-200 border border-slate-200 text-slate-600 font-medium">সব অপূর্ণ</button>
+            </div>
+          </div>
+
+          <!-- Deeds Selection List (Scrollable) -->
+          <div class="border border-slate-200 rounded-xl overflow-y-auto bg-white flex-1 max-h-72 min-h-48 divide-y divide-slate-100">
+            <table class="w-full text-left text-xs text-slate-700">
+              <thead class="bg-slate-100 text-slate-800 font-bold sticky top-0 border-b border-slate-200 z-10">
+                <tr>
+                  <th class="p-2 w-8 text-center">✓</th>
+                  <th class="p-2">পলিসি নং ও গ্রাহক</th>
+                  <th class="p-2">বিএম কোড ও নাম</th>
+                  <th class="p-2 text-center">স্ট্যাটাস</th>
+                </tr>
+              </thead>
+              <tbody id="bulkDeedsListBody" class="divide-y divide-slate-100">
+                <tr><td colspan="4" class="text-center p-6 text-slate-400">দলিল তালিকা লোড হচ্ছে...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Selection status bar -->
+          <div class="flex items-center justify-between text-xs bg-emerald-50/80 border border-emerald-200 px-3 py-1.5 rounded-lg text-emerald-900 font-medium">
+            <span>নির্বাচিত দলিল:</span>
+            <span id="bulkDeedsSelectedCount" class="font-mono font-bold text-sm bg-emerald-600 text-white px-2 py-0.2 rounded-full">০ টি</span>
+          </div>
+        </div>
+
+        <!-- Right Column: Recipient Info & Submission (5 Cols) -->
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-3 border border-slate-200 rounded-xl p-3 bg-white">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between pb-1 border-b border-slate-200">
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <span>👤</span> ২. গ্রহীতার বিবরণ প্রদান করুন
+              </span>
+              <span class="text-[10px] text-amber-600 font-semibold bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">আবশ্যক</span>
+            </div>
+
+            <!-- Smart Auto-Fill Quick Action for Recipient -->
+            <div class="space-y-1.5 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+              <span class="text-[11px] font-bold text-slate-600 block">স্মার্ট সাজেশন (ক্লিক করে অটো-পূরণ করুন):</span>
+              <div id="bulkRecipientSuggestions" class="flex flex-wrap gap-1.5 text-xs">
+                <span class="text-[11px] text-slate-400 italic">বাম পাশ থেকে দলিল নির্বাচন করলে বিএম সাজেশন আসবে</span>
+              </div>
+            </div>
+
+            <!-- Recipient Name Input -->
+            <div>
+              <label class="block text-xs font-bold text-slate-800 mb-1">
+                গ্রহীতার নাম ও পদবী / পরিচয় <span class="text-rose-500">*</span>
+              </label>
+              <input type="text" id="bulkRecipientName" placeholder="উদা: মো: রফিকুল ইসলাম (শাখা কোঅর্ডিনেটর)"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <p class="text-[10px] text-slate-400 mt-0.5">যিনি সব দলিল একসাথে গ্রহণ করবেন তার নাম লিখুন বা উপরের বাটনে চাপ দিন</p>
+            </div>
+
+            <!-- Recipient Mobile -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">
+                গ্রহীতার মোবাইল নম্বর (ঐচ্ছিক)
+              </label>
+              <input type="tel" id="bulkRecipientPhone" placeholder="উদা: ০১৭১২-৩৪৫৬৭৮"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+
+            <!-- Delivery Date -->
+            <div>
+              <label class="block text-xs font-bold text-slate-800 mb-1">
+                ডেলিভারির তারিখ <span class="text-rose-500">*</span>
+              </label>
+              <input type="date" id="bulkDeliveryDateInput"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+
+            <!-- Notes -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">
+                ডেলিভারি নোট / মন্তব্য (ঐচ্ছিক)
+              </label>
+              <input type="text" id="bulkDeliveryRemarks" placeholder="উদা: অফিসে সরাসরি বুঝিয়ে দেওয়া হলো"
+                class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-3 border-t border-slate-200 space-y-2">
+            <button type="button" id="confirmBulkDeliverySubmitBtn" disabled
+              class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span>✅</span>
+              <span id="confirmBulkDeliverySubmitText">ডেলিভারির জন্য দলিল সিলেক্ট করুন</span>
+            </button>
+            <button type="button" id="cancelBulkDeliveryBtn"
+              class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition">
+              বাতিল করুন
+            </button>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </div>
 
@@ -2686,18 +2882,92 @@
     }
 
     /* ============================================================
-       INLINED GEMINI AI OCR UTILITIES
+       INLINED GEMINI AI OCR UTILITIES & INDIVIDUAL USER KEY SYNC
        ============================================================ */
     const GEMINI_API_KEY_STORAGE = 'dms_gemini_api_key';
-    const DEFAULT_GEMINI_KEY = 'AQ.Ab8RN6IiK_EKMA8GYNFggUhg7Q08ZpA-hV79uvdMblNwWXY9Bw';
+    const DEFAULT_GEMINI_KEY = 'AQ.Ab8RN6L4Uh8x_QcjpsdD6jzTsXv1vit-OIUaE_K72BgFD8xEjw';
+
+    function getUserGeminiStorageKey() {
+      return (currentUser && currentUser.uid) ? `dms_gemini_api_key_${currentUser.uid}` : GEMINI_API_KEY_STORAGE;
+    }
 
     function getStoredGeminiKey() {
-      return localStorage.getItem(GEMINI_API_KEY_STORAGE) || DEFAULT_GEMINI_KEY;
+      const userStorageKey = getUserGeminiStorageKey();
+      const userLocalKey = (localStorage.getItem(userStorageKey) || '').trim();
+      if (userLocalKey) return userLocalKey;
+      if (currentUser && currentUser.geminiApiKey) {
+        const profileKey = String(currentUser.geminiApiKey).trim();
+        if (profileKey) {
+          localStorage.setItem(userStorageKey, profileKey);
+          return profileKey;
+        }
+      }
+      return DEFAULT_GEMINI_KEY;
     }
-    function saveGeminiKey(key) {
-      if (key) localStorage.setItem(GEMINI_API_KEY_STORAGE, key.trim());
-      else localStorage.removeItem(GEMINI_API_KEY_STORAGE);
+
+    async function saveGeminiKey(key) {
+      const cleaned = (key || '').trim();
+      const userStorageKey = getUserGeminiStorageKey();
+      if (cleaned) {
+        localStorage.setItem(userStorageKey, cleaned);
+        if (currentUser) {
+          currentUser.geminiApiKey = cleaned;
+          if (currentUser.uid) {
+            try {
+              // Permanently persist strictly to this specific IT Officer's user document
+              await setDoc(doc(db, 'users', currentUser.uid), {
+                geminiApiKey: cleaned,
+                geminiKeyUpdatedAt: serverTimestamp()
+              }, { merge: true });
+            } catch (err) {
+              console.warn("Could not save Gemini key to user profile:", err);
+            }
+          }
+        }
+      } else {
+        localStorage.removeItem(userStorageKey);
+        if (currentUser) {
+          currentUser.geminiApiKey = '';
+          if (currentUser.uid) {
+            try {
+              await setDoc(doc(db, 'users', currentUser.uid), {
+                geminiApiKey: '',
+                geminiKeyUpdatedAt: serverTimestamp()
+              }, { merge: true });
+            } catch (err) {
+              console.warn("Could not clear Gemini key from user profile:", err);
+            }
+          }
+        }
+      }
     }
+
+    // Auto-sync current user's personal Gemini key from their own Firestore document
+    function initGeminiKeyCloudSync() {
+      if (!currentUser || !currentUser.uid) return;
+      try {
+        onSnapshot(doc(db, 'users', currentUser.uid), (snap) => {
+          if (snap.exists()) {
+            const data = snap.data();
+            if (data && data.geminiApiKey !== undefined) {
+              const personalKey = String(data.geminiApiKey || '').trim();
+              currentUser.geminiApiKey = personalKey;
+              const userStorageKey = getUserGeminiStorageKey();
+              if (personalKey) {
+                localStorage.setItem(userStorageKey, personalKey);
+              } else {
+                localStorage.removeItem(userStorageKey);
+              }
+            }
+          }
+        }, (err) => {
+          console.warn("Gemini user sync listener notice:", err);
+        });
+      } catch (e) {
+        console.warn("initGeminiKeyCloudSync error:", e);
+      }
+    }
+
     function fileToBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -2720,7 +2990,9 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
 
     async function extractDeedsFromImages(imageFiles, apiKey) {
       const activeKey = (apiKey || getStoredGeminiKey() || '').trim();
-      if (!activeKey) throw new Error("দয়া করে Gemini API Key সেট করুন।");
+      if (!activeKey) {
+        throw new Error("দয়া করে একটি সঠিক Gemini API Key সেট করুন।");
+      }
       if (!imageFiles || imageFiles.length === 0) throw new Error("কোনো ছবি নির্বাচন করা হয়নি।");
 
       const files = Array.isArray(imageFiles) ? imageFiles : [imageFiles];
@@ -2731,8 +3003,8 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
         return { inlineData: { mimeType, data: base64Data } };
       }));
 
-      // Candidate models in Google Gemini API with priority on gemini-3.5-flash
-      const candidateModels = ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-flash-latest', 'gemini-3.1-flash-lite'];
+      // Candidate models: modern Gemini 3.6 & latest models first
+      const candidateModels = ['gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
       let lastErr = null;
 
       const multiPrompt = `You are an expert document parser.
@@ -2750,7 +3022,7 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
 
       for (const model of candidateModels) {
         try {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(activeKey)}`;
           const payload = {
             contents: [{
               parts: [
@@ -2762,7 +3034,10 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
           };
           const res = await fetch(url, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "x-goog-api-key": activeKey
+            },
             body: JSON.stringify(payload)
           });
           if (!res.ok) {
@@ -2887,6 +3162,8 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
       if (emailMobile) emailMobile.textContent = user.email || '';
 
       initPasswordModal();
+      initGeminiModal();
+      initGeminiKeyCloudSync();
       setupMobileBottomNav(role);
 
       if (role === 'super_admin') {
@@ -2896,6 +3173,7 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
         document.getElementById('appTitle').textContent = "Central Management Hub";
         document.getElementById('userBadge').textContent = user.email;
         document.getElementById('userBadge').classList.remove('hidden');
+        document.getElementById('geminiConfigBtn').classList.remove('hidden');
         document.getElementById('viewSuperAdmin').classList.remove('hidden');
         initSuperAdmin();
       } else if (role === 'it_officer') {
@@ -3327,6 +3605,7 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
       initBackupModule();
       initRestoreModule();
       initChallanModule();
+      initBulkDeliveryModule();
     }
 
     /* ============================================================
@@ -3893,34 +4172,13 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
       // Batch Action: Delivered
       const batchDeliveredBtn = document.getElementById('itBatchDeliveredBtn');
       if (batchDeliveredBtn) {
-        batchDeliveredBtn.onclick = async () => {
+        batchDeliveredBtn.onclick = () => {
           const ids = Array.from(itSelectedDeedIds);
           if (!ids.length) return;
-          const recipientName = await showPromptModal({
-            title: "ডেলিভারি গ্রহীতার নাম",
-            message: `নির্বাচিত ${ids.length}টি দলিল কার কাছে বা কোন কর্মকর্তার নিকট হস্তান্তর করা হয়েছে?`,
-            placeholder: "গ্রহীতার নাম বা পদবী লিখুন...",
-            defaultValue: "শাখা কোঅর্ডিনেটর"
-          });
-          if (recipientName !== null) {
-            try {
-              const today = new Date().toISOString().split('T')[0];
-              const batch = writeBatch(db);
-              ids.forEach(id => {
-                batch.update(doc(db, 'deeds', id), {
-                  status: 'Delivered',
-                  deliveredTo: recipientName || 'হস্তান্তরিত',
-                  deliveryDate: today
-                });
-              });
-              await batch.commit();
-              showToast(`${ids.length}টি রেকর্ড 'Delivered' স্ট্যাটাসে আপডেট করা হয়েছে!`, "success");
-              window.logSystemActivity('STATUS', `ব্যাচ ডেলিভারি সম্পন্ন: ${ids.length}টি রেকর্ড (গ্রহীতা: ${recipientName})`, 'Batch');
-              itSelectedDeedIds.clear();
-              window.updateBatchDock();
-            } catch (err) {
-              showToast("ডেলিভারি আপডেটে ত্রুটি: " + err.message, "error");
-            }
+          if (window.openBulkDeliveryWithIds) {
+            window.openBulkDeliveryWithIds(ids);
+          } else {
+            showToast("বাল্ক ডেলিভারি মডিউল লোড হচ্ছে...", "info");
           }
         };
       }
@@ -4280,6 +4538,7 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
 
       // 12. Initialize Sub-modules
       initBulkModal();
+      initBulkDeliveryModule();
       initCourierModule();
       initChallanModule();
       initBackupModule();
@@ -5253,6 +5512,113 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
     }
 
     /* ============================================================
+       GEMINI API KEY CONFIG MODAL MODULE
+       ============================================================ */
+    function initGeminiModal() {
+      const modal = document.getElementById('geminiKeyModal');
+      const openBtn = document.getElementById('geminiConfigBtn');
+      const closeBtn = document.getElementById('closeGeminiModal');
+      const cancelBtn = document.getElementById('cancelGeminiModal');
+      const form = document.getElementById('geminiKeyForm');
+      const input = document.getElementById('geminiApiKeyInput');
+      const toggleViewBtn = document.getElementById('toggleGeminiKeyVisibility');
+      const keyStatusText = document.getElementById('geminiKeyStatusText');
+      const saveBtn = document.getElementById('saveGeminiKeyBtn');
+
+      function refreshStatus() {
+        const userStorageKey = getUserGeminiStorageKey();
+        const personalKey = (localStorage.getItem(userStorageKey) || currentUser?.geminiApiKey || '').trim();
+        const curKey = personalKey || getStoredGeminiKey();
+        if (input) input.value = personalKey || (curKey !== DEFAULT_GEMINI_KEY ? curKey : '');
+        if (keyStatusText) {
+          if (personalKey && personalKey.length > 8) {
+            const masked = personalKey.slice(0, 8) + '••••••••' + personalKey.slice(-4);
+            keyStatusText.innerHTML = `
+              <div class="flex items-center justify-between">
+                <span class="text-emerald-700 font-bold flex items-center gap-1">🟢 সক্রিয় Key (আপনার ব্যক্তিগত অ্যাকাউন্টে সংরক্ষিত)</span>
+                <span class="font-mono text-[11px] text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">${masked}</span>
+              </div>
+            `;
+          } else if (curKey && curKey.length > 8) {
+            const masked = curKey.slice(0, 8) + '••••••••' + curKey.slice(-4);
+            keyStatusText.innerHTML = `
+              <div class="flex items-center justify-between">
+                <span class="text-amber-700 font-bold flex items-center gap-1">🟡 ডিফল্ট সিস্টেম Key সক্রিয় (আপনার নিজস্ব Key সেট করুন)</span>
+                <span class="font-mono text-[11px] text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">${masked}</span>
+              </div>
+            `;
+          } else {
+            keyStatusText.innerHTML = `<span class="text-amber-700 font-bold flex items-center gap-1">🟡 বর্তমানে কোনো সক্রিয় Key সেট করা নেই</span>`;
+          }
+        }
+      }
+
+      window.openGeminiConfigModal = () => {
+        refreshStatus();
+        if (modal) {
+          modal.classList.remove('hidden');
+          if (input) {
+            input.type = 'password';
+            if (toggleViewBtn) toggleViewBtn.textContent = '👁️ দেখুন';
+            input.focus();
+          }
+        }
+      };
+
+      if (openBtn) {
+        openBtn.onclick = () => window.openGeminiConfigModal();
+      }
+      const bulkOpenBtn = document.getElementById('bulkGeminiConfigBtn');
+      if (bulkOpenBtn) {
+        bulkOpenBtn.onclick = () => window.openGeminiConfigModal();
+      }
+      if (closeBtn) closeBtn.onclick = () => modal.classList.add('hidden');
+      if (cancelBtn) cancelBtn.onclick = () => modal.classList.add('hidden');
+
+      if (toggleViewBtn && input) {
+        toggleViewBtn.onclick = () => {
+          if (input.type === 'password') {
+            input.type = 'text';
+            toggleViewBtn.textContent = '🙈 লুকান';
+          } else {
+            input.type = 'password';
+            toggleViewBtn.textContent = '👁️ দেখুন';
+          }
+        };
+      }
+
+      if (form) {
+        form.onsubmit = async (e) => {
+          e.preventDefault();
+          const key = (input?.value || '').trim();
+          if (!key) {
+            showToast("দয়া করে একটি Gemini API Key লিখুন বা পেস্ট করুন।", "warning");
+            return;
+          }
+
+          if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.textContent = "সংরক্ষণ হচ্ছে...";
+          }
+
+          try {
+            await saveGeminiKey(key);
+            showToast("✅ আপনার ব্যক্তিগত Gemini API Key সফলভাবে সংরক্ষিত হয়েছে!", "success", 4000);
+            window.logSystemActivity('AUTH', 'ব্যক্তিগত Gemini API Key আপডেট করা হয়েছে', 'GeminiConfig');
+            modal.classList.add('hidden');
+          } catch (err) {
+            showToast("সংরক্ষণে সমস্যা: " + err.message, "error");
+          } finally {
+            if (saveBtn) {
+              saveBtn.disabled = false;
+              saveBtn.textContent = "💾 স্থায়ীভাবে সংরক্ষণ করুন";
+            }
+          }
+        };
+      }
+    }
+
+    /* ============================================================
        BULK AI MODAL (OCR & JSON)
        ============================================================ */
     function initBulkModal() {
@@ -5413,8 +5779,12 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
         if (selectedOcrFiles.length === 0) return showToast("দয়া করে অন্তত একটি ছবি নির্বাচন বা ক্যামেরা দিয়ে তুলুন।", "warning");
         const key = getStoredGeminiKey();
         if (!key) {
-          showToast("Gemini API Key পাওয়া যায়নি! দয়া করে সেটিংসে গিয়ে Key দিন।", "warning");
-          document.getElementById('geminiKeyModal').classList.remove('hidden');
+          showToast("Gemini API Key সেট করা নেই! দয়া করে আপনার Google AI Studio Key প্রদান করুন।", "warning");
+          if (window.openGeminiConfigModal) {
+            window.openGeminiConfigModal();
+          } else {
+            document.getElementById('geminiKeyModal')?.classList.remove('hidden');
+          }
           return;
         }
 
@@ -5426,7 +5796,13 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
           showToast(`${selectedOcrFiles.length} টি পৃষ্ঠা থেকে ${deeds.length} টি রেকর্ড সফলভাবে এক্সট্রাক্ট হয়েছে!`, "success");
           displayPreviewDeeds(deeds);
         } catch (err) {
-          showToast(err.message, "error", 6000);
+          const errMsg = String(err.message || '');
+          if (errMsg.includes('401') || errMsg.includes('authentication') || errMsg.includes('credentials') || errMsg.includes('PERMISSION_DENIED')) {
+            showToast("API Key ত্রুটি (Invalid Credentials)! অনুগ্রহ করে সঠিক Gemini API Key প্রদান করুন।", "error", 6000);
+            if (window.openGeminiConfigModal) window.openGeminiConfigModal();
+          } else {
+            showToast(errMsg, "error", 6000);
+          }
         } finally {
           ocrLoader.classList.add('hidden');
           startOcrBtn.disabled = false;
@@ -6101,6 +6477,476 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
     }
 
     /* ============================================================
+       BULK DEED DELIVERY MODULE
+       ============================================================ */
+    function initBulkDeliveryModule() {
+      const modal = document.getElementById('bulkDeliveryModal');
+      const openBtn = document.getElementById('openBulkDeliveryBtn');
+      const closeBtn = document.getElementById('closeBulkDeliveryModal');
+      const cancelBtn = document.getElementById('cancelBulkDeliveryBtn');
+      const submitBtn = document.getElementById('confirmBulkDeliverySubmitBtn');
+      const submitText = document.getElementById('confirmBulkDeliverySubmitText');
+
+      const searchInput = document.getElementById('bulkDeedSearchInput');
+      const bmFilter = document.getElementById('bulkDeedBMFilter');
+      const selectAllCb = document.getElementById('bulkDeedsSelectAll');
+      const foundBadge = document.getElementById('bulkDeedsFoundBadge');
+      const selectedCountBadge = document.getElementById('bulkDeedsSelectedCount');
+      const deedsTableBody = document.getElementById('bulkDeedsListBody');
+
+      const quickOfficeBtn = document.getElementById('bulkDeedQuickOfficeBtn');
+      const quickAllBtn = document.getElementById('bulkDeedQuickAllBtn');
+
+      const suggestionsContainer = document.getElementById('bulkRecipientSuggestions');
+      const recipientNameInput = document.getElementById('bulkRecipientName');
+      const recipientPhoneInput = document.getElementById('bulkRecipientPhone');
+      const deliveryDateInput = document.getElementById('bulkDeliveryDateInput');
+      const deliveryRemarksInput = document.getElementById('bulkDeliveryRemarks');
+
+      let currentPool = [];
+      let activeFilteredDeeds = [];
+      let selectedDeedIds = new Set();
+      let statusFilterMode = 'office'; // 'office' or 'all_undelivered'
+
+      function getRawPool() {
+        if (currentUser && currentUser.role === 'super_admin' && typeof adminDeedsList !== 'undefined' && adminDeedsList && adminDeedsList.length) {
+          return adminDeedsList;
+        }
+        return (itAllDeeds && itAllDeeds.length) ? itAllDeeds : (window.itDeedsList || []);
+      }
+
+      function populateBMFilter() {
+        if (!bmFilter) return;
+        const currentVal = bmFilter.value;
+        const pool = getRawPool();
+        const bmMap = new Map();
+        pool.forEach(d => {
+          if (d.status === 'Delivered') return;
+          const code = String(d.bmCode || d.coordinatorCode || '').trim();
+          const name = String(d.bmName || d.coordinatorName || '').trim();
+          if (code) {
+            bmMap.set(code, name || 'কোঅর্ডিনেটর');
+          }
+        });
+        const sortedBMs = Array.from(bmMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+        let html = `<option value="">সকল বিএম কোড (${sortedBMs.length ? sortedBMs.length + ' জন' : 'সব'})</option>`;
+        sortedBMs.forEach(([code, name]) => {
+          html += `<option value="${code}">[${code}] ${name}</option>`;
+        });
+        bmFilter.innerHTML = html;
+        if (bmMap.has(currentVal)) {
+          bmFilter.value = currentVal;
+        }
+      }
+
+      function updateSmartSuggestions() {
+        if (!suggestionsContainer) return;
+        const selectedDeeds = currentPool.filter(d => selectedDeedIds.has(d.id));
+        if (!selectedDeeds.length) {
+          suggestionsContainer.innerHTML = `<span class="text-[11px] text-slate-400 italic">বাম পাশ থেকে দলিল নির্বাচন করলে বিএম/গ্রাহক সাজেশন আসবে</span>`;
+          return;
+        }
+
+        // Collect unique BMs
+        const bmMap = new Map();
+        const clientMap = new Map();
+
+        selectedDeeds.forEach(d => {
+          const code = String(d.bmCode || d.coordinatorCode || '').trim();
+          const name = String(d.bmName || d.coordinatorName || '').trim();
+          if (name || code) {
+            const label = name ? `${name}${code ? ` (${code})` : ''}` : code;
+            bmMap.set(label, { name, code });
+          }
+
+          const client = String(d.policyHolderName || d.name || '').trim();
+          if (client) {
+            clientMap.set(client, client);
+          }
+        });
+
+        let chipsHtml = '';
+
+        bmMap.forEach((val, label) => {
+          chipsHtml += `
+            <button type="button" class="bulk-suggest-chip px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow-2xs" data-fill="${label}">
+              <span>👤</span> <span>বিএম: ${label}</span>
+            </button>
+          `;
+        });
+
+        if (clientMap.size === 1) {
+          const clientName = Array.from(clientMap.keys())[0];
+          chipsHtml += `
+            <button type="button" class="bulk-suggest-chip px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow-2xs" data-fill="${clientName} (গ্রাহক)">
+              <span>👤</span> <span>গ্রাহক: ${clientName}</span>
+            </button>
+          `;
+        }
+
+        chipsHtml += `
+          <button type="button" class="bulk-suggest-chip px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-lg text-xs font-medium transition" data-fill="শাখা কোঅর্ডিনেটর">
+            <span>🏢</span> <span>শাখা কোঅর্ডিনেটর</span>
+          </button>
+        `;
+
+        suggestionsContainer.innerHTML = chipsHtml;
+
+        // Wire chips click to fill recipient name
+        suggestionsContainer.querySelectorAll('.bulk-suggest-chip').forEach(btn => {
+          btn.onclick = () => {
+            const fillText = btn.dataset.fill;
+            if (recipientNameInput && fillText) {
+              recipientNameInput.value = fillText;
+              recipientNameInput.focus();
+              updateSubmitButtonState();
+            }
+          };
+        });
+      }
+
+      function updateSubmitButtonState() {
+        if (!submitBtn) return;
+        const count = selectedDeedIds.size;
+        const recipient = recipientNameInput ? recipientNameInput.value.trim() : '';
+
+        if (selectedCountBadge) {
+          selectedCountBadge.textContent = `${count} টি`;
+        }
+
+        if (count > 0 && recipient.length > 0) {
+          submitBtn.disabled = false;
+          if (submitText) submitText.textContent = `নির্বাচিত ${count}টি দলিল ডেলিভারি সম্পন্ন করুন`;
+        } else {
+          submitBtn.disabled = true;
+          if (submitText) {
+            submitText.textContent = count === 0
+              ? 'ডেলিভারির জন্য দলিল সিলেক্ট করুন'
+              : 'গ্রহীতার নাম লিখুন';
+          }
+        }
+      }
+
+      function renderDeedsList() {
+        if (!deedsTableBody) return;
+
+        if (!activeFilteredDeeds.length) {
+          deedsTableBody.innerHTML = `
+            <tr>
+              <td colspan="4" class="text-center p-8 text-slate-400">
+                <span class="block text-xl mb-1">🔍</span>
+                কোনো উপযুক্ত দলিল পাওয়া যায়নি।
+              </td>
+            </tr>
+          `;
+          if (foundBadge) foundBadge.textContent = '০ টি পাওয়া গেছে';
+          if (selectAllCb) selectAllCb.checked = false;
+          updateSubmitButtonState();
+          return;
+        }
+
+        if (foundBadge) foundBadge.textContent = `${activeFilteredDeeds.length} টি পাওয়া গেছে`;
+
+        // Check if all filtered deeds are selected
+        const allFilteredSelected = activeFilteredDeeds.length > 0 && activeFilteredDeeds.every(d => selectedDeedIds.has(d.id));
+        if (selectAllCb) selectAllCb.checked = allFilteredSelected;
+
+        deedsTableBody.innerHTML = activeFilteredDeeds.map(d => {
+          const isChecked = selectedDeedIds.has(d.id);
+          const statusBg = d.status === 'Received at Office'
+            ? 'bg-blue-50 text-blue-700 border-blue-200'
+            : d.status === 'Pending'
+              ? 'bg-amber-50 text-amber-700 border-amber-200'
+              : 'bg-slate-100 text-slate-600 border-slate-200';
+
+          return `
+            <tr class="hover:bg-emerald-50/50 cursor-pointer transition ${isChecked ? 'bg-emerald-50/70 font-medium' : ''}" data-row-id="${d.id}">
+              <td class="p-2 text-center">
+                <input type="checkbox" class="bulk-deed-cb rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer" data-id="${d.id}" ${isChecked ? 'checked' : ''}>
+              </td>
+              <td class="p-2">
+                <div class="font-mono font-bold text-indigo-700 text-xs">${d.policyNo || '—'}</div>
+                <div class="text-slate-800 text-[11px] truncate max-w-[160px]">${d.policyHolderName || 'N/A'}</div>
+              </td>
+              <td class="p-2">
+                <div class="text-slate-800 text-[11px] font-medium truncate max-w-[140px]">${d.bmName || '—'}</div>
+                <span class="text-slate-400 font-mono text-[10px]">${d.bmCode || ''}</span>
+              </td>
+              <td class="p-2 text-center whitespace-nowrap">
+                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold border ${statusBg}">
+                  ${d.status === 'Received at Office' ? 'অফিসে রক্ষিত' : (d.status || 'Pending')}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Wire click events on rows
+        deedsTableBody.querySelectorAll('tr[data-row-id]').forEach(tr => {
+          tr.onclick = (e) => {
+            if (e.target.tagName && e.target.tagName.toLowerCase() === 'input') return;
+            const id = tr.dataset.rowId;
+            if (selectedDeedIds.has(id)) {
+              selectedDeedIds.delete(id);
+            } else {
+              selectedDeedIds.add(id);
+            }
+            renderDeedsList();
+            updateSmartSuggestions();
+            updateSubmitButtonState();
+          };
+        });
+
+        deedsTableBody.querySelectorAll('.bulk-deed-cb').forEach(cb => {
+          cb.onchange = (e) => {
+            const id = e.target.dataset.id;
+            if (e.target.checked) {
+              selectedDeedIds.add(id);
+            } else {
+              selectedDeedIds.delete(id);
+            }
+            renderDeedsList();
+            updateSmartSuggestions();
+            updateSubmitButtonState();
+          };
+        });
+
+        updateSubmitButtonState();
+      }
+
+      function applyFilters() {
+        const q = (searchInput?.value || '').trim().toLowerCase();
+        const selectedBM = bmFilter?.value || '';
+
+        activeFilteredDeeds = currentPool.filter(d => {
+          // Status filter
+          if (statusFilterMode === 'office') {
+            if (d.status !== 'Received at Office') return false;
+          } else if (statusFilterMode === 'all_undelivered') {
+            if (d.status === 'Delivered') return false;
+          }
+
+          // BM filter
+          if (selectedBM) {
+            const code = String(d.bmCode || d.coordinatorCode || '').trim();
+            if (code !== selectedBM) return false;
+          }
+
+          // Search query
+          if (q) {
+            const pNo = String(d.policyNo || '').toLowerCase();
+            const pRef = String(d.refNo || '').toLowerCase();
+            const pName = String(d.policyHolderName || d.name || '').toLowerCase();
+            const bmN = String(d.bmName || '').toLowerCase();
+            const bmC = String(d.bmCode || '').toLowerCase();
+            if (!pNo.includes(q) && !pRef.includes(q) && !pName.includes(q) && !bmN.includes(q) && !bmC.includes(q)) return false;
+          }
+
+          return true;
+        });
+
+        renderDeedsList();
+      }
+
+      function openModal(preselectedIds = null) {
+        currentPool = getRawPool();
+        populateBMFilter();
+
+        if (preselectedIds && preselectedIds.length) {
+          selectedDeedIds = new Set(preselectedIds);
+          statusFilterMode = 'all_undelivered';
+        } else {
+          if (typeof itSelectedDeedIds !== 'undefined' && itSelectedDeedIds && itSelectedDeedIds.size > 0) {
+            selectedDeedIds = new Set(itSelectedDeedIds);
+            statusFilterMode = 'all_undelivered';
+          } else {
+            selectedDeedIds.clear();
+            statusFilterMode = 'office';
+          }
+        }
+
+        if (quickOfficeBtn && quickAllBtn) {
+          if (statusFilterMode === 'office') {
+            quickOfficeBtn.className = "px-2 py-0.5 rounded bg-emerald-600 text-white font-bold border border-emerald-600 shadow-2xs";
+            quickAllBtn.className = "px-2 py-0.5 rounded bg-white hover:bg-slate-200 border border-slate-200 text-slate-600 font-medium";
+          } else {
+            quickOfficeBtn.className = "px-2 py-0.5 rounded bg-white hover:bg-slate-200 border border-slate-200 text-slate-600 font-medium";
+            quickAllBtn.className = "px-2 py-0.5 rounded bg-emerald-600 text-white font-bold border border-emerald-600 shadow-2xs";
+          }
+        }
+
+        if (searchInput) searchInput.value = '';
+        if (bmFilter) bmFilter.value = '';
+        if (recipientNameInput) recipientNameInput.value = '';
+        if (recipientPhoneInput) recipientPhoneInput.value = '';
+        if (deliveryRemarksInput) deliveryRemarksInput.value = '';
+        if (deliveryDateInput) deliveryDateInput.value = new Date().toISOString().split('T')[0];
+
+        applyFilters();
+        updateSmartSuggestions();
+        updateSubmitButtonState();
+
+        if (modal) modal.classList.remove('hidden');
+      }
+
+      // External API
+      window.openBulkDeliveryModal = openModal;
+      window.openBulkDeliveryWithIds = (ids) => openModal(ids);
+
+      // Event listeners
+      if (openBtn) {
+        openBtn.onclick = () => openModal();
+      }
+      if (closeBtn) {
+        closeBtn.onclick = () => modal.classList.add('hidden');
+      }
+      if (cancelBtn) {
+        cancelBtn.onclick = () => modal.classList.add('hidden');
+      }
+
+      if (searchInput) searchInput.oninput = applyFilters;
+      if (bmFilter) {
+        bmFilter.onchange = () => {
+          applyFilters();
+          if (bmFilter.value && recipientNameInput && !recipientNameInput.value) {
+            const opt = bmFilter.options[bmFilter.selectedIndex];
+            if (opt && opt.text) {
+              recipientNameInput.value = opt.text.replace(/\[.*?\]\s*/, '').trim() + ` (${bmFilter.value})`;
+              updateSubmitButtonState();
+            }
+          }
+        };
+      }
+
+      if (recipientNameInput) {
+        recipientNameInput.oninput = updateSubmitButtonState;
+      }
+
+      if (quickOfficeBtn) {
+        quickOfficeBtn.onclick = () => {
+          statusFilterMode = 'office';
+          quickOfficeBtn.className = "px-2 py-0.5 rounded bg-emerald-600 text-white font-bold border border-emerald-600 shadow-2xs";
+          quickAllBtn.className = "px-2 py-0.5 rounded bg-white hover:bg-slate-200 border border-slate-200 text-slate-600 font-medium";
+          applyFilters();
+        };
+      }
+
+      if (quickAllBtn) {
+        quickAllBtn.onclick = () => {
+          statusFilterMode = 'all_undelivered';
+          quickOfficeBtn.className = "px-2 py-0.5 rounded bg-white hover:bg-slate-200 border border-slate-200 text-slate-600 font-medium";
+          quickAllBtn.className = "px-2 py-0.5 rounded bg-emerald-600 text-white font-bold border border-emerald-600 shadow-2xs";
+          applyFilters();
+        };
+      }
+
+      if (selectAllCb) {
+        selectAllCb.onchange = (e) => {
+          if (e.target.checked) {
+            activeFilteredDeeds.forEach(d => selectedDeedIds.add(d.id));
+          } else {
+            activeFilteredDeeds.forEach(d => selectedDeedIds.delete(d.id));
+          }
+          renderDeedsList();
+          updateSmartSuggestions();
+          updateSubmitButtonState();
+        };
+      }
+
+      // Submit execution
+      if (submitBtn) {
+        submitBtn.onclick = async () => {
+          const ids = Array.from(selectedDeedIds);
+          if (!ids.length) {
+            showToast("অনুগ্রহ করে অন্তত একটি দলিল নির্বাচন করুন!", "warning");
+            return;
+          }
+
+          const recipient = recipientNameInput ? recipientNameInput.value.trim() : '';
+          if (!recipient) {
+            showToast("অনুগ্রহ করে গ্রহীতার নাম লিখুন!", "warning");
+            if (recipientNameInput) recipientNameInput.focus();
+            return;
+          }
+
+          const phone = recipientPhoneInput ? recipientPhoneInput.value.trim() : '';
+          const deliveryDate = (deliveryDateInput && deliveryDateInput.value) ? deliveryDateInput.value : new Date().toISOString().split('T')[0];
+          const remarks = deliveryRemarksInput ? deliveryRemarksInput.value.trim() : '';
+
+          const confirmed = await showConfirmModal({
+            title: "বাল্ক ডেলিভারি নিশ্চিতকরণ",
+            message: `আপনি কি নিশ্চিতভাবে নির্বাচিত ${ids.length}টি দলিল গ্রহীতা "${recipient}"-এর নিকট হস্তান্তর/ডেলিভারি করতে চান?`,
+            confirmText: "হ্যাঁ, ডেলিভারি সম্পন্ন করুন"
+          });
+
+          if (!confirmed) return;
+
+          submitBtn.disabled = true;
+          if (submitText) submitText.textContent = "ডেলিভারি আপডেট হচ্ছে...";
+
+          try {
+            const batch = writeBatch(db);
+            ids.forEach(id => {
+              const payload = {
+                status: 'Delivered',
+                deliveredTo: recipient,
+                deliveryDate: deliveryDate,
+                deliveredByUid: currentUser?.uid || '',
+                deliveredByEmail: currentUser?.email || ''
+              };
+              if (phone) payload.deliveredPhone = phone;
+              if (remarks) payload.deliveryRemarks = remarks;
+
+              batch.update(doc(db, 'deeds', id), payload);
+            });
+
+            await batch.commit();
+
+            showToast(`${ids.length}টি দলিল সফলভাবে ডেলিভারি সম্পন্ন হয়েছে!`, "success");
+            window.logSystemActivity('STATUS', `বাল্ক ডেলিভারি সম্পন্ন: ${ids.length}টি দলিল (গ্রহীতা: ${recipient}, তারিখ: ${deliveryDate})`, 'BulkDelivery');
+
+            // Find full deed objects for delivery challan prompt
+            const deliveredDeeds = currentPool.filter(d => ids.includes(d.id)).map(d => ({
+              ...d,
+              status: 'Delivered',
+              deliveredTo: recipient,
+              deliveryDate: deliveryDate
+            }));
+
+            // Clear selections
+            selectedDeedIds.clear();
+            if (typeof itSelectedDeedIds !== 'undefined') {
+              itSelectedDeedIds.clear();
+              if (window.updateBatchDock) window.updateBatchDock();
+            }
+
+            modal.classList.add('hidden');
+
+            // Friendly prompt to print Delivery Challan for these newly delivered deeds
+            setTimeout(async () => {
+              const wantChallan = await showConfirmModal({
+                title: "🚚 ডেলিভারি চালান প্রিন্ট করবেন?",
+                message: `সফলভাবে ${ids.length}টি দলিল ডেলিভারি সম্পন্ন হয়েছে। গ্রহীতার স্বাক্ষর গ্রহণের জন্য আপনি কি এখনই ডেলিভারি চালান ও প্রাপ্তি স্বীকারপত্র প্রিন্ট করতে চান?`,
+                confirmText: "হ্যাঁ, চালান প্রিন্ট করুন",
+                cancelText: "পরে করবো"
+              });
+              if (wantChallan && window.openChallanWithCustomList) {
+                window.openChallanWithCustomList(deliveredDeeds);
+              }
+            }, 400);
+
+          } catch (err) {
+            console.error("Bulk delivery error:", err);
+            showToast("বাল্ক ডেলিভারিতে ত্রুটি: " + err.message, "error");
+          } finally {
+            submitBtn.disabled = false;
+            updateSubmitButtonState();
+          }
+        };
+      }
+    }
+
+    /* ============================================================
        OFFLINE BACKUP HUB MODULE
        ============================================================ */
     function initBackupModule() {
@@ -6731,25 +7577,8 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
     }
 
     /* ============================================================
-       GEMINI KEY CONFIGURATION
+       GEMINI KEY CONFIGURATION — Managed by initGeminiModal()
        ============================================================ */
-    const geminiModal = document.getElementById('geminiKeyModal');
-    const geminiBtn = document.getElementById('geminiConfigBtn');
-    const keyInput = document.getElementById('geminiApiKeyInput');
-
-    geminiBtn.onclick = () => {
-      keyInput.value = getStoredGeminiKey();
-      geminiModal.classList.remove('hidden');
-    };
-    document.getElementById('closeGeminiModal').onclick = () => geminiModal.classList.add('hidden');
-    document.getElementById('cancelGeminiModal').onclick = () => geminiModal.classList.add('hidden');
-
-    document.getElementById('geminiKeyForm').onsubmit = (e) => {
-      e.preventDefault();
-      saveGeminiKey(keyInput.value);
-      showToast("Gemini API Key সংরক্ষিত হয়েছে!", "success");
-      geminiModal.classList.add('hidden');
-    };
 
     /* ============================================================
        FIELD USER PORTAL
