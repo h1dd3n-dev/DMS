@@ -159,11 +159,16 @@
     }
 
     @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
 
       html,
       body {
         width: 100% !important;
         height: auto !important;
+        min-height: 0 !important;
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
@@ -171,12 +176,22 @@
         overflow: visible !important;
       }
 
-      body * {
-        visibility: hidden !important;
+      /* 1. HIDE ALL NON-PRINT DOM SIBLINGS WITH display: none
+            (Ensures 0 height, 0 footprint, completely eliminating blank pages) */
+      body > *:not(#challanModal):not(#courierSlipModal) {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
       }
 
-      #challanModal,
-      #courierSlipModal {
+      #challanModal.hidden,
+      #courierSlipModal.hidden {
+        display: none !important;
+      }
+
+      /* 2. RESET ACTIVE MODAL CONTAINER AS TOP-LEVEL PRINT ROOT */
+      #challanModal:not(.hidden),
+      #courierSlipModal:not(.hidden) {
         position: static !important;
         display: block !important;
         background: transparent !important;
@@ -184,28 +199,44 @@
         margin: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
         box-shadow: none !important;
         overflow: visible !important;
         inset: auto !important;
+        z-index: auto !important;
       }
 
-      #challanModal>div,
-      #courierSlipModal>div {
+      /* 3. RESET INNER DIALOG & SCROLLABLE WRAPPERS: STRIP FLEX & OVERFLOW */
+      #challanModal:not(.hidden) > div,
+      #courierSlipModal:not(.hidden) > div,
+      #challanModal .overflow-y-auto,
+      #challanModal .overflow-hidden,
+      #challanModal div[class*="overflow"] {
+        display: block !important;
+        position: static !important;
         box-shadow: none !important;
         max-width: 100% !important;
         width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
         padding: 0 !important;
         margin: 0 !important;
         border: none !important;
+        background: transparent !important;
+        overflow: visible !important;
       }
 
-      #printArea,
-      #printArea *,
-      #courierPrintArea,
-      #courierPrintArea * {
-        visibility: visible !important;
+      /* 4. HIDE NON-PRINTABLE UI CONTROLS */
+      .no-print,
+      .no-print * {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
 
+      /* 5. PRINTABLE SHEET (Matches preview layout precisely) */
       #printArea,
       #courierPrintArea {
         display: block !important;
@@ -213,33 +244,88 @@
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        padding: 2mm 4mm !important;
+        margin: 0 auto !important;
         background: #fff !important;
         color: #000 !important;
-        page-break-inside: avoid;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
       }
 
+      /* Ensure all text and elements inside #printArea are visible and sharp */
+      #printArea *,
+      #courierPrintArea * {
+        color: #000 !important;
+      }
+
+      /* Meta info grid box */
+      #printArea .grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+        background-color: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 8px !important;
+      }
+
+      /* 6. TABLE STYLING FOR CLEAN A4 PRINTING */
       #printArea table,
       #courierPrintArea table {
         width: 100% !important;
         table-layout: fixed !important;
         border-collapse: collapse !important;
+        border: 1.5px solid #1e293b !important;
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+      }
+
+      #printArea thead,
+      #courierPrintArea thead {
+        display: table-header-group !important;
       }
 
       #printArea th,
-      #printArea td,
-      #courierPrintArea th,
-      #courierPrintArea td {
-        word-break: break-word !important;
-        overflow-wrap: break-word !important;
+      #courierPrintArea th {
+        background-color: #f1f5f9 !important;
+        border: 1px solid #1e293b !important;
         font-size: 10px !important;
-        line-height: 1.25 !important;
+        font-weight: 700 !important;
         padding: 4px 6px !important;
+        text-align: left !important;
+        color: #0f172a !important;
       }
 
-      .no-print {
-        display: none !important;
+      #printArea td,
+      #courierPrintArea td {
+        border: 1px solid #64748b !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        font-size: 9.5px !important;
+        line-height: 1.25 !important;
+        padding: 4px 6px !important;
+        color: #0f172a !important;
+      }
+
+      #printArea tr,
+      #courierPrintArea tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      /* 7. SIGNATURE BLOCK (Stays together, does not split) */
+      .challan-sig-box {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin-top: 24px !important;
+        padding-top: 8px !important;
+      }
+
+      .challan-sig-box .grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 16px !important;
       }
     }
   </style>
@@ -656,9 +742,10 @@
               <span class="text-[9px] bg-indigo-200/80 text-indigo-800 px-1 py-0.2 rounded font-mono">OCR</span>
             </button>
             <button id="printChallanBtn"
-              class="flex-shrink-0 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1 mobile-tap">
-              <span>📄</span>
-              <span>চালান</span>
+              class="flex-shrink-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 text-amber-900 border border-amber-300 text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-xs mobile-tap"
+              title="ডেলিভারিকৃত দলিলের তারিখ ও বিএম ভিত্তিক চালান ও সিগনেচার শিট প্রিন্ট করুন">
+              <span>🚚</span>
+              <span class="font-bold">ডেলিভারি চালান</span>
             </button>
             <button id="itExportFilteredBtn"
               class="flex-shrink-0 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1 mobile-tap"
@@ -1790,67 +1877,231 @@
   <div id="challanModal"
     class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div
-      class="bg-white rounded-2xl w-full max-w-4xl max-h-[94vh] flex flex-col p-4 sm:p-6 shadow-2xl space-y-3 my-auto overflow-hidden">
-      <div class="flex justify-between items-center border-b pb-3 no-print">
-        <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-800">অফিসিয়াল দলিল ও রেকর্ড বিতরণ চালান</h3>
-          <p class="text-xs text-slate-500">বিতরণ ও হস্তান্তর বিবরণী কপি (A4 প্রিন্ট উপযোগী)</p>
+      class="bg-white rounded-2xl w-full max-w-5xl max-h-[94vh] flex flex-col p-4 sm:p-6 shadow-2xl space-y-3.5 my-auto overflow-hidden">
+      
+      <!-- Modal Header (No Print) -->
+      <div class="flex justify-between items-center border-b border-slate-200 pb-3 no-print">
+        <div class="flex items-center gap-2.5">
+          <div class="h-9 w-9 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center text-lg">🚚</div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-800">ডেলিভারি চালান ও সিগনেচার শিট প্রিন্ট হাব</h3>
+            <p class="text-xs text-slate-500">তারিখ/ডেট রেঞ্জ ও বিএম কোড অনুযায়ী ডেলিভারিকৃত দলিল ফিল্টার, বাছাই ও প্রিন্ট</p>
+          </div>
         </div>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
           <button id="triggerPrintBtn"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow flex items-center gap-1.5 active:scale-95 transition">
+            class="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl shadow-md flex items-center gap-1.5 active:scale-95 transition mobile-tap">
             <span>🖨️ প্রিন্ট চালান</span>
           </button>
           <button id="closeChallanModal"
-            class="text-slate-400 hover:text-slate-600 text-2xl font-bold leading-none">&times;</button>
+            class="text-slate-400 hover:text-slate-600 text-2xl font-bold leading-none p-1 rounded-lg hover:bg-slate-100 transition">&times;</button>
+        </div>
+      </div>
+
+      <!-- Filter & Selection Control Panel (No Print) -->
+      <div class="bg-gradient-to-r from-slate-50 to-amber-50/40 border border-slate-200/90 rounded-2xl p-3.5 space-y-3 no-print">
+        <!-- Row 1: Filters -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">ডেলিভারি শুরুর তারিখ (হতে)</label>
+            <input type="date" id="challanFilterFromDate"
+              class="w-full text-xs font-medium border border-slate-300 rounded-xl px-2.5 py-1.5 bg-white focus:ring-2 focus:ring-amber-500 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">ডেলিভারি শেষ তারিখ (পর্যন্ত)</label>
+            <input type="date" id="challanFilterToDate"
+              class="w-full text-xs font-medium border border-slate-300 rounded-xl px-2.5 py-1.5 bg-white focus:ring-2 focus:ring-amber-500 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">বিএম কোড / কোঅর্ডিনেটর ফিল্টার</label>
+            <select id="challanFilterBM"
+              class="w-full text-xs font-medium border border-slate-300 rounded-xl px-2.5 py-1.5 bg-white focus:ring-2 focus:ring-amber-500 outline-none transition">
+              <option value="">সকল বিএম কোড (All BMs)</option>
+            </select>
+          </div>
+          <div class="flex flex-col justify-end">
+            <span class="block text-[11px] font-bold text-slate-700 mb-1">সহজ তারিখ প্রিসেট</span>
+            <div class="flex items-center gap-1">
+              <button type="button" id="challanPresetToday"
+                class="flex-1 bg-white hover:bg-amber-100 text-slate-700 hover:text-amber-900 border border-slate-200 text-[11px] font-semibold py-1.5 rounded-lg transition text-center shadow-xs">আজ</button>
+              <button type="button" id="challanPreset7Days"
+                class="flex-1 bg-white hover:bg-amber-100 text-slate-700 hover:text-amber-900 border border-slate-200 text-[11px] font-semibold py-1.5 rounded-lg transition text-center shadow-xs">৭ দিন</button>
+              <button type="button" id="challanPresetMonth"
+                class="flex-1 bg-white hover:bg-amber-100 text-slate-700 hover:text-amber-900 border border-slate-200 text-[11px] font-semibold py-1.5 rounded-lg transition text-center shadow-xs">এই মাস</button>
+              <button type="button" id="challanPresetAll"
+                class="flex-1 bg-white hover:bg-amber-100 text-slate-700 hover:text-amber-900 border border-slate-200 text-[11px] font-semibold py-1.5 rounded-lg transition text-center shadow-xs">সব</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Selection & Action Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/70">
+          <div class="flex items-center gap-3 flex-wrap">
+            <label class="flex items-center gap-1.5 cursor-pointer select-none">
+              <input type="checkbox" id="challanSelectAll"
+                class="h-4 w-4 rounded text-amber-600 focus:ring-amber-500 border-slate-300">
+              <span class="text-xs font-bold text-slate-700">ফিল্টারকৃত সমস্ত দলিল নির্বাচন</span>
+            </label>
+            <span id="challanSelectedBadge"
+              class="bg-amber-100 text-amber-900 border border-amber-300 text-xs px-2.5 py-0.5 rounded-full font-bold">০ টি নির্বাচিত</span>
+            <span id="challanFoundBadge" class="text-xs text-slate-500 font-medium">মোট পাওয়া গেছে: ০ টি</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="challanSearchInput" placeholder="পলিসি / নাম / বিএম খুঁজুন..."
+              class="text-xs border border-slate-300 rounded-xl px-2.5 py-1.5 bg-white w-40 sm:w-52 focus:ring-2 focus:ring-amber-500 outline-none transition">
+            <button type="button" id="challanTogglePickerBtn"
+              class="text-xs text-amber-900 hover:text-amber-950 bg-amber-200/70 hover:bg-amber-300/80 px-3 py-1.5 rounded-xl border border-amber-300 font-semibold flex items-center gap-1.5 transition mobile-tap shadow-xs">
+              <span>📋 দলিল বাছাই তালিকা</span>
+              <span id="challanPickerArrow">▼</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Deed Picker Checklist Drawer -->
+        <div id="challanPickerDrawer" class="hidden bg-white border border-slate-200 rounded-xl p-3 shadow-inner space-y-2">
+          <div class="flex justify-between items-center text-xs text-slate-600 pb-1.5 border-b">
+            <span class="font-bold text-slate-700">নির্দিষ্ট দলিল বাছাই করুন (টিক চিহ্ন দিন/তুলুন):</span>
+            <div class="flex items-center gap-2">
+              <button type="button" id="challanPickAllBtn" class="text-[11px] text-indigo-600 hover:underline font-semibold">সব টিক দিন</button>
+              <span>|</span>
+              <button type="button" id="challanUnpickAllBtn" class="text-[11px] text-slate-500 hover:underline font-semibold">সব মুছুন</button>
+            </div>
+          </div>
+          <div id="challanPickerList" class="max-h-48 overflow-y-auto space-y-1.5 pr-1 divide-y divide-slate-100">
+            <!-- Dynamic checkboxes generated via JS -->
+          </div>
         </div>
       </div>
 
       <!-- Printable Area Scrollable Wrapper for On-Screen View -->
-      <div class="overflow-y-auto flex-1 pr-1">
+      <div class="overflow-y-auto flex-1 pr-1 border border-slate-200 rounded-2xl bg-slate-50 p-2 sm:p-3">
         <!-- Printable Area -->
-        <div id="printArea" class="bg-white p-4 sm:p-6 border rounded-xl space-y-4 text-slate-900">
-          <div class="text-center border-b-2 border-slate-900 pb-3">
-            <h2 class="text-lg sm:text-xl font-bold uppercase tracking-wide">Central Deed & Record Management Hub</h2>
-            <p class="text-xs sm:text-sm font-semibold text-slate-700">দলিল ও রেকর্ড বিতরণ ও হস্তান্তর বিবরণী চালান</p>
-            <div class="flex justify-between text-[11px] sm:text-xs text-slate-600 mt-2 font-mono">
-              <span id="challanBranchText">শাখা / ইউনিট: লোড হচ্ছে...</span>
-              <span id="challanDateText">তারিখ: ...</span>
+        <div id="printArea" class="bg-white p-6 sm:p-8 border border-slate-300 rounded-xl space-y-5 text-slate-900 shadow-sm mx-auto max-w-[210mm]">
+          
+          <!-- Official Challan Header -->
+          <div class="text-center border-b-2 border-slate-900 pb-3 space-y-0.5">
+            <h2 class="text-lg sm:text-xl font-bold uppercase tracking-wider text-slate-900 font-mono">Central Deed & Record Management Hub</h2>
+            <p class="text-sm sm:text-base font-bold text-slate-800">অফিসিয়াল দলিল ডেলিভারি চালান ও প্রাপ্তি স্বীকারপত্র</p>
+            <p class="text-[11px] text-slate-500 font-mono">Official Deed Delivery Challan & Acknowledgement Receipt</p>
+          </div>
+
+          <!-- Metadata Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <div>
+              <span class="text-slate-500 block text-[10px] font-semibold uppercase">শাখা / সেলস অফিস:</span>
+              <span id="challanBranchText" class="font-bold font-mono text-slate-800">লোড হচ্ছে...</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] font-semibold uppercase">চালান রেফারেন্স নং:</span>
+              <span id="challanNoText" class="font-bold font-mono text-indigo-900">DC-...</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] font-semibold uppercase">ডেলিভারি সময়কাল / তারিখ:</span>
+              <span id="challanDateRangeText" class="font-bold text-slate-800">...</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] font-semibold uppercase">কোঅর্ডিনেটর ফিল্টার (BM):</span>
+              <span id="challanBMText" class="font-bold text-slate-800">সকল বিএম</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] font-semibold uppercase">চালান তৈরির সময়:</span>
+              <span id="challanIssueTimeText" class="font-mono text-slate-700">...</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block text-[10px] font-semibold uppercase">দায়িত্বপ্রাপ্ত কর্মকর্তা:</span>
+              <span id="challanIssuerText" class="font-medium text-slate-800">IT Officer</span>
             </div>
           </div>
 
+          <!-- Table of Delivered Deeds -->
           <div class="w-full overflow-x-auto">
-            <table class="w-full text-left text-[11px] border border-slate-300"
+            <table class="w-full text-left text-[10.5px] border border-slate-400 border-collapse"
               style="table-layout: fixed; width: 100%;">
               <colgroup>
-                <col style="width: 5%;">
-                <col style="width: 15%;">
-                <col style="width: 17%;">
-                <col style="width: 20%;">
-                <col style="width: 16%;">
+                <col style="width: 4%;">
                 <col style="width: 11%;">
+                <col style="width: 14%;">
                 <col style="width: 16%;">
+                <col style="width: 17%;">
+                <col style="width: 15%;">
+                <col style="width: 11%;">
+                <col style="width: 12%;">
               </colgroup>
-              <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+              <thead class="bg-slate-100 text-slate-900 font-bold border-b border-slate-400">
                 <tr>
-                  <th class="p-2 border-r border-slate-300 text-center">ক্র:</th>
-                  <th class="p-2 border-r border-slate-300">রেফারেন্স নং</th>
-                  <th class="p-2 border-r border-slate-300">রেকর্ড আইডি</th>
-                  <th class="p-2 border-r border-slate-300">গ্রাহকের নাম</th>
-                  <th class="p-2 border-r border-slate-300">কোঅর্ডিনেটর (BM)</th>
-                  <th class="p-2 border-r border-slate-300">স্ট্যাটাস</th>
-                  <th class="p-2">ডেলিভারি বিবরণ</th>
+                  <th class="p-2 border border-slate-400 text-center">ক্র:</th>
+                  <th class="p-2 border border-slate-400">ডেলিভারির তারিখ</th>
+                  <th class="p-2 border border-slate-400">রেফারেন্স নং</th>
+                  <th class="p-2 border border-slate-400">পলিসি নং</th>
+                  <th class="p-2 border border-slate-400">গ্রাহকের নাম</th>
+                  <th class="p-2 border border-slate-400">কোঅর্ডিনেটর (BM)</th>
+                  <th class="p-2 border border-slate-400">প্রাপক / গ্রহীতা</th>
+                  <th class="p-2 border border-slate-400 text-center">গ্রাহক/গ্রহীতার স্বাক্ষর</th>
                 </tr>
               </thead>
-              <tbody id="challanTableBody" class="divide-y divide-slate-300"></tbody>
+              <tbody id="challanTableBody" class="divide-y divide-slate-300">
+                <!-- Dynamically generated rows -->
+              </tbody>
             </table>
           </div>
 
-          <div
-            class="flex justify-between items-center pt-4 text-[10.5px] text-slate-500 border-t border-slate-300 font-mono">
-            <span>সেন্ট্রাল রেকর্ড সিস্টেম কর্তৃক স্বয়ংক্রিয় জেনারেটেড কপি</span>
-            <span>স্ট্যাটাস: অফিশিয়াল রেকর্ড</span>
+          <!-- Summary & Declaration -->
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
+            <div class="font-semibold text-slate-800">
+              মোট ডেলিভারিকৃত দলিলের সংখ্যা: <span id="challanTotalSelectedCount" class="font-bold font-mono text-indigo-900 text-sm">০</span> টি
+            </div>
+            <div class="text-[10px] text-slate-600 italic">
+              * অত্র চালানে উল্লেখিত দলিলসমূহ সংশ্লিষ্ট গ্রাহক/প্রতিনিধি/বিএম-এর নিকট বুঝিয়ে প্রদানপূর্বক প্রাপ্তিস্বীকার নেওয়া হলো।
+            </div>
           </div>
+
+          <!-- Official Signatures Section (আইটি অফিসারদের সিগনেচার অংশ) -->
+          <div class="challan-sig-box pt-8 mt-6">
+            <div class="grid grid-cols-4 gap-4 text-center">
+              <!-- Signature 1: IT Officer -->
+              <div class="flex flex-col justify-end">
+                <div class="h-12 flex items-end justify-center"></div>
+                <div class="border-t border-slate-900 pt-1.5">
+                  <p class="font-bold text-[10.5px] text-slate-900">আইটি অফিসার / বিতরণকারী</p>
+                  <p class="text-[9px] text-slate-600">স্বাক্ষর, নাম ও তারিখ</p>
+                </div>
+              </div>
+
+              <!-- Signature 2: BM Coordinator -->
+              <div class="flex flex-col justify-end">
+                <div class="h-12 flex items-end justify-center"></div>
+                <div class="border-t border-slate-900 pt-1.5">
+                  <p class="font-bold text-[10.5px] text-slate-900">কোঅর্ডিনেটর / বিএম</p>
+                  <p class="text-[9px] text-slate-600">স্বাক্ষর, কোড ও তারিখ</p>
+                </div>
+              </div>
+
+              <!-- Signature 3: Deed Receiver -->
+              <div class="flex flex-col justify-end">
+                <div class="h-12 flex items-end justify-center"></div>
+                <div class="border-t border-slate-900 pt-1.5">
+                  <p class="font-bold text-[10.5px] text-slate-900">দলিল গ্রহীতা / গ্রাহক</p>
+                  <p class="text-[9px] text-slate-600">স্বাক্ষর ও মোবাইল নং</p>
+                </div>
+              </div>
+
+              <!-- Signature 4: Branch In-Charge -->
+              <div class="flex flex-col justify-end">
+                <div class="h-12 flex items-end justify-center"></div>
+                <div class="border-t border-slate-900 pt-1.5">
+                  <p class="font-bold text-[10.5px] text-slate-900">শাখা প্রধান / অনুমোদনকারী</p>
+                  <p class="text-[9px] text-slate-600">স্বাক্ষর ও অফিশিয়াল সীল</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Footer Note -->
+          <div class="flex justify-between items-center pt-3 text-[9.5px] text-slate-500 border-t border-slate-300 font-mono">
+            <span>সেন্ট্রাল রেকর্ড ম্যানেজমেন্ট সিস্টেম (DMS) কর্তৃক স্বয়ংক্রিয় প্রস্তুতকৃত ডেলিভারি চালান কপি</span>
+            <span>অফিস কপি | সংরক্ষণ বাধ্যতামূলক</span>
+          </div>
+
         </div>
       </div>
     </div>
@@ -3085,6 +3336,7 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
 
       initBackupModule();
       initRestoreModule();
+      initChallanModule();
     }
 
     /* ============================================================
@@ -5296,39 +5548,549 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
     }
 
     /* ============================================================
-       CHALLAN & PRINT MODULE
+       DELIVERY CHALLAN & SIGNATURE PRINT MODULE
        ============================================================ */
     function initChallanModule() {
       const modal = document.getElementById('challanModal');
+      const printBtn = document.getElementById('printChallanBtn');
+      const closeBtn = document.getElementById('closeChallanModal');
+      const triggerPrintBtn = document.getElementById('triggerPrintBtn');
 
-      window.openChallanWithCustomList = (customList) => {
-        if (!customList || !customList.length) return showToast("চালান তৈরি করার মতো কোনো রেকর্ড নেই!", "warning");
-        document.getElementById('challanBranchText').textContent = `শাখা / ইউনিট: ${currentUser.officeCode || 'Internal'}`;
-        document.getElementById('challanDateText').textContent = `তারিখ: ${new Date().toLocaleDateString('bn-BD')}`;
+      const filterFromDate = document.getElementById('challanFilterFromDate');
+      const filterToDate = document.getElementById('challanFilterToDate');
+      const filterBM = document.getElementById('challanFilterBM');
+      const selectAllCheckbox = document.getElementById('challanSelectAll');
+      const searchInput = document.getElementById('challanSearchInput');
+      const selectedBadge = document.getElementById('challanSelectedBadge');
+      const foundBadge = document.getElementById('challanFoundBadge');
 
-        const tbody = document.getElementById('challanTableBody');
-        tbody.innerHTML = customList.map((d, index) => `
-          <tr class="border-b border-slate-300">
-            <td class="p-1.5 border-r border-slate-300 text-center font-mono text-[10.5px]">${index + 1}</td>
-            <td class="p-1.5 border-r border-slate-300 font-mono text-[10px] break-all">${d.refNo || ''}</td>
-            <td class="p-1.5 border-r border-slate-300 font-mono font-bold text-[10.5px] text-indigo-900 break-all">${d.policyNo || ''}</td>
-            <td class="p-1.5 border-r border-slate-300 font-semibold text-[10.5px] leading-tight break-words">${d.policyHolderName || ''}</td>
-            <td class="p-1.5 border-r border-slate-300 text-[10px] leading-tight break-words">${d.bmName || ''} <span class="font-mono text-[9.5px] text-slate-500 block">(${d.bmCode || '—'})</span></td>
-            <td class="p-1.5 border-r border-slate-300 text-[10px] leading-tight">${d.status || ''}</td>
-            <td class="p-1.5 font-medium text-[10px] leading-tight break-words">${d.deliveredTo ? `${d.deliveredTo} (${d.deliveryDate || ''})` : 'অফিসে সংরক্ষিত'}</td>
+      const togglePickerBtn = document.getElementById('challanTogglePickerBtn');
+      const pickerDrawer = document.getElementById('challanPickerDrawer');
+      const pickerArrow = document.getElementById('challanPickerArrow');
+      const pickerList = document.getElementById('challanPickerList');
+      const pickAllBtn = document.getElementById('challanPickAllBtn');
+      const unpickAllBtn = document.getElementById('challanUnpickAllBtn');
+
+      const presetToday = document.getElementById('challanPresetToday');
+      const preset7Days = document.getElementById('challanPreset7Days');
+      const presetMonth = document.getElementById('challanPresetMonth');
+      const presetAll = document.getElementById('challanPresetAll');
+
+      const challanBranchText = document.getElementById('challanBranchText');
+      const challanNoText = document.getElementById('challanNoText');
+      const challanDateRangeText = document.getElementById('challanDateRangeText');
+      const challanBMText = document.getElementById('challanBMText');
+      const challanIssueTimeText = document.getElementById('challanIssueTimeText');
+      const challanIssuerText = document.getElementById('challanIssuerText');
+      const challanTableBody = document.getElementById('challanTableBody');
+      const challanTotalSelectedCount = document.getElementById('challanTotalSelectedCount');
+
+      let currentPool = [];
+      let activeFilteredDeeds = [];
+      let selectedIds = new Set();
+      let currentChallanNo = '';
+
+      // Helper: get all available deeds based on user role and branch
+      function getRawDeedsPool() {
+        if (currentUser && currentUser.role === 'super_admin' && typeof adminDeedsList !== 'undefined' && adminDeedsList && adminDeedsList.length) {
+          return adminDeedsList;
+        }
+        return (itAllDeeds && itAllDeeds.length) ? itAllDeeds : (window.itDeedsList || []);
+      }
+
+      // Format Bangla numbers
+      function toBnNum(num) {
+        const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+        return String(num).replace(/[0-9]/g, d => bnDigits[d]);
+      }
+
+      // Format ISO Date YYYY-MM-DD to DD/MM/YYYY
+      function formatBnDate(dateStr) {
+        if (!dateStr) return '';
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+          return `${toBnNum(parts[2])}/${toBnNum(parts[1])}/${toBnNum(parts[0])}`;
+        }
+        return dateStr;
+      }
+
+      // Populate BM filter dropdown from delivered records
+      function populateBMDropdown(pool) {
+        const currentSelectedBM = filterBM ? filterBM.value : '';
+        const bmMap = new Map();
+        pool.forEach(d => {
+          const code = String(d.bmCode || d.coordinatorCode || '').trim();
+          const name = String(d.bmName || d.coordinatorName || '').trim();
+          if (code) {
+            bmMap.set(code, name || 'কোঅর্ডিনেটর');
+          }
+        });
+
+        const sortedBMs = Array.from(bmMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+        let html = `<option value="">সকল বিএম কোড (${sortedBMs.length ? sortedBMs.length + ' জন' : 'সব'})</option>`;
+        sortedBMs.forEach(([code, name]) => {
+          html += `<option value="${code}">[${code}] ${name}</option>`;
+        });
+        if (filterBM) {
+          filterBM.innerHTML = html;
+          if (bmMap.has(currentSelectedBM)) {
+            filterBM.value = currentSelectedBM;
+          }
+        }
+      }
+
+      // Apply Filters: Date Range + BM Code + Search
+      function applyDeliveryFilters() {
+        const fromVal = filterFromDate ? filterFromDate.value : '';
+        const toVal = filterToDate ? filterToDate.value : '';
+        const bmVal = filterBM ? (filterBM.value || '').trim() : '';
+        const q = searchInput ? (searchInput.value || '').trim().toLowerCase() : '';
+
+        activeFilteredDeeds = currentPool.filter(d => {
+          // Date filtering on deliveryDate (fallback to incomingDate or updatedAt if missing)
+          const dDate = d.deliveryDate || (d.updatedAt ? d.updatedAt.slice(0, 10) : '') || d.incomingDate || '';
+          if (fromVal && toVal) {
+            if (fromVal <= toVal) {
+              if (dDate && (dDate < fromVal || dDate > toVal)) return false;
+            } else {
+              if (dDate && (dDate < toVal || dDate > fromVal)) return false;
+            }
+          } else if (fromVal) {
+            if (dDate && dDate < fromVal) return false;
+          } else if (toVal) {
+            if (dDate && dDate > toVal) return false;
+          }
+
+          // BM Code filter
+          if (bmVal) {
+            const deedBMCode = String(d.bmCode || d.coordinatorCode || '').trim();
+            if (deedBMCode !== bmVal) return false;
+          }
+
+          // Search query
+          if (q) {
+            const pNo = String(d.policyNo || '').toLowerCase();
+            const rNo = String(d.refNo || '').toLowerCase();
+            const hName = String(d.policyHolderName || d.name || '').toLowerCase();
+            const bName = String(d.bmName || '').toLowerCase();
+            const bCode = String(d.bmCode || '').toLowerCase();
+            const dTo = String(d.deliveredTo || '').toLowerCase();
+            if (!pNo.includes(q) && !rNo.includes(q) && !hName.includes(q) && !bName.includes(q) && !bCode.includes(q) && !dTo.includes(q)) {
+              return false;
+            }
+          }
+
+          return true;
+        });
+
+        // Default to selecting all filtered deeds
+        selectedIds = new Set(activeFilteredDeeds.map(d => d.id));
+        renderChallanView();
+      }
+
+      // Render both Picker list and Printable Challan Table
+      function renderChallanView() {
+        // Update header texts
+        const branchName = currentUser.officeCode || 'Internal Branch';
+        if (challanBranchText) challanBranchText.textContent = branchName;
+        if (challanNoText) challanNoText.textContent = currentChallanNo;
+
+        // Date range display
+        const fromVal = filterFromDate ? filterFromDate.value : '';
+        const toVal = filterToDate ? filterToDate.value : '';
+        if (challanDateRangeText) {
+          if (fromVal && toVal) {
+            if (fromVal === toVal) {
+              challanDateRangeText.textContent = `${formatBnDate(fromVal)} (নির্দিষ্ট দিন)`;
+            } else {
+              challanDateRangeText.textContent = `${formatBnDate(fromVal)} হতে ${formatBnDate(toVal)}`;
+            }
+          } else if (fromVal) {
+            challanDateRangeText.textContent = `${formatBnDate(fromVal)} হতে পরবর্তী`;
+          } else if (toVal) {
+            challanDateRangeText.textContent = `${formatBnDate(toVal)} পর্যন্ত`;
+          } else {
+            challanDateRangeText.textContent = 'সকল সমাপ্ত ডেলিভারি';
+          }
+        }
+
+        // BM filter text
+        if (challanBMText && filterBM) {
+          const selectedBMOpt = filterBM.options[filterBM.selectedIndex];
+          challanBMText.textContent = filterBM.value ? selectedBMOpt.text : 'সকল সংশ্লিষ্ট বিএম (All BMs)';
+        }
+
+        if (challanIssueTimeText) {
+          challanIssueTimeText.textContent = new Date().toLocaleString('bn-BD', {
+            year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true
+          });
+        }
+        if (challanIssuerText) {
+          challanIssuerText.textContent = `${currentUser.name || currentUser.displayName || 'IT Officer'} (${currentUser.role === 'super_admin' ? 'Super Admin' : 'আইটি অফিসার'})`;
+        }
+
+        // Update counts and badges
+        const totalFound = activeFilteredDeeds.length;
+        const totalSelected = activeFilteredDeeds.filter(d => selectedIds.has(d.id)).length;
+
+        if (foundBadge) foundBadge.textContent = `মোট পাওয়া গেছে: ${toBnNum(totalFound)} টি`;
+        if (selectedBadge) selectedBadge.textContent = `${toBnNum(totalSelected)} টি নির্বাচিত`;
+        if (challanTotalSelectedCount) challanTotalSelectedCount.textContent = toBnNum(totalSelected);
+        if (selectAllCheckbox) {
+          selectAllCheckbox.checked = (totalFound > 0 && totalSelected === totalFound);
+          selectAllCheckbox.indeterminate = (totalSelected > 0 && totalSelected < totalFound);
+        }
+
+        // 1. Render Picker Checklist Drawer
+        if (pickerList) {
+          if (!totalFound) {
+            pickerList.innerHTML = `<div class="p-3 text-center text-slate-400 text-xs">কোনো ডেলিভারিকৃত দলিল পাওয়া যায়নি।</div>`;
+          } else {
+            pickerList.innerHTML = activeFilteredDeeds.map((d, idx) => {
+              const isChecked = selectedIds.has(d.id);
+              return `
+                <label class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition cursor-pointer select-none border border-transparent hover:border-slate-200">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <input type="checkbox" data-deed-id="${d.id}" class="challan-item-checkbox h-4 w-4 rounded text-amber-600 focus:ring-amber-500 border-slate-300" ${isChecked ? 'checked' : ''}>
+                    <div class="min-w-0">
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono font-bold text-xs text-indigo-700">${d.policyNo || '—'}</span>
+                        <span class="font-mono text-[10px] text-slate-400">#${d.refNo || 'N/A'}</span>
+                      </div>
+                      <div class="text-[11px] font-semibold text-slate-800 truncate">${d.policyHolderName || 'নাম নেই'}</div>
+                    </div>
+                  </div>
+                  <div class="text-right flex-shrink-0 text-[10.5px]">
+                    <div class="font-medium text-slate-700">${d.bmName || '—'} <span class="text-slate-400 font-mono">(${d.bmCode || ''})</span></div>
+                    <div class="text-emerald-700 font-medium">ডেলিভারি: <span class="font-mono">${d.deliveryDate || 'N/A'}</span></div>
+                  </div>
+                </label>
+              `;
+            }).join('');
+
+            // Bind checkbox events in picker drawer
+            pickerList.querySelectorAll('.challan-item-checkbox').forEach(cb => {
+              cb.onchange = (e) => {
+                const id = e.target.dataset.deedId;
+                if (e.target.checked) selectedIds.add(id);
+                else selectedIds.delete(id);
+                renderChallanView();
+              };
+            });
+          }
+        }
+
+        // 2. Render Printable Table with ONLY selected deeds
+        const printableDeeds = activeFilteredDeeds.filter(d => selectedIds.has(d.id));
+
+        if (!printableDeeds.length) {
+          challanTableBody.innerHTML = `
+            <tr>
+              <td colspan="8" class="text-center p-8 text-slate-400 font-medium">
+                প্রিন্ট করার জন্য কোনো দলিল নির্বাচন করা হয়নি অথবা ফিল্টার অনুযায়ী কোনো রেকর্ড নেই।<br>
+                <span class="text-[10px] text-slate-400">অনুগ্রহ করে তারিখ/বিএম ফিল্টার চেক করুন অথবা দলিল নির্বাচন করুন।</span>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        challanTableBody.innerHTML = printableDeeds.map((d, index) => `
+          <tr class="border-b border-slate-300 hover:bg-slate-50 transition">
+            <td class="p-1.5 border-r border-slate-300 text-center font-mono text-[10.5px]">${toBnNum(index + 1)}</td>
+            <td class="p-1.5 border-r border-slate-300 font-mono text-[10px] text-slate-700 whitespace-nowrap">${d.deliveryDate ? formatBnDate(d.deliveryDate) : '—'}</td>
+            <td class="p-1.5 border-r border-slate-300 font-mono text-[10px] text-slate-600 break-all">${d.refNo || '—'}</td>
+            <td class="p-1.5 border-r border-slate-300 font-mono font-bold text-[10.5px] text-indigo-900 break-all">${d.policyNo || '—'}</td>
+            <td class="p-1.5 border-r border-slate-300 font-semibold text-[10.5px] leading-tight break-words">${d.policyHolderName || '—'}</td>
+            <td class="p-1.5 border-r border-slate-300 text-[10px] leading-tight break-words">
+              <span class="font-medium text-slate-800">${d.bmName || '—'}</span>
+              <span class="font-mono text-[9px] text-slate-500 block">(${d.bmCode || '—'})</span>
+            </td>
+            <td class="p-1.5 border-r border-slate-300 text-[10px] leading-tight break-words">
+              <span class="font-medium text-emerald-800">${d.deliveredTo || 'সরাসরি বিতরণ'}</span>
+            </td>
+            <td class="p-1.5 text-center text-[10px] text-slate-400 font-mono">
+              <div class="h-6 flex items-end justify-center border-b border-dashed border-slate-300 pb-0.5"></div>
+            </td>
           </tr>
         `).join('');
+      }
 
+      // Open Modal Function
+      function openDeliveryChallanModal(customList = null) {
+        const rawPool = getRawDeedsPool();
+        
+        if (customList && customList.length) {
+          currentPool = customList;
+        } else {
+          currentPool = rawPool.filter(d => d.status === 'Delivered' || !!d.deliveryDate || !!d.deliveredTo);
+        }
+
+        if (!currentPool.length) {
+          showToast("বর্তমানে সিস্টেমে কোনো ডেলিভারিকৃত রেকর্ড নেই!", "warning");
+          return;
+        }
+
+        // Generate Challan No
+        const officeCode = (currentUser.officeCode || 'DMS').toUpperCase().replace(/[^A-Z0-9]/g, '');
+        const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const randomPart = Math.floor(1000 + Math.random() * 9000);
+        currentChallanNo = `DC-${officeCode}-${datePart}-${randomPart}`;
+
+        // Populate BM options
+        populateBMDropdown(currentPool);
+
+        // Date range default: Check if deeds were delivered today
+        const todayStr = new Date().toISOString().split('T')[0];
+        const hasTodayDeeds = currentPool.some(d => (d.deliveryDate || '') === todayStr);
+
+        if (hasTodayDeeds) {
+          if (filterFromDate) filterFromDate.value = todayStr;
+          if (filterToDate) filterToDate.value = todayStr;
+        } else {
+          const sortedDates = currentPool
+            .map(d => d.deliveryDate || (d.updatedAt ? d.updatedAt.slice(0, 10) : ''))
+            .filter(Boolean)
+            .sort()
+            .reverse();
+          if (sortedDates.length) {
+            if (filterFromDate) filterFromDate.value = sortedDates[0];
+            if (filterToDate) filterToDate.value = sortedDates[0];
+          } else {
+            if (filterFromDate) filterFromDate.value = '';
+            if (filterToDate) filterToDate.value = '';
+          }
+        }
+
+        if (searchInput) searchInput.value = '';
+        if (pickerDrawer) pickerDrawer.classList.add('hidden');
+        if (pickerArrow) pickerArrow.textContent = '▼';
+
+        applyDeliveryFilters();
         modal.classList.remove('hidden');
+      }
+
+      // External API for joint challan or custom batch lists
+      window.openChallanWithCustomList = (customList) => {
+        openDeliveryChallanModal(customList);
       };
 
-      document.getElementById('printChallanBtn').onclick = () => {
-        const listToPrint = (window.itFilteredDeeds && window.itFilteredDeeds.length) ? window.itFilteredDeeds : itDeedsList;
-        window.openChallanWithCustomList(listToPrint);
-      };
+      // Button click: "ডেলিভারি চালান"
+      if (printBtn) {
+        printBtn.onclick = () => {
+          openDeliveryChallanModal();
+        };
+      }
 
-      document.getElementById('closeChallanModal').onclick = () => modal.classList.add('hidden');
-      document.getElementById('triggerPrintBtn').onclick = () => window.print();
+      // Filter events
+      if (filterFromDate) filterFromDate.onchange = applyDeliveryFilters;
+      if (filterToDate) filterToDate.onchange = applyDeliveryFilters;
+      if (filterBM) filterBM.onchange = applyDeliveryFilters;
+      if (searchInput) searchInput.oninput = applyDeliveryFilters;
+
+      // Select All Checkbox
+      if (selectAllCheckbox) {
+        selectAllCheckbox.onchange = (e) => {
+          if (e.target.checked) {
+            selectedIds = new Set(activeFilteredDeeds.map(d => d.id));
+          } else {
+            selectedIds.clear();
+          }
+          renderChallanView();
+        };
+      }
+
+      // Drawer toggle
+      if (togglePickerBtn && pickerDrawer) {
+        togglePickerBtn.onclick = () => {
+          const isHidden = pickerDrawer.classList.contains('hidden');
+          if (isHidden) {
+            pickerDrawer.classList.remove('hidden');
+            if (pickerArrow) pickerArrow.textContent = '▲';
+          } else {
+            pickerDrawer.classList.add('hidden');
+            if (pickerArrow) pickerArrow.textContent = '▼';
+          }
+        };
+      }
+
+      // Drawer bulk pick/unpick buttons
+      if (pickAllBtn) {
+        pickAllBtn.onclick = () => {
+          selectedIds = new Set(activeFilteredDeeds.map(d => d.id));
+          renderChallanView();
+        };
+      }
+      if (unpickAllBtn) {
+        unpickAllBtn.onclick = () => {
+          selectedIds.clear();
+          renderChallanView();
+        };
+      }
+
+      // Date Presets
+      const today = new Date().toISOString().split('T')[0];
+      if (presetToday) {
+        presetToday.onclick = () => {
+          if (filterFromDate) filterFromDate.value = today;
+          if (filterToDate) filterToDate.value = today;
+          applyDeliveryFilters();
+        };
+      }
+      if (preset7Days) {
+        preset7Days.onclick = () => {
+          const d = new Date();
+          d.setDate(d.getDate() - 7);
+          if (filterFromDate) filterFromDate.value = d.toISOString().split('T')[0];
+          if (filterToDate) filterToDate.value = today;
+          applyDeliveryFilters();
+        };
+      }
+      if (presetMonth) {
+        presetMonth.onclick = () => {
+          const d = new Date();
+          const firstDay = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0];
+          if (filterFromDate) filterFromDate.value = firstDay;
+          if (filterToDate) filterToDate.value = today;
+          applyDeliveryFilters();
+        };
+      }
+      if (presetAll) {
+        presetAll.onclick = () => {
+          if (filterFromDate) filterFromDate.value = '';
+          if (filterToDate) filterToDate.value = '';
+          applyDeliveryFilters();
+        };
+      }
+
+      // Close & Print Handlers
+      if (closeBtn) {
+        closeBtn.onclick = () => modal.classList.add('hidden');
+      }
+
+      // Isolated Clean Print Function (Guarantees 0 blank pages & exact preview reproduction)
+      function printChallanDocument() {
+        const printArea = document.getElementById('printArea');
+        if (!printArea) return window.print();
+
+        try {
+          let iframe = document.getElementById('challanIsolatedPrintFrame');
+          if (iframe) iframe.remove();
+
+          iframe = document.createElement('iframe');
+          iframe.id = 'challanIsolatedPrintFrame';
+          iframe.style.position = 'fixed';
+          iframe.style.right = '0';
+          iframe.style.bottom = '0';
+          iframe.style.width = '0';
+          iframe.style.height = '0';
+          iframe.style.border = '0';
+          iframe.style.visibility = 'hidden';
+          document.body.appendChild(iframe);
+
+          const doc = iframe.contentWindow.document;
+          doc.open();
+          doc.write(`<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>Delivery Challan</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm 8mm 10mm;
+    }
+    * {
+      box-sizing: border-box !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    html, body {
+      font-family: 'Hind Siliguri', 'Inter', sans-serif !important;
+      background: #fff !important;
+      color: #000 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+    }
+    table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      table-layout: fixed !important;
+      border: 1.5px solid #1e293b !important;
+      margin-top: 8px !important;
+      margin-bottom: 8px !important;
+    }
+    thead {
+      display: table-header-group !important;
+    }
+    th {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+      border: 1px solid #1e293b !important;
+      padding: 4px 6px !important;
+      font-size: 10px !important;
+      font-weight: 700 !important;
+      text-align: left !important;
+    }
+    td {
+      border: 1px solid #64748b !important;
+      padding: 4px 6px !important;
+      font-size: 9.5px !important;
+      line-height: 1.25 !important;
+      word-break: break-word !important;
+      color: #0f172a !important;
+    }
+    tr {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    .challan-sig-box {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      margin-top: 24px !important;
+    }
+    .no-print {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="p-2">
+  <div style="width: 100%; max-width: 100%;">
+    ${printArea.innerHTML}
+  </div>
+</body>
+</html>`);
+          doc.close();
+
+          setTimeout(() => {
+            try {
+              iframe.contentWindow.focus();
+              iframe.contentWindow.print();
+              setTimeout(() => {
+                if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
+              }, 2500);
+            } catch (e) {
+              window.print();
+            }
+          }, 350);
+        } catch (err) {
+          window.print();
+        }
+      }
+
+      if (triggerPrintBtn) {
+        triggerPrintBtn.onclick = () => {
+          const printableDeeds = activeFilteredDeeds.filter(d => selectedIds.has(d.id));
+          if (!printableDeeds.length) {
+            showToast("প্রিন্ট করার মতো কোনো দলিল নির্বাচিত নেই!", "warning");
+            return;
+          }
+          printChallanDocument();
+        };
+      }
     }
 
     /* ============================================================
