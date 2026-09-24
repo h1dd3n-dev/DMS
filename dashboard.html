@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Central Audit & Record Hub | DMS</title>
+  <title> DMS</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <link rel="icon" type="image/png" href="icon.png">
@@ -261,13 +261,14 @@
       }
 
       /* Meta info grid box */
+      /* Meta info grid box */
       #printArea .grid {
         display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-columns: repeat(4, 1fr) !important;
         gap: 6px !important;
         background-color: #f8fafc !important;
         border: 1px solid #cbd5e1 !important;
-        padding: 8px !important;
+        padding: 5px 8px !important;
       }
 
       /* 6. TABLE STYLING FOR CLEAN A4 PRINTING */
@@ -277,8 +278,8 @@
         table-layout: fixed !important;
         border-collapse: collapse !important;
         border: 1.5px solid #1e293b !important;
-        margin-top: 8px !important;
-        margin-bottom: 8px !important;
+        margin-top: 6px !important;
+        margin-bottom: 6px !important;
       }
 
       #printArea thead,
@@ -292,7 +293,7 @@
         border: 1px solid #1e293b !important;
         font-size: 10px !important;
         font-weight: 700 !important;
-        padding: 4px 6px !important;
+        padding: 3px 5px !important;
         text-align: left !important;
         color: #0f172a !important;
       }
@@ -304,7 +305,7 @@
         overflow-wrap: break-word !important;
         font-size: 9.5px !important;
         line-height: 1.25 !important;
-        padding: 4px 6px !important;
+        padding: 3px 5px !important;
         color: #0f172a !important;
       }
 
@@ -318,14 +319,24 @@
       .challan-sig-box {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
-        margin-top: 24px !important;
-        padding-top: 8px !important;
+        margin-top: 14px !important;
+        padding-top: 4px !important;
       }
 
       .challan-sig-box .grid {
         display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 16px !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
+      }
+
+      .challan-footer-note {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin-top: 12px !important;
+        padding-top: 4px !important;
+        border-top: 1px solid #cbd5e1 !important;
       }
     }
   </style>
@@ -1976,67 +1987,55 @@
       <!-- Printable Area Scrollable Wrapper for On-Screen View -->
       <div class="overflow-y-auto flex-1 pr-1 border border-slate-200 rounded-2xl bg-slate-50 p-2 sm:p-3">
         <!-- Printable Area -->
-        <div id="printArea" class="bg-white p-6 sm:p-8 border border-slate-300 rounded-xl space-y-5 text-slate-900 shadow-sm mx-auto max-w-[210mm]">
+        <div id="printArea" class="bg-white p-4 sm:p-5 border border-slate-300 rounded-xl space-y-3.5 text-slate-900 shadow-sm mx-auto max-w-[210mm]">
           
           <!-- Official Challan Header -->
-          <div class="text-center border-b-2 border-slate-900 pb-3 space-y-0.5">
-            <h2 class="text-lg sm:text-xl font-bold uppercase tracking-wider text-slate-900 font-mono">Central Deed & Record Management Hub</h2>
-            <p class="text-sm sm:text-base font-bold text-slate-800">অফিসিয়াল দলিল ডেলিভারি চালান ও প্রাপ্তি স্বীকারপত্র</p>
-            <p class="text-[11px] text-slate-500 font-mono">Official Deed Delivery Challan & Acknowledgement Receipt</p>
+          <div class="text-center border-b-2 border-slate-900 pb-2 space-y-0.5">
+            <p class="text-sm font-bold text-slate-800">অফিসিয়াল দলিল ডেলিভারি চালান ও প্রাপ্তি স্বীকারপত্র</p>
           </div>
 
-          <!-- Metadata Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <!-- Metadata Compact Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200">
             <div>
-              <span class="text-slate-500 block text-[10px] font-semibold uppercase">শাখা / সেলস অফিস:</span>
+              <span class="text-slate-500 block text-[9.5px] font-semibold uppercase">শাখা / সেলস অফিস:</span>
               <span id="challanBranchText" class="font-bold font-mono text-slate-800">লোড হচ্ছে...</span>
             </div>
             <div>
-              <span class="text-slate-500 block text-[10px] font-semibold uppercase">চালান রেফারেন্স নং:</span>
+              <span class="text-slate-500 block text-[9.5px] font-semibold uppercase">চালান রেফারেন্স নং:</span>
               <span id="challanNoText" class="font-bold font-mono text-indigo-900">DC-...</span>
             </div>
             <div>
-              <span class="text-slate-500 block text-[10px] font-semibold uppercase">ডেলিভারি সময়কাল / তারিখ:</span>
+              <span class="text-slate-500 block text-[9.5px] font-semibold uppercase">ডেলিভারি সময়কাল / তারিখ:</span>
               <span id="challanDateRangeText" class="font-bold text-slate-800">...</span>
             </div>
             <div>
-              <span class="text-slate-500 block text-[10px] font-semibold uppercase">কোঅর্ডিনেটর ফিল্টার (BM):</span>
+              <span class="text-slate-500 block text-[9.5px] font-semibold uppercase">কোঅর্ডিনেটর (BM):</span>
               <span id="challanBMText" class="font-bold text-slate-800">সকল বিএম</span>
-            </div>
-            <div>
-              <span class="text-slate-500 block text-[10px] font-semibold uppercase">চালান তৈরির সময়:</span>
-              <span id="challanIssueTimeText" class="font-mono text-slate-700">...</span>
-            </div>
-            <div>
-              <span class="text-slate-500 block text-[10px] font-semibold uppercase">দায়িত্বপ্রাপ্ত কর্মকর্তা:</span>
-              <span id="challanIssuerText" class="font-medium text-slate-800">IT Officer</span>
             </div>
           </div>
 
-          <!-- Table of Delivered Deeds -->
+          <!-- Table of Delivered Deeds (Ref No Removed for Space) -->
           <div class="w-full overflow-x-auto">
             <table class="w-full text-left text-[10.5px] border border-slate-400 border-collapse"
               style="table-layout: fixed; width: 100%;">
               <colgroup>
-                <col style="width: 4%;">
-                <col style="width: 11%;">
+                <col style="width: 5%;">
                 <col style="width: 14%;">
-                <col style="width: 16%;">
-                <col style="width: 17%;">
-                <col style="width: 15%;">
-                <col style="width: 11%;">
-                <col style="width: 12%;">
+                <col style="width: 20%;">
+                <col style="width: 23%;">
+                <col style="width: 18%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
               </colgroup>
               <thead class="bg-slate-100 text-slate-900 font-bold border-b border-slate-400">
                 <tr>
-                  <th class="p-2 border border-slate-400 text-center">ক্র:</th>
-                  <th class="p-2 border border-slate-400">ডেলিভারির তারিখ</th>
-                  <th class="p-2 border border-slate-400">রেফারেন্স নং</th>
-                  <th class="p-2 border border-slate-400">পলিসি নং</th>
-                  <th class="p-2 border border-slate-400">গ্রাহকের নাম</th>
-                  <th class="p-2 border border-slate-400">কোঅর্ডিনেটর (BM)</th>
-                  <th class="p-2 border border-slate-400">প্রাপক / গ্রহীতা</th>
-                  <th class="p-2 border border-slate-400 text-center">গ্রাহক/গ্রহীতার স্বাক্ষর</th>
+                  <th class="p-1.5 border border-slate-400 text-center">ক্র:</th>
+                  <th class="p-1.5 border border-slate-400">ডেলিভারির তারিখ</th>
+                  <th class="p-1.5 border border-slate-400">পলিসি নং</th>
+                  <th class="p-1.5 border border-slate-400">গ্রাহকের নাম</th>
+                  <th class="p-1.5 border border-slate-400">কোঅর্ডিনেটর (BM)</th>
+                  <th class="p-1.5 border border-slate-400">প্রাপক / গ্রহীতা</th>
+                  <th class="p-1.5 border border-slate-400 text-center">গ্রাহকের স্বাক্ষর</th>
                 </tr>
               </thead>
               <tbody id="challanTableBody" class="divide-y divide-slate-300">
@@ -2046,22 +2045,22 @@
           </div>
 
           <!-- Summary & Declaration -->
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs">
             <div class="font-semibold text-slate-800">
               মোট ডেলিভারিকৃত দলিলের সংখ্যা: <span id="challanTotalSelectedCount" class="font-bold font-mono text-indigo-900 text-sm">০</span> টি
             </div>
-            <div class="text-[10px] text-slate-600 italic">
-              * অত্র চালানে উল্লেখিত দলিলসমূহ সংশ্লিষ্ট গ্রাহক/প্রতিনিধি/বিএম-এর নিকট বুঝিয়ে প্রদানপূর্বক প্রাপ্তিস্বীকার নেওয়া হলো।
+            <div class="text-[9.5px] text-slate-500 italic">
+              * উল্লেখিত দলিলসমূহ সংশ্লিষ্ট গ্রাহক/প্রতিনিধি/বিএম-এর নিকট বুঝিয়ে প্রদানপূর্বক প্রাপ্তিস্বীকার নেওয়া হলো।
             </div>
           </div>
 
-          <!-- Official Signatures Section (আইটি অফিসারদের সিগনেচার অংশ) -->
-          <div class="challan-sig-box pt-8 mt-6">
-            <div class="grid grid-cols-4 gap-4 text-center">
+          <!-- Official Signatures Section (Compact Height for 1-Page Fit) -->
+          <div class="challan-sig-box pt-4 mt-3">
+            <div class="grid grid-cols-3 gap-6 text-center">
               <!-- Signature 1: IT Officer -->
               <div class="flex flex-col justify-end">
-                <div class="h-12 flex items-end justify-center"></div>
-                <div class="border-t border-slate-900 pt-1.5">
+                <div class="h-8 flex items-end justify-center"></div>
+                <div class="border-t border-slate-900 pt-1">
                   <p class="font-bold text-[10.5px] text-slate-900">আইটি অফিসার / বিতরণকারী</p>
                   <p class="text-[9px] text-slate-600">স্বাক্ষর, নাম ও তারিখ</p>
                 </div>
@@ -2069,8 +2068,8 @@
 
               <!-- Signature 2: BM Coordinator -->
               <div class="flex flex-col justify-end">
-                <div class="h-12 flex items-end justify-center"></div>
-                <div class="border-t border-slate-900 pt-1.5">
+                <div class="h-8 flex items-end justify-center"></div>
+                <div class="border-t border-slate-900 pt-1">
                   <p class="font-bold text-[10.5px] text-slate-900">কোঅর্ডিনেটর / বিএম</p>
                   <p class="text-[9px] text-slate-600">স্বাক্ষর, কোড ও তারিখ</p>
                 </div>
@@ -2078,16 +2077,17 @@
 
               <!-- Signature 3: Deed Receiver -->
               <div class="flex flex-col justify-end">
-                <div class="h-12 flex items-end justify-center"></div>
-                <div class="border-t border-slate-900 pt-1.5">
+                <div class="h-8 flex items-end justify-center"></div>
+                <div class="border-t border-slate-900 pt-1">
                   <p class="font-bold text-[10.5px] text-slate-900">দলিল গ্রহীতা / গ্রাহক</p>
                   <p class="text-[9px] text-slate-600">স্বাক্ষর ও মোবাইল নং</p>
                 </div>
               </div>
+            </div>
+          </div>
 
-           
           <!-- Bottom Footer Note -->
-          <div class="flex justify-between items-center pt-3 text-[9.5px] text-slate-500 border-t border-slate-300 font-mono">
+          <div class="challan-footer-note flex justify-between items-center pt-2 mt-3 text-[9px] text-slate-500 border-t border-slate-300 font-mono w-full">
             <span>স্বয়ংক্রিয় প্রস্তুতকৃত ডেলিভারি চালান কপি</span>
             <span>অফিস কপি</span>
           </div>
@@ -5776,7 +5776,7 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
         if (!printableDeeds.length) {
           challanTableBody.innerHTML = `
             <tr>
-              <td colspan="8" class="text-center p-8 text-slate-400 font-medium">
+              <td colspan="7" class="text-center p-6 text-slate-400 font-medium">
                 প্রিন্ট করার জন্য কোনো দলিল নির্বাচন করা হয়নি অথবা ফিল্টার অনুযায়ী কোনো রেকর্ড নেই।<br>
                 <span class="text-[10px] text-slate-400">অনুগ্রহ করে তারিখ/বিএম ফিল্টার চেক করুন অথবা দলিল নির্বাচন করুন।</span>
               </td>
@@ -5787,20 +5787,19 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
 
         challanTableBody.innerHTML = printableDeeds.map((d, index) => `
           <tr class="border-b border-slate-300 hover:bg-slate-50 transition">
-            <td class="p-1.5 border-r border-slate-300 text-center font-mono text-[10.5px]">${toBnNum(index + 1)}</td>
-            <td class="p-1.5 border-r border-slate-300 font-mono text-[10px] text-slate-700 whitespace-nowrap">${d.deliveryDate ? formatBnDate(d.deliveryDate) : '—'}</td>
-            <td class="p-1.5 border-r border-slate-300 font-mono text-[10px] text-slate-600 break-all">${d.refNo || '—'}</td>
-            <td class="p-1.5 border-r border-slate-300 font-mono font-bold text-[10.5px] text-indigo-900 break-all">${d.policyNo || '—'}</td>
-            <td class="p-1.5 border-r border-slate-300 font-semibold text-[10.5px] leading-tight break-words">${d.policyHolderName || '—'}</td>
-            <td class="p-1.5 border-r border-slate-300 text-[10px] leading-tight break-words">
+            <td class="p-1 border-r border-slate-300 text-center font-mono text-[10px]">${toBnNum(index + 1)}</td>
+            <td class="p-1 border-r border-slate-300 font-mono text-[10px] text-slate-700 whitespace-nowrap">${d.deliveryDate ? formatBnDate(d.deliveryDate) : '—'}</td>
+            <td class="p-1 border-r border-slate-300 font-mono font-bold text-[10.5px] text-indigo-900 break-all">${d.policyNo || '—'}</td>
+            <td class="p-1 border-r border-slate-300 font-semibold text-[10.5px] leading-tight break-words">${d.policyHolderName || '—'}</td>
+            <td class="p-1 border-r border-slate-300 text-[10px] leading-tight break-words">
               <span class="font-medium text-slate-800">${d.bmName || '—'}</span>
               <span class="font-mono text-[9px] text-slate-500 block">(${d.bmCode || '—'})</span>
             </td>
-            <td class="p-1.5 border-r border-slate-300 text-[10px] leading-tight break-words">
+            <td class="p-1 border-r border-slate-300 text-[10px] leading-tight break-words">
               <span class="font-medium text-emerald-800">${d.deliveredTo || 'সরাসরি বিতরণ'}</span>
             </td>
-            <td class="p-1.5 text-center text-[10px] text-slate-400 font-mono">
-              <div class="h-6 flex items-end justify-center border-b border-dashed border-slate-300 pb-0.5"></div>
+            <td class="p-1 text-center text-[10px] text-slate-400 font-mono">
+              <div class="h-5 flex items-end justify-center border-b border-dashed border-slate-300 pb-0.5"></div>
             </td>
           </tr>
         `).join('');
@@ -6020,14 +6019,14 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
       background-color: #f1f5f9 !important;
       color: #0f172a !important;
       border: 1px solid #1e293b !important;
-      padding: 4px 6px !important;
+      padding: 3px 5px !important;
       font-size: 10px !important;
       font-weight: 700 !important;
       text-align: left !important;
     }
     td {
       border: 1px solid #64748b !important;
-      padding: 4px 6px !important;
+      padding: 3px 5px !important;
       font-size: 9.5px !important;
       line-height: 1.25 !important;
       word-break: break-word !important;
@@ -6037,10 +6036,28 @@ Ensure all text is clean and properly formatted. Do not include markdown or back
       page-break-inside: avoid !important;
       break-inside: avoid !important;
     }
+    .grid {
+      display: grid !important;
+    }
     .challan-sig-box {
       page-break-inside: avoid !important;
       break-inside: avoid !important;
-      margin-top: 24px !important;
+      margin-top: 14px !important;
+      padding-top: 4px !important;
+    }
+    .challan-sig-box .grid {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 20px !important;
+    }
+    .challan-footer-note {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      width: 100% !important;
+      margin-top: 12px !important;
+      padding-top: 4px !important;
+      border-top: 1px solid #cbd5e1 !important;
     }
     .no-print {
       display: none !important;
