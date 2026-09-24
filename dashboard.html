@@ -1108,7 +1108,7 @@
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">কোঅর্ডিনেটর কোড (BM/UM/FA এর জন্য)</label>
-          <input type="text" id="adminUserBMCode" placeholder="উদা: 10029061 (ঐচ্ছিক)"
+          <input type="text" id="adminUserBMCode" placeholder="উদা: 10028060 (ঐচ্ছিক)"
             class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 font-mono">
         </div>
         <div class="flex justify-end gap-2 pt-2">
@@ -1203,7 +1203,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">কোঅর্ডিনেটর কোড</label>
-            <input type="text" id="itBMCode" required placeholder="10029061"
+            <input type="text" id="itBMCode" required placeholder="10028060"
               class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
           </div>
           <div>
@@ -1298,7 +1298,7 @@
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">কোঅর্ডিনেটর কোড (ঐচ্ছিক)</label>
-          <input type="text" id="editUserBM" placeholder="উদা: 10029061"
+          <input type="text" id="editUserBM" placeholder="উদা: 10028060"
             class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
         </div>
         <div class="flex justify-end gap-2 pt-2">
@@ -1381,7 +1381,7 @@
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">কোঅর্ডিনেটর কোড</label>
-          <input type="text" id="newUserBMCode" required placeholder="উদা: 10029061"
+          <input type="text" id="newUserBMCode" required placeholder="উদা: 10028060"
             class="w-full px-3 py-2 border rounded-lg text-sm font-mono">
         </div>
         <div class="flex justify-end gap-2 pt-2">
@@ -1499,7 +1499,7 @@
           </button>
         </div>
         <textarea id="bulkJsonInput"
-          placeholder='[\n  {\n    "refNo": "AILIL-02860/2026",\n    "policyNo": "010110177896-9",\n    "policyHolderName": "MD SHAHIDUL ISLAM",\n    "bmCode": "10029061",\n    "bmName": "MD. ALAMGIR HOSSAIN",\n    "incomingDate": "2026-07-22"\n  }\n]'
+          placeholder='[\n  {\n    "refNo": "AILIL-02860/2026",\n    "policyNo": "010110123896-9",\n    "policyHolderName": "MD SHAHIDUL ISLAM",\n    "bmCode": "10028060",\n    "bmName": "MD. Jahangir HOSSAIN",\n    "incomingDate": "2026-07-22"\n  }\n]'
           class="w-full flex-1 p-3 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-slate-700 focus:outline-none min-h-[140px]"></textarea>
         <div class="flex justify-end gap-2 pt-1">
           <button id="parseJsonBtn"
@@ -2471,8 +2471,8 @@ Output MUST be a strict JSON array of objects with the exact following fields:
 - refNo: Reference number (e.g. "REF-02860/2026" or similar, or empty string if not found)
 - policyNo: Record / Policy ID number (e.g. "010110177896-9")
 - policyHolderName: Name of the customer / recipient (e.g. "MD SHAHIDUL ISLAM")
-- bmCode: Branch Manager / Coordinator code (numeric or alphanumeric, e.g. "10029061")
-- bmName: Name of Coordinator / Manager (e.g. "MD. ALAMGIR HOSSAIN")
+- bmCode: Branch Manager / Coordinator code (numeric or alphanumeric, e.g. "10028060")
+- bmName: Name of Coordinator / Manager (e.g. "MD. Jahangir HOSSAIN")
 - incomingDate: Date on transmission letter in YYYY-MM-DD format (or today's date if missing)
 
 Ensure all text is clean and properly formatted. Do not include markdown or backticks in the response. Return valid JSON only.`;
@@ -2501,8 +2501,8 @@ Output MUST be a strict JSON array of objects with the exact following fields:
 - refNo: Reference number (e.g. "REF-02860/2026" or similar, or empty string if not found)
 - policyNo: Record / Policy ID number (e.g. "010110177896-9")
 - policyHolderName: Name of the customer / recipient (e.g. "MD SHAHIDUL ISLAM")
-- bmCode: Branch Manager / Coordinator code (numeric or alphanumeric, e.g. "10029061")
-- bmName: Name of Coordinator / Manager (e.g. "MD. ALAMGIR HOSSAIN")
+- bmCode: Branch Manager / Coordinator code (numeric or alphanumeric, e.g. "10028060")
+- bmName: Name of Coordinator / Manager (e.g. "MD. Jahangir HOSSAIN")
 - incomingDate: Date on transmission letter in YYYY-MM-DD format (or today's date if missing)
 
 Ensure all text is clean and properly formatted. Do not include markdown or backticks in the response. Return valid JSON only.`;
